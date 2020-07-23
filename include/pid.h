@@ -1,5 +1,36 @@
 #pragma once
 #include "vex.h"
+
+struct PDcontroller {
+  double kP;
+  double kD;
+};
+
+class posPID{
+  private:
+    double m_kP;
+    double m_kD;
+
+    double m_error;
+    double m_prevError;
+    double m_proportional;
+    double m_derivative;
+
+    static const int m_upperBound=10;
+    static const int m_lowerBound = -10;
+    double m_power;
+    
+  public:
+    double KP;
+    double KD;
+    posPID();
+    posPID(double kP, double kD);
+    void calculatePower(posPID *pid, double targetPos,double currentPos);
+    double getError() {return(m_error);}
+    double getPower() {return(m_power);}
+
+
+};
 typedef struct _posPID {
 double  kP;
 double kI;
@@ -13,9 +44,10 @@ int derivative;
 	//PID limits
 int errorThreshold;
 int integralLimit;
-int upperBound;
-int lowerBound;
-
+//static const int upperBound=10;
+//static const int lowerBound = -10;
+int upperBound=10;
+int lowerBound = -10;
 	//Timestep
 int dt;
 double currentTime;

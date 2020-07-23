@@ -68,19 +68,29 @@
 
 using namespace vex;
 
-FourMotorDrive chassis( {PORT12,PORT13} , {PORT11,PORT16} , ratio18_1 , 1.66667);
+FourMotorDrive chassis( {PORT12,PORT13} , {PORT11,PORT16} , ratio18_1 , 1.66667, 
+{
+  { 5 , 0 },     //Distance PD
+  { 0 , 0 },     //Angle PD
+  { 0 , 4.7},    //Turn PD
+  }
+);    
 
 
-Dimensions *chassisDimensions = new Dimensions(&chassis,15.0_in,3.25_in);Limits *chassisLimits = new Limits(&chassis, 42.0_inps,12.0_inps2);
+Dimensions *chassisDimensions = new Dimensions(&chassis,15.0_in , 3.25_in );
+
+Limits *chassisLimits = new Limits(&chassis, 42.0_inps , 12.0_inps2);
 
 
-Tracking poseTracker(4.0,2.75,360.0,{Tracking::A,Tracking::C,Tracking::G},PORT18);
+Tracking poseTracker(4.0_in,2.75_in,360.0,{Tracking::A,Tracking::C,Tracking::G},PORT18);
 
 competition Competition;
 task autonSelect;
 // A global instance of vex::brain used for printing to the V5 brain screen
 // define your global instances of motors and other devices here
 void pre_auto(void) {
+  
+  poseTracker.leftEncoder.position(degrees);
   // Initializing Robot Configuration. DO NOT REMOVE!
   delete chassisDimensions;
   delete chassisLimits;
@@ -97,7 +107,7 @@ void pre_auto(void) {
   // Example: clearing encoders, setting servo positions, ...
 }
 void autonomous(void) {
-  driveStraight(2);
+  //driveStraight(2);
 }
 
 /*void usercontrol(void) {
@@ -159,7 +169,7 @@ int main() {
       Brain.Screen.setFillColor ("black");
       Brain.Screen.printAt(50,50,"%d",inert.isCalibrating());*/
       //printPosition();
-      
+      std::cout <<chassis.turnPID.KD <<std::endl;;
       this_thread::sleep_for(10)  ;
        }
 }

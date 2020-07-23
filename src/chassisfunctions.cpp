@@ -1,5 +1,6 @@
 #include "vex.h"
 using namespace std;
+/*
 void driveStraight( const double distance) {
   bool atTarget = false; //are we at target no!
   double distanceElapsed =0, angleChange = 0;
@@ -8,11 +9,12 @@ void driveStraight( const double distance) {
   double unroundedTargetDistance = encoderToInch * distance;
   double targetDistance = truncf(unroundedTargetDistance * 10) / 10; //desired distance in encoder ticks rounded to tenths
 
-  pos_PID distancePID, anglePID;
-  pos_PID_InitController(&distancePID,.1 , 0 , .5); //inistiizng distance pid and values in orrder (kp,ki,kd)
+  //pos_PID distancePID, anglePID;
+  //pos_PID_InitController(&distancePID,.1 , 0 , .5); //inistiizng distance pid and values in orrder (kp,ki,kd)
   //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&anglePID,.2, 0.0,0.0); //inistiizng "dampner" pid and values in orrder (kp,ki,kd)
-
+  //pos_PID_InitController(&anglePID,.2, 0.0,0.0); //inistiizng "dampner" pid and values in orrder (kp,ki,kd)
+  posPID distancePID(5,.5);
+  posPID anglePID(.2,0);
 
 
 
@@ -26,11 +28,11 @@ void driveStraight( const double distance) {
   const double threshold = 2;//if we havent moved close then we exit (this is in encoder ticks)
 
 
-  const int timeoutPeriod = 250; //amount of time before exiting
+  const int timeoutPeriod = 7000; //amount of time before exiting
   long currentLeft, currentRight;
   driveTimer.notMoved =0; //setting timers to 0
   driveTimer.close = 0;
-  double distancePower, anglePower;
+  //double distancePower, anglePower;
   while(!atTarget) {
 
     currentLeft = leftFront.position(degrees) - initialEncoderLeft; //current left encoder
@@ -39,13 +41,15 @@ void driveStraight( const double distance) {
     distanceElapsed = (currentLeft + currentRight) / 2.0; //this is the amount we travelled (something the vex discord told me)
     angleChange = currentLeft-currentRight;
 
-    distancePower = pos_PID_CalculatePower(&distancePID,targetDistance,distanceElapsed); //function to calculate power where target is our target and distanceElapsed is current
+    //distancePower = pos_PID_CalculatePower(&distancePID,targetDistance,distanceElapsed); //function to calculate power where target is our target and distanceElapsed is current
     //anglePower = 0;
-    anglePower = pos_PID_CalculatePower(&anglePID,0,angleChange);//function to calculate angle change where target is our target and angleCange is current. in this case i have target set to 0 for straightdrive but it can be anything
+    //anglePower = pos_PID_CalculatePower(&anglePID,0,angleChange);//function to calculate angle change where target is our target and angleCange is current. in this case i have target set to 0 for straightdrive but it can be anything
+    distancePID.calculatePower(targetDistance, distanceElapsed);
+    anglePID.calculatePower(0, angleChange);
 
-
-      setDrive(distancePower+anglePower,distancePower-anglePower); // setting the drive and adding the correction pid
-
+      setDrive(distancePID.getPower()+anglePID.getPower()
+      ,distancePID.getPower()+anglePID.getPower()); // setting the drive and adding the correction pid
+      std::cout << distancePID.getPower() << " " << anglePID.getPower() << " " <<distancePID.getError() <<std::endl;
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance) //exit function
       {
         driveTimer.close += 10;
@@ -78,7 +82,7 @@ void driveStraight( const double distance) {
       Brain.Screen.clearScreen();
     setDrive(0,0); //stopping bot
 }
-
+*/
 
 void turnToDegree(double angle)
 {
