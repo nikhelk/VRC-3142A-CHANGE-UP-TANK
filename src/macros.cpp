@@ -9,7 +9,7 @@ bool getS1Status ()
     {
       return true;
     }
-  else 
+  else
   {
     return false;
   }
@@ -21,14 +21,14 @@ bool getS2Status()
   {
     return true;
   }
-  else 
+  else
   {
     return false;
   }
 }
 
 
-void setMacroState() 
+void setMacroState()
 {
   if(getS2Status())
   {
@@ -47,13 +47,14 @@ void setMacroState()
         myBot = S2_BALL_N_SHOOTING_I_LOW;
       }
     }
+
   }
-  else 
+  else
   {
 
   }
 }
-
+//bruhhhhh
 bool getIsShooting()
 {
   return (Controller1.ButtonL1.pressing());
@@ -64,25 +65,24 @@ void macrosUser()
   switch (myBot)
   {
     case S2_EMPTY_E_SAME_I_HIGH:
-      break;      
-    case S2_EMPTY_E_SAME_I_LOW:  
-      break;         
-    case S2_EMPTY_E_OPP:         
-      break;        
+      break;
+    case S2_EMPTY_E_SAME_I_LOW:
+      break;
+    case S2_EMPTY_E_OPP:
+      break;
     case S2_EMPTY_E_EMPTY_S1_EMPTY_I_HIGH:
       break;
-    case S2_EMPTY_E_EMPTY_S1_EMPTY_I_LOW:  
+    case S2_EMPTY_E_EMPTY_S1_EMPTY_I_LOW:
       break;
-    case S2_EMPTY_E_EMPTY_S1_BALL_I_HIGH: 
+    case S2_EMPTY_E_EMPTY_S1_BALL_I_HIGH:
       break;
-    case S2_EMPTY_E_EMPTY_S1_BALL_I_LOW:  
+    case S2_EMPTY_E_EMPTY_S1_BALL_I_LOW:
       break;
-    case S2_BALL_SHOOTING:        
-      break;        
-    case S2_BALL_N_SHOOTING_I_HIGH:   
-      break;   
-    case S2_BALL_N_SHOOTING_I_LOW:   
+    case S2_BALL_SHOOTING:
+      break;
+    case S2_BALL_N_SHOOTING_I_HIGH:
+      break;
+    case S2_BALL_N_SHOOTING_I_LOW:
       break;
   }
 }
-
