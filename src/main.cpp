@@ -163,13 +163,14 @@ int main() {
     //turnToDegree(180);
     //driveStraightFeedforward(50);
     double time = Brain.Timer.time(timeUnits::sec);
+    driveArcSortaWorks(90,20);
     while(true) {
       /*
       Brain.Screen.setPenColor( vex::color(0xe0e0e0) );
       Brain.Screen.setFillColor ("black");
       Brain.Screen.printAt(50,50,"%d",inert.isCalibrating());*/
       //printPosition();
-      std::cout <<chassis.turnPID.KD <<std::endl;;
+      //std::cout <<chassis.turnPID.KD <<std::endl;;
       this_thread::sleep_for(10)  ;
        }
 }

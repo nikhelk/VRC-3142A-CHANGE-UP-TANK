@@ -251,6 +251,7 @@ void driveArcSortaWorks( const double angle,double radius) {
     else {
     currentRatio = (double)currentLeft/currentRight;
     }
+    std::cout << ratio << std::endl;
    // std::cout << targetDistance << " " << 1/curvature << " " <<angleChange << " " << angle*(720/102.0)<<std::endl;
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
@@ -261,7 +262,7 @@ void driveArcSortaWorks( const double angle,double radius) {
     //anglePower = 0;
     anglePower = pos_PID_CalculatePower(&anglePID,angle*(720/102.0),angleChange);
     std::cout << ratio << " " << currentRatio << std::endl;
-      setDrive(ratio*(distancePower)+ratioPower,distancePower-ratioPower);
+      setDrive(ratio*(distancePower)+0,distancePower-0);
 
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance)
       {
