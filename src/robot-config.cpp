@@ -17,6 +17,13 @@ inertial inert = inertial(PORT7);
 line Line1 = line(Brain.ThreeWirePort.A);
 line Line2 = line(Brain.ThreeWirePort.B);
 controller Controller1 = controller(primary);
+motor IntakeL = motor(PORT4, ratio6_1, false);
+motor IntakeR = motor(PORT3, ratio6_1, false);
+motor Flywheel = motor(PORT2, ratio6_1, false);
+motor Indexer = motor(PORT1, ratio6_1, false);
+/*vex-vision-config:begin*/
+vision Vision = vision (PORT15, 50);
+/*vex-vision-config:end*/
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

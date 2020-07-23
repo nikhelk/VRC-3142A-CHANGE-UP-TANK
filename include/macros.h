@@ -1,7 +1,7 @@
 #pragma once //DO NOT REMOVE
 #include "vex.h"
 
-void indexerUser();
+void macrosUser();
 void flywheelUser();
 void intakeUser();
 bool getS1 ();
