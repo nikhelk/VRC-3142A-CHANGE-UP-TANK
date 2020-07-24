@@ -54,13 +54,13 @@ void setMacroState()
     Vision.takeSnapshot(SIG_1);
     if (Vision.objects[0].exists)
     {
-      if (IntakeL.power() > 3)
+      if (IntakeL.power() > 8)
       {
-        
+        myBot = S2_EMPTY_E_SAME_I_HIGH;
       }
       else
       {
-
+        myBot = S2_EMPTY_E_SAME_I_LOW;
       }
     }
     else
@@ -68,11 +68,33 @@ void setMacroState()
       Vision.takeSnapshot(SIG_2);
       if (Vision.objects[0].exists)
       {
-
+        myBot = S2_EMPTY_E_OPP;
       }
       else
       {
+        if(getS1())
+        {
+          if(IntakeL.power()>8)
+          {
+            myBot = S2_EMPTY_E_EMPTY_S1_BALL_I_HIGH;
+          }
+          else
+          {
+            myBot = S2_EMPTY_E_EMPTY_S1_BALL_I_LOW;
+          }
+        }
 
+        else
+        {
+          if(IntakeL.power()>8)
+          {
+            myBot = S2_EMPTY_E_EMPTY_S1_EMPTY_I_HIGH;
+          }
+          else
+          {
+            myBot = S2_EMPTY_E_EMPTY_S1_EMPTY_I_LOW;
+          }
+        }
       }
 
     }
