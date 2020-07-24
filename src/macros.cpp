@@ -51,6 +51,31 @@ void setMacroState()
   }
   else
   {
+    Vision.takeSnapshot(SIG_1);
+    if (Vision.objects[0].exists)
+    {
+      if (IntakeL.power() > 3)
+      {
+        
+      }
+      else
+      {
+
+      }
+    }
+    else
+    {
+      Vision.takeSnapshot(SIG_2);
+      if (Vision.objects[0].exists)
+      {
+
+      }
+      else
+      {
+
+      }
+
+    }
 
   }
 }
