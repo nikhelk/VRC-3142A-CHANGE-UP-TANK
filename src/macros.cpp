@@ -96,9 +96,7 @@ void setMacroState()
           }
         }
       }
-
     }
-
   }
 }
 //bruhhhhh
