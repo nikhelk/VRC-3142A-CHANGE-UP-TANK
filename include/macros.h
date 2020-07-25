@@ -1,26 +1,38 @@
 #pragma once //DO NOT REMOVE
 #include "vex.h"
-
+    /**
+    * Handles all automation for driver control
+    */
 void macrosUser();
-void flywheelUser();
-void intakeUser();
+    /**
+    * Gets the state of line sensor 1
+    * @return state of line sensor 1
+    */
 bool getS1 ();
+    /**
+    * Gets the state of line sensor 2
+    * @return state of line sensor 2
+    */
 bool getS2 ();
+    /**
+    * Detects whether robot is in a shooting state
+    * @return state of controller button L1
+    */
 bool getIsShooting();
+    /**
+    * Updates the enum botStates
+    */
 void setMacroState();
-std::string getState ();
-enum visionSensor
+enum visionSensor /*!< Stores the state of the visionsensor for use with the sorter*/
 {
   RED,
   BLUE,
-  BLACK
+  BLACK //default; no ball
 };
-enum botStates
+enum botStates /*!< Stores every possibility of ball positions found from two line sensors, a vision sensor for ball ejection and the wattage of the intakes. */
 {
-  //Every possibility of ball positions found from two line sensors, a vision sensor for ball ejection and the wattage of the intakes.
-
-  S2_EMPTY_E_SAME_I_HIGH,           //SENSOR2 EMPTY, EJECTOR CORRECT COLOR, INTAKE BALL DETECTED
-  S2_EMPTY_E_SAME_I_LOW,            //SENSOR2 EMPTY, EJECTOR CORRECT COLOR, INTAKE EMPTY
+  S2_EMPTY_E_SAME_I_HIGH,           //SENSOR2 EMPTY, EJECTOR SAME COLOR, INTAKE BALL DETECTED
+  S2_EMPTY_E_SAME_I_LOW,            //SENSOR2 EMPTY, EJECTOR SAME COLOR, INTAKE EMPTY
   S2_EMPTY_E_OPP,                   //SENSOR2 EMPTY, EJECTOR OPPOSITE COLOR
   S2_EMPTY_E_EMPTY_S1_EMPTY_I_HIGH, //SENSOR2 EMPTY, SENSOR1 EMPTY, BALL DETECTED IN INTAKE
   S2_EMPTY_E_EMPTY_S1_EMPTY_I_LOW,  //SENSOR2 EMPTY, SENSOR1 EMPTY, EJECTOR EMPTY, INTAKE EMPTY
@@ -31,13 +43,4 @@ enum botStates
   S2_BALL_N_SHOOTING_I_LOW          //SENSOR2 BALL DETECTED, NOT SHOOTING, INTAKE EMPTY
 };
 
-//extern bool isShooting;
-//extern bool s1;
-//extern bool s2;
-//test2
-
-
-
-bool getS1Status ();
-bool getS2Status ();
 
