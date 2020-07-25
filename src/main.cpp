@@ -68,11 +68,11 @@
 
 using namespace vex;
 
-FourMotorDrive chassis( {PORT12,PORT13} , {PORT11,PORT16} , ratio18_1 , 1.66667, 
+FourMotorDrive chassis( {PORT11,PORT13} , {PORT11,PORT16} , ratio18_1 , 1.66667, 
 {
-  { 5 , 0 },     //Distance PD
+  { 0 , 0 },     //Distance PD
   { 0 , 0 },     //Angle PD
-  { 0 , 4.7},    //Turn PD
+  { 0 , 0},    //Turn PD
   }
 );    
 
@@ -163,7 +163,7 @@ int main() {
     //turnToDegree(180);
     //driveStraightFeedforward(50);
     double time = Brain.Timer.time(timeUnits::sec);
-    driveArcSortaWorks(90,20);
+    driveArcSortaWorks(20,20);
     while(true) {
       /*
       Brain.Screen.setPenColor( vex::color(0xe0e0e0) );
