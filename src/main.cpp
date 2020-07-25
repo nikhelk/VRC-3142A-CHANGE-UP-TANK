@@ -89,7 +89,7 @@ task autonSelect;
 // A global instance of vex::brain used for printing to the V5 brain screen
 // define your global instances of motors and other devices here
 void pre_auto(void) {
-  
+  chassis.leftBack.position(degrees);
   poseTracker.leftEncoder.position(degrees);
   // Initializing Robot Configuration. DO NOT REMOVE!
   delete chassisDimensions;

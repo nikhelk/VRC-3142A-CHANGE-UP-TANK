@@ -7,7 +7,7 @@ posPID::posPID(double kP, double kD) {
   m_kP = kP;
   m_kD = kD;
 }
-void posPID::calculatePower(posPID *pid,double targetPos, double currentPos) {
+double posPID::calculatePower(posPID *pid,double targetPos, double currentPos) {
   m_kP = pid->KP;
   m_kD = pid->KD;
 	m_error = targetPos - currentPos;
@@ -24,6 +24,7 @@ void posPID::calculatePower(posPID *pid,double targetPos, double currentPos) {
 		m_power = m_lowerBound;
   }
 m_prevError = m_error;
+  return(m_power);
 
 }
 

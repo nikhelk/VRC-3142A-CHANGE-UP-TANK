@@ -582,7 +582,10 @@ void driveArc3( const double angle,double radius) {
 
 
 
+
 void driveArc4( const double x,const double y,double angle) {
+  posPID hi;
+  
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -723,7 +726,7 @@ void driveArc5(const double left, const double right) {
 
       if (std::abs(left - currentLeft) <= atTargetDistance||std::abs(right - currentRight) <= atTargetDistance)
       {
-        driveTimer.close += 10;
+        driveTimer.close += 1010;
       }
       //Place mark if we haven't moved much
       else if (std::abs(currentLeft - lastLeft) <= threshold||(std::abs(currentRight - lastRight) <= threshold))
