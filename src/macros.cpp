@@ -41,6 +41,7 @@ void setMacroState()
       if(IntakeL.power()>8)
       {
         myBot = S2_BALL_N_SHOOTING_I_HIGH;
+        
       }
       else
       {

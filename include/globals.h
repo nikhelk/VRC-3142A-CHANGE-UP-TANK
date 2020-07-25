@@ -23,7 +23,7 @@ public:
     motor rightBack;
     
     /**
-    * Initilizes 4 motor drive
+    * Constructor for 4 motor drive
     * @param vector of left motor ports (front,back)
     * @param vector of right motor ports (front,back)
     * @param gear cartridge
