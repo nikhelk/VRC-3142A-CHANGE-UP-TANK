@@ -56,9 +56,9 @@ int trackPosition()
   position.y = positionArray[ODOM_Y];
   position.a = positionArray[ODOM_THETA]*(M_PI/180);
   while(true) {
-  int left = leftFront.position(degrees);
-  int right = rightFront.position(degrees);
-  int back = EncoderG.position(degrees);
+  int left = poseTracker.leftEncoder.position(degrees);
+  int right = poseTracker.rightEncoder.position(degrees);
+  int back = poseTracker.backEncoder.position(degrees);
 	double L = (left - position.leftLst) * SPIN_TO_IN_LR; // The amount the left side of the robot moved
 	double R = (right - position.rightLst) * SPIN_TO_IN_LR; // The amount the right side of the robot moved
 	double S = (back - position.backLst) * SPIN_TO_IN_S; // The amount the back side of the robot moved

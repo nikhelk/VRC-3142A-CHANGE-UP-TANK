@@ -101,7 +101,7 @@ int main() {
     }*/
     task::sleep(1000);
 
-    task trackPos(trackPositionGyro);
+    task trackPos(trackPosition);
     task::sleep(100);
     //turnToDegree(90);
     //turnToDegree(180);
