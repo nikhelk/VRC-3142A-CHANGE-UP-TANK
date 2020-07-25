@@ -1,17 +1,26 @@
 #pragma once 
 #include "vex.h"
+#include "pid.h"
+
+/* 
+* Header file with all the global classes (motors, sensors) and other applications such as PID and Motion Profiling
+*
+*@author Nikhel Krishna, 3142A
+
+*/
 
 class FourMotorDrive {
 private:
 
 vex::gearSetting setting;
-
 public:
   enum backOrFront {
     FRONT,
     BACK,
   };
-
+  posPID distancePID;
+  posPID anglePID;
+  posPID turnPID;
     double trackWidth;
     double wheelRadius;
     double gearRatio;
@@ -28,24 +37,12 @@ public:
     * @param vector of right motor ports (front,back)
     * @param gear cartridge
     * @param gear ratio
+    * @param PD Controller chassis parameters
     */
 
     FourMotorDrive( std::vector<int32_t> leftGroup, 
     std::vector<int32_t> rightGroup,
-    vex::gearSetting setting,double gearRatio) :
-
-    leftFront(leftGroup[FRONT],setting),
-
-    rightFront(rightGroup[FRONT],setting),
-
-    leftBack(leftGroup[BACK],setting),
-
-    rightBack(rightGroup[BACK],setting)
-
-    {
-      this->gearRatio = gearRatio;
-      this-> setting = setting;
-    } 
+    vex::gearSetting setting,double gearRatio, std::initializer_list<PDcontroller> PDGains);
 
 
 

@@ -1,5 +1,6 @@
 #include "vex.h"
 using namespace std;
+
 void driveStraight( const double distance) {
   bool atTarget = false; //are we at target no!
   double distanceElapsed =0, angleChange = 0;
@@ -8,11 +9,12 @@ void driveStraight( const double distance) {
   double unroundedTargetDistance = encoderToInch * distance;
   double targetDistance = truncf(unroundedTargetDistance * 10) / 10; //desired distance in encoder ticks rounded to tenths
 
-  pos_PID distancePID, anglePID;
-  pos_PID_InitController(&distancePID,.1 , 0 , .5); //inistiizng distance pid and values in orrder (kp,ki,kd)
+  //pos_PID distancePID, anglePID;
+  //pos_PID_InitController(&distancePID,.1 , 0 , .5); //inistiizng distance pid and values in orrder (kp,ki,kd)
   //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&anglePID,.2, 0.0,0.0); //inistiizng "dampner" pid and values in orrder (kp,ki,kd)
-
+  //pos_PID_InitController(&anglePID,.2, 0.0,0.0); //inistiizng "dampner" pid and values in orrder (kp,ki,kd)
+  posPID distancePID(5,.5);
+  posPID anglePID(.2,0);
 
 
 
@@ -26,11 +28,11 @@ void driveStraight( const double distance) {
   const double threshold = 2;//if we havent moved close then we exit (this is in encoder ticks)
 
 
-  const int timeoutPeriod = 250; //amount of time before exiting
+  const int timeoutPeriod = 7000; //amount of time before exiting
   long currentLeft, currentRight;
   driveTimer.notMoved =0; //setting timers to 0
   driveTimer.close = 0;
-  double distancePower, anglePower;
+  //double distancePower, anglePower;
   while(!atTarget) {
 
     currentLeft = leftFront.position(degrees) - initialEncoderLeft; //current left encoder
@@ -39,13 +41,15 @@ void driveStraight( const double distance) {
     distanceElapsed = (currentLeft + currentRight) / 2.0; //this is the amount we travelled (something the vex discord told me)
     angleChange = currentLeft-currentRight;
 
-    distancePower = pos_PID_CalculatePower(&distancePID,targetDistance,distanceElapsed); //function to calculate power where target is our target and distanceElapsed is current
+    //distancePower = pos_PID_CalculatePower(&distancePID,targetDistance,distanceElapsed); //function to calculate power where target is our target and distanceElapsed is current
     //anglePower = 0;
-    anglePower = pos_PID_CalculatePower(&anglePID,0,angleChange);//function to calculate angle change where target is our target and angleCange is current. in this case i have target set to 0 for straightdrive but it can be anything
+    //anglePower = pos_PID_CalculatePower(&anglePID,0,angleChange);//function to calculate angle change where target is our target and angleCange is current. in this case i have target set to 0 for straightdrive but it can be anything
+    distancePID.calculatePower(targetDistance, distanceElapsed);
+    anglePID.calculatePower(0, angleChange);
 
-
-      setDrive(distancePower+anglePower,distancePower-anglePower); // setting the drive and adding the correction pid
-
+      setDrive(distancePID.getPower()+anglePID.getPower()
+      ,distancePID.getPower()+anglePID.getPower()); // setting the drive and adding the correction pid
+      std::cout << distancePID.getPower() << " " << anglePID.getPower() << " " <<distancePID.getError() <<std::endl;
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance) //exit function
       {
         driveTimer.close += 10;
@@ -101,8 +105,7 @@ void turnToDegree(double angle)
 
 	double targetAngle = angle * conv;
 
-	pos_PID anglePID;
-	pos_PID_InitController(&anglePID,.07, 0, 0); //Ku = 1.4, Tu = 0.45
+
 
 	//If angle PID controller is at target
 	bool atTarget = false;
@@ -134,8 +137,6 @@ void turnToDegree(double angle)
 
 		angleChange = currentRight - currentLeft;
 
-		//Get output from PID
-		angleOutput = pos_PID_CalculatePower(&anglePID,targetAngle,angleChange);
 
 		//Set motors to angle PID output
 		setDrive(angleOutput*-1,angleOutput);
@@ -214,11 +215,6 @@ void driveArcSortaWorks( const double angle,double radius) {
   double unroundedTargetDistance = encoderToInch * distance;
   double targetDistance = truncf(unroundedTargetDistance * 10) / 10;
 
-  pos_PID distancePID, anglePID,ratioPID;
-  pos_PID_InitController(&distancePID,.10 , 0 ,.43);
-  //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&ratioPID,.2, 0.0,0.0);
-
 
 
 
@@ -251,13 +247,10 @@ void driveArcSortaWorks( const double angle,double radius) {
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
   //angleChange = positionArray[ODOM_THETA] - curAngle;
-    distancePower = pos_PID_CalculatePower(&distancePID,targetDistance,distanceElapsed);
-    ratioPower =  pos_PID_CalculatePower(&ratioPID,ratio,currentRatio);
-   // double realPower = distancePower/11;
-    //anglePower = 0;
-    anglePower = pos_PID_CalculatePower(&anglePID,angle*(720/102.0),angleChange);
+  distancePower = chassis.distancePID.calculatePower(targetDistance,distanceElapsed);
+
     std::cout << ratio << " " << currentRatio << std::endl;
-      setDrive(ratio*(distancePower)+ratioPower,distancePower-ratioPower);
+      setDrive(ratio*(distancePower)+0,distancePower-0);
 
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance)
       {
@@ -288,7 +281,7 @@ void driveArcSortaWorks( const double angle,double radius) {
       }
         Brain .Screen.printAt(100,150,"%f",leftFront.position(degrees));
         Brain .Screen.printAt(0,150,"timerClose: %.0f, timerNotMoved: %.0f",driveTimer.close,driveTimer.notMoved);
-        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
+        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,chassis.distancePID.KP);
         task::sleep(10);
       }
       Brain.Screen.clearScreen();
@@ -305,12 +298,6 @@ void driveArc( const double angle,double radius) {
   double distance = angle*(M_PI/180) * (radius);
   double unroundedTargetDistance = encoderToInch * distance;
   double targetDistance = truncf(unroundedTargetDistance * 10) / 10;
-
-  pos_PID distancePID, anglePID;
-  pos_PID_InitController(&distancePID,.1 , 0 , .5);
-  //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&anglePID,.2, 0.0,0.0);
-
 
 
 
@@ -338,9 +325,7 @@ void driveArc( const double angle,double radius) {
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
   //angleChange = positionArray[ODOM_THETA] - curAngle;
-    distancePower = pos_PID_CalculatePower(&distancePID,targetDistance,distanceElapsed);
-    //anglePower = 0;
-    anglePower = pos_PID_CalculatePower(&anglePID,angle*(720/102.0),angleChange);
+
     //std::cout << distancePower + anglePower << " " << distancePower - anglePower << std::endl;
       setDrive(distancePower-anglePower,distancePower+anglePower);
 
@@ -373,7 +358,7 @@ void driveArc( const double angle,double radius) {
       }
         Brain .Screen.printAt(100,150,"%f",leftFront.position(degrees));
         Brain .Screen.printAt(0,150,"timerClose: %.0f, timerNotMoved: %.0f",driveTimer.close,driveTimer.notMoved);
-        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
+        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed);
         task::sleep(10);
       }
       Brain.Screen.clearScreen();
@@ -396,10 +381,6 @@ void driveArc2( const double angle,double radius) {
   double unroundedTargetDistance = encoderToInch * distance;
   double targetDistance = truncf(unroundedTargetDistance * 10) / 10;
 
-  pos_PID distancePID, anglePID,ratioPID;
-  pos_PID_InitController(&distancePID,.7 , 0 ,.3);
-  //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&ratioPID,0, 0.0,0.0);
 
 
 
@@ -433,11 +414,10 @@ void driveArc2( const double angle,double radius) {
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
   //angleChange = positionArray[ODOM_THETA] - curAngle;
-    distancePower = pos_PID_CalculatePower(&distancePID,rDistance*encoderToInch,currentRight);
-    ratioPower =  pos_PID_CalculatePower(&ratioPID,ratio,currentRatio);
+
    // double realPower = distancePower/11;
     //anglePower = 0;
-    anglePower = pos_PID_CalculatePower(&anglePID,angle*(720/102.0),angleChange);
+
    // std::cout << distancePower << " " << currentRatio << std::endl;
     double realPower = distancePower*2;
       setVelDrive(ratio*(distancePower/3)+ratioPower,distancePower/3-ratioPower);
@@ -471,12 +451,13 @@ void driveArc2( const double angle,double radius) {
       }
         Brain .Screen.printAt(100,150,"%f",leftFront.position(degrees));
         Brain .Screen.printAt(0,150,"timerClose: %.0f, timerNotMoved: %.0f",driveTimer.close,driveTimer.notMoved);
-        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
+        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,targetDistance);
         task::sleep(10);
       }
       Brain.Screen.clearScreen();
     setDrive(0,0);
 }
+
 void driveArc3( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
@@ -493,11 +474,6 @@ void driveArc3( const double angle,double radius) {
 
   double unroundedTargetDistance = encoderToInch * distance;
   double targetDistance = truncf(unroundedTargetDistance * 10) / 10;
-
-  pos_PID distancePID, anglePID,ratioPID;
-  pos_PID_InitController(&distancePID,.10 , 0 ,.43);
-  //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&ratioPID,0, 0.0,0.0);
 
 
 
@@ -531,13 +507,13 @@ void driveArc3( const double angle,double radius) {
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
   //angleChange = positionArray[ODOM_THETA] - curAngle;
-    distancePower = pos_PID_CalculatePower(&distancePID,targetDistance,distanceElapsed);
+    /*distancePower = pos_PID_CalculatePower(&distancePID,targetDistance,distanceElapsed);
     ratioPower =  pos_PID_CalculatePower(&ratioPID,ratio,currentRatio);
     double realPower = distancePower*2;
     //anglePower = 0;
-    anglePower = pos_PID_CalculatePower(&anglePID,angle*(720/102.0),angleChange);
+    anglePower = pos_PID_CalculatePower(&anglePID,angle*(720/102.0),angleChange);*/
     //std::cout << ratio << " " << currentRatio << std::endl;
-      setDrive(ratio*(realPower)-ratioPower,realPower+ratioPower);
+      //setDrive(ratio*(realPower)-ratioPower,realPower+ratioPower);
 
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance)
       {
@@ -568,7 +544,7 @@ void driveArc3( const double angle,double radius) {
       }
         Brain .Screen.printAt(100,150,"%f",leftFront.position(degrees));
         Brain .Screen.printAt(0,150,"timerClose: %.0f, timerNotMoved: %.0f",driveTimer.close,driveTimer.notMoved);
-        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
+       // Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
         task::sleep(10);
       }
       Brain.Screen.clearScreen();
@@ -577,7 +553,10 @@ void driveArc3( const double angle,double radius) {
 
 
 
+
 void driveArc4( const double x,const double y,double angle) {
+  posPID hi;
+  
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -586,11 +565,6 @@ void driveArc4( const double x,const double y,double angle) {
   double distanceLeft = start.length;
   double unroundedTargetDistance = encoderToInch * distanceLeft;
   double targetDistance = truncf(unroundedTargetDistance * 10) / 10;
-
-  pos_PID distancePID, anglePID;
-  pos_PID_InitController(&distancePID,.5 , 0 , 0);
-  //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&anglePID,0, 0.0,0.0);
 
 
 
@@ -622,10 +596,7 @@ void driveArc4( const double x,const double y,double angle) {
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
     curAngle = positionArray[ODOM_THETA];
-  //angleChange = positionArray[ODOM_THETA] - curAngle;
-    distancePower = pos_PID_CalculatePower(&distancePID,targetMinimize,distanceLeft);
-    //anglePower = 0;
-    anglePower = pos_PID_CalculatePower(&anglePID,angle,curAngle);
+
     //std::cout << distancePower + anglePower << " " << distancePower - anglePower << std::endl;
       setDrive(-distancePower-anglePower,-distancePower+anglePower);
 
@@ -658,7 +629,7 @@ void driveArc4( const double x,const double y,double angle) {
       }
         Brain .Screen.printAt(100,150,"%f",leftFront.position(degrees));
         Brain .Screen.printAt(0,150,"timerClose: %.0f, timerNotMoved: %.0f",driveTimer.close,driveTimer.notMoved);
-        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
+        //Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
         task::sleep(10);
       }
       Brain.Screen.clearScreen();
@@ -670,12 +641,7 @@ void driveArc5(const double left, const double right) {
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
 
-  pos_PID distancePID, leftPID,rightPID,ratioPID;
-  pos_PID_InitController(&leftPID,.04 , 0 ,0);
-  //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&rightPID,.04,0,0);
-  pos_PID_InitController(&ratioPID,.4,0,0);
-
+  
   const long desiredRatio = left/right;
 
 
@@ -709,16 +675,14 @@ void driveArc5(const double left, const double right) {
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
   //angleChange = positionArray[ODOM_THETA] - curAngle;
-    leftPower = pos_PID_CalculatePower(&leftPID,left,currentLeft);
-    rightPower =  pos_PID_CalculatePower(&rightPID,right,currentRight);
-    ratioPower = pos_PID_CalculatePower(&rightPID,desiredRatio,currentLeft/currentRight);
+    
     //anglePower = 0;
     //std::cout << ratio << " " << currentRatio << std::endl;
       setDrive(leftPower+ratioPower,rightPower-ratioPower);
 
       if (std::abs(left - currentLeft) <= atTargetDistance||std::abs(right - currentRight) <= atTargetDistance)
       {
-        driveTimer.close += 10;
+        driveTimer.close += 1010;
       }
       //Place mark if we haven't moved much
       else if (std::abs(currentLeft - lastLeft) <= threshold||(std::abs(currentRight - lastRight) <= threshold))
@@ -746,7 +710,7 @@ void driveArc5(const double left, const double right) {
       }
         Brain .Screen.printAt(100,150,"%f",leftFront.position(degrees));
         Brain .Screen.printAt(0,150,"timerClose: %.0f, timerNotMoved: %.0f",driveTimer.close,driveTimer.notMoved);
-        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
+        //Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
         task::sleep(10);
       }
       Brain.Screen.clearScreen();
@@ -774,10 +738,6 @@ void driveStraightFeedforward(const double distance) {
   double unroundedTargetDistance = encoderToInch * distance;
   double targetDistance = truncf(unroundedTargetDistance * 10) / 10; //desired distance in encoder ticks rounded to tenths
 
-  pos_PID distancePID, anglePID;
-  pos_PID_InitController(&distancePID,.1 , 0 , 0); //inistiizng distance pid and values in orrder (kp,ki,kd)
-  //pos_PID_SetTargetPosition(&distancePID, targetDistance);
-  pos_PID_InitController(&anglePID,.2, 0.0,0.0); //inistiizng "dampner" pid and values in orrder (kp,ki,kd)
   double currentTime;
 
 
@@ -807,9 +767,7 @@ void driveStraightFeedforward(const double distance) {
     currentTime = Brain.timer(vex::timeUnits::sec) - startTimeA;
     mpVel = calculateMpVelocity(currentTime)*60*(1/(4*M_PI));
     double ogVel = calculateMpVelocity(currentTime);
-    distancePower = pos_PID_CalculatePower(&distancePID,mpVel,(leftFront.velocity(velocityUnits::rpm)/60)*4*M_PI); //function to calculate power where target is our target and distanceElapsed is current
-    //anglePower = 0;
-    anglePower = pos_PID_CalculatePower(&anglePID,0,angleChange);//function to calculate angle change where target is our target and angleCange is current. in this case i have target set to 0 for straightdrive but it can be anything
+ 
 
     std::string currentStatus = getMpStatus(currentTime);
     cout << mpVel << " " << distanceElapsed/26.3 << " " << currentStatus<<endl;
@@ -838,13 +796,13 @@ void driveStraightFeedforward(const double distance) {
       lastDistance = distanceElapsed; //remember to store lastDistance for Kd calculation
 
       //If we've been close enough for long enough, we're there
-      /*if (driveTimer.close >= timeoutPeriod||driveTimer.notMoved >=timeoutPeriod) // seeing if it exits
+      if (driveTimer.close >= timeoutPeriod||driveTimer.notMoved >=timeoutPeriod) // seeing if it exits
       {
         atTarget = true;
-      } // debugging stuff*/
+      } // debugging stuff
         Brain .Screen.printAt(100,150,"%f",leftFront.position(degrees));
         Brain .Screen.printAt(0,150,"timerClose: %.0f, timerNotMoved: %.0f",driveTimer.close,driveTimer.notMoved);
-        Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
+        //Brain .Screen.printAt(0,200,"distanceElapsed: %.2f,Error %.2f  ",distanceElapsed,distancePID.currentPos);
         task::sleep(10);
       }
       Brain.Screen.clearScreen();
