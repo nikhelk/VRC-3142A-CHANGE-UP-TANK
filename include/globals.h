@@ -1,22 +1,59 @@
 #pragma once 
 #include "vex.h"
 
+
+
+class Dimensions {
+private:
+
+public:
+long double m_trackWidth ;
+long double m_wheelRadius;
+
+    /**
+    * Initilizes dimensions for 4 motor drive
+    * @param four motor drive to add dimensions to
+    * @param track width of drive
+    * @param wheel radius of drive
+    */
+    Dimensions( long double trackWidth, long double wheelRadius);
+};
+
+class Limits {
+private:
+
+public:
+long double m_maxVelocity;
+    long double m_maxAcceleration;
+    /**
+    * Initilizes kinematic limits for 4 motor drive
+    * @param four motor drive to add limits to
+    * @param max Velocity of drive (inches/sec)
+    * @param max Acceleration of drive (inches/sec^2)
+    */
+    Limits(long double maxVelocity, long double maxAcceleration);
+    
+  //void setGearRatio(double ratio);
+  //double getGearRatio() {return(gearRatio);}
+  //void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
+};
+
 class FourMotorDrive {
 private:
 
 vex::gearSetting setting;
 
 public:
+Dimensions m_chassisDimensions;
+Limits m_chassisLimits;
   enum backOrFront {
     FRONT,
     BACK,
   };
 
-    double trackWidth;
-    double wheelRadius;
-    double gearRatio;
-    double maxVelocity;
-    double maxAcceleration;
+
+    long double gearRatio;
+    
     motor leftFront;
     motor rightFront;
     motor leftBack;
@@ -32,21 +69,7 @@ public:
 
     FourMotorDrive( std::vector<int32_t> leftGroup, 
     std::vector<int32_t> rightGroup,
-    vex::gearSetting setting,double gearRatio) :
-
-    leftFront(leftGroup[FRONT],setting),
-
-    rightFront(rightGroup[FRONT],setting),
-
-    leftBack(leftGroup[BACK],setting),
-
-    rightBack(rightGroup[BACK],setting)
-
-    {
-      this->gearRatio = gearRatio;
-      this-> setting = setting;
-    } 
-
+    vex::gearSetting setting,long double gearRatio, Dimensions chassisDimensions,Limits chassisLimits);
 
 
     /**
@@ -55,38 +78,17 @@ public:
     * @param RightReverseVals boolean array of rightFront and rightBack desired reversal states
     */
   void setReverseSettings(std::vector<bool> LeftReverseVals,std::vector<bool> RightReverseVals);
+
+  long double getTrackWidth() {
+    return(m_chassisDimensions.m_trackWidth);
+  }
+  long double getWheelRadius() {
+    return(m_chassisDimensions.m_wheelRadius);
+  }
+  long double getMaxVelocity() {
+    return(m_chassisLimits.m_maxVelocity);
+  }
 }; 
-
-class Dimensions {
-private:
-public:
-
-    /**
-    * Initilizes dimensions for 4 motor drive
-    * @param four motor drive to add dimensions to
-    * @param track width of drive
-    * @param wheel radius of drive
-    */
-    Dimensions( FourMotorDrive *drive,double trackWidth, double wheelRadius);
-};
-
-class Limits {
-private:
-public:
-    /**
-    * Initilizes kinematic limits for 4 motor drive
-    * @param four motor drive to add limits to
-    * @param max Velocity of drive (inches/sec)
-    * @param max Acceleration of drive (inches/sec^2)
-    */
-    Limits( FourMotorDrive *drive,double maxVelocity, double maxAcceleration);
-    
-  //void setGearRatio(double ratio);
-  //double getGearRatio() {return(gearRatio);}
-  //void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
-};
-
-
 
 
 class Tracking {

@@ -11,6 +11,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory>
 #include <string.h>
 #include <cmath>
 #include "v5.h"

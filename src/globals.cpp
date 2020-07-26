@@ -1,4 +1,27 @@
 #include "vex.h"
+FourMotorDrive::FourMotorDrive( std::vector<int32_t> leftGroup, 
+    std::vector<int32_t> rightGroup,
+    vex::gearSetting setting,long double gearRatio,Dimensions chassisDimensions,Limits chassisLimits) :
+
+    m_chassisDimensions(chassisDimensions),
+
+    m_chassisLimits(chassisLimits),
+
+    leftFront(leftGroup[FRONT],setting),
+
+    rightFront(rightGroup[FRONT],setting),
+
+    leftBack(leftGroup[BACK],setting),
+
+    rightBack(rightGroup[BACK],setting)
+
+
+    {
+      this->gearRatio = gearRatio;
+      this-> setting = setting;
+    }
+
+
 
  void FourMotorDrive::setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals) {
     leftFront.setReversed(LeftReverseVals[0]);
@@ -8,15 +31,17 @@
 
   }
 
-Dimensions::Dimensions( FourMotorDrive *drive,double trackWidth, double wheelRadius)
+Dimensions::Dimensions(long  double trackWidth, long  double wheelRadius) :
+
+    m_trackWidth(trackWidth),
+    m_wheelRadius(wheelRadius)
 {
-      drive->trackWidth = trackWidth;
-      drive->wheelRadius = wheelRadius;
+
 } 
 
 
-Limits::Limits( FourMotorDrive *drive,double maxVelocity, double maxAcceleration)
+Limits::Limits( long double maxVelocity, long double maxAcceleration) :
+    m_maxVelocity(maxVelocity),
+    m_maxAcceleration(maxAcceleration)
 {
-      drive->maxVelocity  = maxVelocity;
-      drive->maxAcceleration = maxAcceleration;
 } 

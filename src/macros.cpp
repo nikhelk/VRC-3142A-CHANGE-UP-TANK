@@ -52,7 +52,7 @@ void setMacroState()
   }
   else
   {
-    Vision.takeSnapshot(SIG_1);
+    //Vision.takeSnapshot(SIG_1);
     if (Vision.objects[0].exists)
     {
       if (IntakeL.power() > 8)
@@ -66,7 +66,7 @@ void setMacroState()
     }
     else
     {
-      Vision.takeSnapshot(SIG_2);
+     // Vision.takeSnapshot(SIG_2);
       if (Vision.objects[0].exists)
       {
         myBot = S2_EMPTY_E_OPP;

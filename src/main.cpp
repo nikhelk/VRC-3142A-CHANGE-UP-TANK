@@ -22,22 +22,30 @@
 
 using namespace vex;
 
-FourMotorDrive chassis( {PORT12,PORT13} , {PORT11,PORT16} , ratio18_1 , 1.66667);
+FourMotorDrive chassis{ {PORT12,PORT13} , {PORT11,PORT16} , ratio18_1 , 
+
+1.66667,
+
+{15.0_in , 4.0_in}, 
+
+{42.0_inps,3} };
 
 
-Dimensions *chassisDimensions = new Dimensions(&chassis,15.0_in,3.25_in);Limits *chassisLimits = new Limits(&chassis, 42.0_inps,12.0_inps2);
 
 
-Tracking poseTracker(4.0,2.75,360.0,{Tracking::A,Tracking::C,Tracking::G},PORT18);
+Tracking poseTracker(4.0_in,2.75,360.0,{Tracking::A,Tracking::C,Tracking::G},PORT18);
 
 competition Competition;
 task autonSelect;
 // A global instance of vex::brain used for printing to the V5 brain screen
 // define your global instances of motors and other devices here
 void pre_auto(void) {
+
+
+
+
   // Initializing Robot Configuration. DO NOT REMOVE!
-  delete chassisDimensions;
-  delete chassisLimits;
+
   vexcodeInit();
   Brain.Screen.pressed( userTouchCallbackPressed );
   Brain.Screen.released( userTouchCallbackReleased );
@@ -101,7 +109,7 @@ int main() {
     }*/
     task::sleep(1000);
 
-    task trackPos(trackPosition);
+   // task trackPos(trackPosition);
     task::sleep(100);
     //turnToDegree(90);
     //turnToDegree(180);
@@ -113,7 +121,7 @@ int main() {
       Brain.Screen.setFillColor ("black");
       Brain.Screen.printAt(50,50,"%d",inert.isCalibrating());*/
       //printPosition();
-      
+      std::cout << chassis.getMaxVelocity();
       this_thread::sleep_for(10)  ;
        }
 }
