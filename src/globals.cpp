@@ -3,7 +3,11 @@
 
 FourMotorDrive::FourMotorDrive( std::vector<int32_t> leftGroup, 
     std::vector<int32_t> rightGroup,
-    vex::gearSetting setting,double gearRatio, std::initializer_list<PDcontroller> PDGains) :
+    vex::gearSetting setting,double gearRatio, Dimensions chassisDimensions,Limits chassisLimits,std::initializer_list<PDcontroller> PDGains) :
+    
+    m_chassisDimensions(chassisDimensions),
+
+    m_chassisLimits(chassisLimits),
 
     leftFront(leftGroup[FRONT],setting),
 
@@ -49,15 +53,17 @@ FourMotorDrive::FourMotorDrive( std::vector<int32_t> leftGroup,
 
   }
 
-Dimensions::Dimensions( FourMotorDrive *drive,double trackWidth, double wheelRadius)
+Dimensions::Dimensions(long  double trackWidth, long  double wheelRadius) :
+
+    m_trackWidth(trackWidth),
+    m_wheelRadius(wheelRadius)
 {
-      drive->trackWidth = trackWidth;
-      drive->wheelRadius = wheelRadius;
+
 } 
 
 
-Limits::Limits( FourMotorDrive *drive,double maxVelocity, double maxAcceleration)
+Limits::Limits( long double maxVelocity, long double maxAcceleration) :
+    m_maxVelocity(maxVelocity),
+    m_maxAcceleration(maxAcceleration)
 {
-      drive->maxVelocity  = maxVelocity;
-      drive->maxAcceleration = maxAcceleration;
 } 

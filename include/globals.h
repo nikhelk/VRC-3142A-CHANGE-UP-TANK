@@ -2,6 +2,8 @@
 #include "vex.h"
 #include "pid.h"
 
+
+
 /* 
 * Header file with all the global classes (motors, sensors) and other applications such as PID and Motion Profiling
 *
@@ -9,6 +11,41 @@
 
 */
 
+
+class Dimensions {
+private:
+
+public:
+long double m_trackWidth ;
+long double m_wheelRadius;
+
+    /**
+    * Initilizes dimensions for 4 motor drive
+    * @param four motor drive to add dimensions to
+    * @param track width of drive
+    * @param wheel radius of drive
+    */
+    Dimensions( long double trackWidth, long double wheelRadius);
+};
+
+class Limits {
+private:
+
+public:
+long double m_maxVelocity;
+    long double m_maxAcceleration;
+    /**
+    * Initilizes kinematic limits for 4 motor drive
+    * @param four motor drive to add limits to
+    * @param max Velocity of drive (inches/sec)
+    * @param max Acceleration of drive (inches/sec^2)
+    */
+    Limits(long double maxVelocity, long double maxAcceleration);
+    
+  //void setGearRatio(double ratio);
+  //double getGearRatio() {return(gearRatio);}
+  //void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
+};
 class FourMotorDrive {
 private:
 
@@ -42,7 +79,7 @@ public:
 
     FourMotorDrive( std::vector<int32_t> leftGroup, 
     std::vector<int32_t> rightGroup,
-    vex::gearSetting setting,double gearRatio, std::initializer_list<PDcontroller> PDGains);
+    vex::gearSetting setting,double gearRatio, Dimensions chassisDimensions,Limits chassisLimits,std::initializer_list<PDcontroller> PDGains);
 
 
 
@@ -54,34 +91,7 @@ public:
   void setReverseSettings(std::vector<bool> LeftReverseVals,std::vector<bool> RightReverseVals);
 }; 
 
-class Dimensions {
-private:
-public:
 
-    /**
-    * Initilizes dimensions for 4 motor drive
-    * @param four motor drive to add dimensions to
-    * @param track width of drive
-    * @param wheel radius of drive
-    */
-    Dimensions( FourMotorDrive *drive,double trackWidth, double wheelRadius);
-};
-
-class Limits {
-private:
-public:
-    /**
-    * Initilizes kinematic limits for 4 motor drive
-    * @param four motor drive to add limits to
-    * @param max Velocity of drive (inches/sec)
-    * @param max Acceleration of drive (inches/sec^2)
-    */
-    Limits( FourMotorDrive *drive,double maxVelocity, double maxAcceleration);
-    
-  //void setGearRatio(double ratio);
-  //double getGearRatio() {return(gearRatio);}
-  //void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
-};
 
 
 
