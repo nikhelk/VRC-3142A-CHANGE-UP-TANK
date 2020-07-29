@@ -7,7 +7,7 @@
 /* 
 * Header file with all the global classes (motors, sensors) and other applications such as PID and Motion Profiling
 *
-*@author Nikhel Krishna, 3142A
+* @author Nikhel Krishna, 3142A
 
 */
 
@@ -51,6 +51,8 @@ private:
 
 vex::gearSetting setting;
 public:
+Dimensions m_chassisDimensions;
+Limits m_chassisLimits;
   enum backOrFront {
     FRONT,
     BACK,
@@ -74,6 +76,8 @@ public:
     * @param vector of right motor ports (front,back)
     * @param gear cartridge
     * @param gear ratio
+    * @param chassis dimensions (trackWidth and wheel size)
+    * @param chassis limits (max velocity and acceleration)
     * @param PD Controller chassis parameters
     */
 
@@ -88,7 +92,40 @@ public:
     * @param LeftReverseVals boolean array of leftFront and leftBack desired reversal states
     * @param RightReverseVals boolean array of rightFront and rightBack desired reversal states
     */
+
   void setReverseSettings(std::vector<bool> LeftReverseVals,std::vector<bool> RightReverseVals);
+
+  long double getTrackWidth() {
+    return(m_chassisDimensions.m_trackWidth);
+  }
+  long double getWheelRadius() {
+    return(m_chassisDimensions.m_wheelRadius);
+  }
+  long double getMaxVelocity() {
+    return(m_chassisLimits.m_maxVelocity);
+  }
+  long double getMaxAcceleration() {
+    return(m_chassisLimits.m_maxAcceleration);
+  }
+
+  /**
+  * sets the chassis to drive at a voltage
+  * @param the desired left side voltage of chassis
+  * @param the desired right side voltage of chassis
+  */
+
+  void setVoltDrive(double leftVoltage,double rightVoltage);
+
+  /**
+  * sets the chassis to drive at a velocity 
+  * @param the desired left side velocity
+  * @param the desired right side velocity
+  * @param the desired units of velocity (dps, rpm)
+  */
+
+  void setVelocityDrive(double leftVelocity, double rightVelocity, velocityUnits vel);
+
+  void turnToDegreeGyro(double degree);
 }; 
 
 
@@ -141,7 +178,8 @@ public:
       this-> ticksPerRev = ticksPerRev;
       this-> trackWidth = trackWidth;
       this-> wheelRadius = wheelRadius;
-    } 
+    }
+    double getInertialHeading();
 };
 extern Tracking poseTracker;
 extern FourMotorDrive chassis;

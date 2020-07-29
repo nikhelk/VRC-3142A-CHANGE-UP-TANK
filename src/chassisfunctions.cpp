@@ -126,7 +126,7 @@ void turnToDegree(double angle)
 	long currentLeft, currentRight;
 
 	//Distance and angle PID output
-	int angleOutput;
+	double angleOutput;
   turnTimer.notMoved =0;
   turnTimer.close = 0;
 	while (!atTarget)
@@ -136,7 +136,7 @@ void turnToDegree(double angle)
 		currentRight = rightFront.position(degrees) - encoderRight;
 
 		angleChange = currentRight - currentLeft;
-
+    angleOutput = chassis.turnPID.calculatePower(targetAngle, angleChange);
 
 		//Set motors to angle PID output
 		setDrive(angleOutput*-1,angleOutput);
@@ -249,9 +249,10 @@ void driveArcSortaWorks( const double angle,double radius) {
   //angleChange = positionArray[ODOM_THETA] - curAngle;
   distancePower = chassis.distancePID.calculatePower(targetDistance,distanceElapsed);
 
-    std::cout << ratio << " " << currentRatio << std::endl;
+    std::cout << ratio << " " << currentRatio << " " <<360-poseTracker.inert.heading(degrees) <<std::endl;
       setDrive(ratio*(distancePower)+0,distancePower-0);
-
+      if((360-poseTracker.inert.heading(degrees))-angle<2 &&(360-poseTracker.inert.heading(degrees))-angle>-2)
+        atTarget = true;
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance)
       {
         driveTimer.close += 10;
@@ -400,10 +401,11 @@ void driveArc2( const double angle,double radius) {
   driveTimer.notMoved =0;
   driveTimer.close = 0;
   double distancePower, anglePower,ratioPower;
+  posPID arcPID(9,.3);
   double curAngle = positionArray[ODOM_THETA];
   while(!atTarget) {
-    currentLeft = leftFront.position(degrees) - encoderLeft;
-    currentRight = rightFront.position(degrees) - encoderRight;
+    currentLeft = chassis.leftFront.position(degrees) - encoderLeft;
+    currentRight = chassis.rightFront.position(degrees) - encoderRight;
     if(currentRight ==0 || currentLeft ==0) {
       currentRatio =0;
     }
@@ -414,13 +416,12 @@ void driveArc2( const double angle,double radius) {
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
   //angleChange = positionArray[ODOM_THETA] - curAngle;
-
+  distancePower =  chassis.distancePID.calculatePower(targetDistance, distanceElapsed);
    // double realPower = distancePower/11;
     //anglePower = 0;
 
-   // std::cout << distancePower << " " << currentRatio << std::endl;
-    double realPower = distancePower*2;
-      setVelDrive(ratio*(distancePower/3)+ratioPower,distancePower/3-ratioPower);
+    std::cout << distancePower << " " << currentRatio << " " << ratio <<std::endl;
+      setDrive(ratio*(distancePower)+ratioPower,distancePower-ratioPower);
 
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance)
       {

@@ -1,4 +1,5 @@
 #include "vex.h"
+
 double positionArray[3];
 int sgn(double num) {
   if(num > 0 )
@@ -108,7 +109,7 @@ int trackPosition()
   positionArray[ODOM_X] = position.x;
   positionArray[ODOM_Y] = position.y;
   positionArray[ODOM_THETA] = position.a*(180/M_PI);
-  std::cout << positionArray[ODOM_X] << "," << positionArray[ODOM_Y] << " " <<positionArray[ODOM_THETA] <<" " << a<<std::endl;
+ // std::cout << positionArray[ODOM_X] << "," << positionArray[ODOM_Y] << " " <<positionArray[ODOM_THETA] <<" " << a<<std::endl;
   //cout << positionArray[ODOM_X] << "," << positionArray[ODOM_Y] << " " <<positionArray[ODOM_THETA] <<" " << left<< " " <<right<<endl;
   //cout << positionArray[ODOM_X] << "," << positionArray[ODOM_Y] <<endl;;
   //cout << positionArray[ODOM_X] << "," << positionArray[ODOM_Y] << " " << positionArray[ODOM_THETA] << " " << leftFront.position(degrees)<< " " << rightFront.position(degrees)<< " "<<
