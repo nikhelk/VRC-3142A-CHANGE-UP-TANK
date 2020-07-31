@@ -233,7 +233,7 @@ int main() {
     task::sleep(100);
     //chassis.turnToDegreeGyro(-90);
   //  task::sleep(3000);
-    driveArc2(90, 20);
+    chassis.driveArc2(90, 20);
     //turnToDegree(180);
     //driveStraightFeedforward(50);
     double time = Brain.Timer.time(timeUnits::sec);

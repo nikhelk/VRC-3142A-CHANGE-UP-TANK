@@ -1,7 +1,8 @@
 #include "vex.h"
+#include "globals.h"
 using namespace std;
 
-void driveStraight( const double distance) {
+void FourMotorDrive::driveStraight( const double distance) {
   bool atTarget = false; //are we at target no!
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -84,7 +85,7 @@ void driveStraight( const double distance) {
 }
 
 
-void turnToDegree(double angle)
+void FourMotorDrive::turnToDegree(double angle)
 {
 	//Save left and right quad values instead of setting them to zero
 	const long encoderLeft = leftFront.position(degrees);
@@ -169,7 +170,7 @@ void turnToDegree(double angle)
 	setDrive(0,0);
 }
 double test2;
-void moveToPoint(const double x, const double y, bool backwards, long offset)
+void FourMotorDrive::moveToPoint(const double x, const double y, bool backwards, long offset)
 {
 	distanceAndAngle temp;
 	computeDistanceAndAngleToPoint(x, y, &temp);
@@ -188,7 +189,7 @@ void moveToPoint(const double x, const double y, bool backwards, long offset)
 
 
 
-void turnToAbsAngle(const double deg)
+void FourMotorDrive::turnToAbsAngle(const double deg)
 {
 	long theta = 0;
 	theta = positionArray[ODOM_THETA];
@@ -199,7 +200,7 @@ void turnToAbsAngle(const double deg)
 
 
 
-void driveArcSortaWorks( const double angle,double radius) {
+void FourMotorDrive::driveArcSortaWorks( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -292,7 +293,7 @@ void driveArcSortaWorks( const double angle,double radius) {
 
 
 
-void driveArc( const double angle,double radius) {
+void FourMotorDrive::driveArc( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -366,7 +367,7 @@ void driveArc( const double angle,double radius) {
     setDrive(0,0);
 }
 
-void driveArc2( const double angle,double radius) {
+void FourMotorDrive::driveArc2( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -459,7 +460,7 @@ void driveArc2( const double angle,double radius) {
     setDrive(0,0);
 }
 
-void driveArc3( const double angle,double radius) {
+void FourMotorDrive::driveArc3( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -555,7 +556,7 @@ void driveArc3( const double angle,double radius) {
 
 
 
-void driveArc4( const double x,const double y,double angle) {
+void FourMotorDrive::driveArc4( const double x,const double y,double angle) {
   posPID hi;
   
   bool atTarget = false;
@@ -637,7 +638,7 @@ void driveArc4( const double x,const double y,double angle) {
     setDrive(0,0);
 }
 
-void driveArc5(const double left, const double right) {
+void FourMotorDrive::driveArc5(const double left, const double right) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -719,7 +720,7 @@ void driveArc5(const double left, const double right) {
 }
 
 
-void moveToPointArc(const double x, const double y, const double theta) {
+void FourMotorDrive::moveToPointArc(const double x, const double y, const double theta) {
   distanceAndAngle temp2;
 	computeDistanceAndAngleToPoint(x, y, &temp2);
   double radius = temp2.length/(2*sin(toRadians(theta/2)));
@@ -728,7 +729,7 @@ void moveToPointArc(const double x, const double y, const double theta) {
 
 }
 
-void driveStraightFeedforward(const double distance) {
+void FourMotorDrive::driveStraightFeedforward(const double distance) {
   bool atTarget = false;
   double startTimeA = Brain.timer(vex::timeUnits::sec);
   double mpVel;
@@ -813,14 +814,14 @@ void driveStraightFeedforward(const double distance) {
   
 }
 
-void setVelDrive(double leftVelocity, double rightVelocity) {
+void FourMotorDrive::setVelDrive(double leftVelocity, double rightVelocity) {
   leftFront.spin (fwd,leftVelocity, velocityUnits::rpm);
   leftBack.spin (fwd,leftVelocity, velocityUnits::rpm);
   rightFront.spin (fwd,rightVelocity, velocityUnits::rpm);
   rightBack.spin (fwd,rightVelocity, velocityUnits::rpm);
 }
 
-void setDrive(double leftVoltage,double rightVoltage) {
+void FourMotorDrive::setDrive(double leftVoltage,double rightVoltage) {
   leftFront.spin (fwd,leftVoltage, volt);
   leftBack.spin(fwd,leftVoltage,volt);
   rightFront.spin(fwd,rightVoltage,volt);
@@ -828,3 +829,12 @@ void setDrive(double leftVoltage,double rightVoltage) {
 }
 
 
+double FourMotorDrive::getAverageEncoderValueMotors() {
+  return((leftFront.position(degrees)+rightFront.position(degrees)
+  +leftBack.position(degrees)+rightBack.position(degrees))/4);
+}
+
+double FourMotorDrive::getAverageEncoderValueEncoders() {
+  return((poseTracker.leftEncoder.position(degrees)+
+  poseTracker.rightEncoder.position(degrees))/2);
+}

@@ -1,6 +1,9 @@
 #include "vex.h"
 
 double positionArray[3];
+
+
+
 int sgn(double num) {
   if(num > 0 )
     return 1;
@@ -8,17 +11,26 @@ int sgn(double num) {
     return -1;
   return 0;
 }
+
+
+
 double cosDegrees(double value) {
   return(cos(value*(M_PI/180)));
 }
+
+
+
 double sinDegrees(double value) {
   return(sin(value*(M_PI/180)));
 }
 
 
+
 double toDegrees(double angle) {
   return angle*(180/M_PI);
 }
+
+
 
 double toRadians(double angle) {
   return angle*(M_PI/180);
@@ -46,6 +58,29 @@ void setOdomOrigin(double x, double y, double a) {
   positionArray[ODOM_THETA] = a;
 
 }
+
+
+
+
+/*
+Copyright (c) 2018 5225A E-bot PiLons
+Modifications nikhelkrishna
+2020-31-7: Modify constants for bit use
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 
 int trackPosition()
 {
