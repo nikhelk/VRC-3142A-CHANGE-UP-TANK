@@ -65,7 +65,7 @@ void setOdomOrigin(double x, double y, double a) {
 /*
 Copyright (c) 2018 5225A E-bot PiLons
 Modifications nikhelkrishna
-2020-31-7: Modify constants for bit use
+2020-31-7: Modify constants for bot use
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

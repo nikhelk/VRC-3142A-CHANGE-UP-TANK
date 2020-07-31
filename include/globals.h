@@ -20,11 +20,11 @@ long double m_trackWidth ;
 long double m_wheelRadius;
 
     /**
-    * Initilizes dimensions for 4 motor drive
-    * @param four motor drive to add dimensions to
-    * @param track width of drive
-    * @param wheel radius of drive
-    */
+     * Initilizes dimensions for 4 motor drive
+     * @param four motor drive to add dimensions to
+     * @param track width of drive
+     * @param wheel radius of drive
+     */
     Dimensions( long double trackWidth, long double wheelRadius);
 };
 
@@ -35,11 +35,11 @@ public:
 long double m_maxVelocity;
     long double m_maxAcceleration;
     /**
-    * Initilizes kinematic limits for 4 motor drive
-    * @param four motor drive to add limits to
-    * @param max Velocity of drive (inches/sec)
-    * @param max Acceleration of drive (inches/sec^2)
-    */
+     * Initilizes kinematic limits for 4 motor drive
+     * @param four motor drive to add limits to
+     * @param max Velocity of drive (inches/sec)
+     * @param max Acceleration of drive (inches/sec^2)
+     */
     Limits(long double maxVelocity, long double maxAcceleration);
     
   //void setGearRatio(double ratio);
@@ -71,15 +71,15 @@ Limits m_chassisLimits;
     motor rightBack;
     
     /**
-    * Initilizes 4 motor drive
-    * @param vector of left motor ports (front,back)
-    * @param vector of right motor ports (front,back)
-    * @param gear cartridge
-    * @param gear ratio
-    * @param chassis dimensions (trackWidth and wheel size)
-    * @param chassis limits (max velocity and acceleration)
-    * @param PD Controller chassis parameters
-    */
+     * Initilizes 4 motor drive
+     * @param vector of left motor ports (front,back)
+     * @param vector of right motor ports (front,back)
+     * @param gear cartridge
+     * @param gear ratio
+     * @param chassis dimensions (trackWidth and wheel size)
+     * @param chassis limits (max velocity and acceleration)
+     * @param PD Controller chassis parameters
+     */
 
     FourMotorDrive( std::vector<int32_t> leftGroup, 
     std::vector<int32_t> rightGroup,
@@ -88,10 +88,10 @@ Limits m_chassisLimits;
 
 
     /**
-    * Handles the reversal of motors.
-    * @param LeftReverseVals boolean array of leftFront and leftBack desired reversal states
-    * @param RightReverseVals boolean array of rightFront and rightBack desired reversal states
-    */
+     * Handles the reversal of motors.
+     * @param LeftReverseVals boolean array of leftFront and leftBack desired reversal states
+     * @param RightReverseVals boolean array of rightFront and rightBack desired reversal states
+     */
 
   void setReverseSettings(std::vector<bool> LeftReverseVals,std::vector<bool> RightReverseVals);
 
@@ -109,19 +109,19 @@ Limits m_chassisLimits;
   }
 
   /**
-  * sets the chassis to drive at a voltage
-  * @param the desired left side voltage of chassis
-  * @param the desired right side voltage of chassis
-  */
+   * sets the chassis to drive at a voltage
+   * @param the desired left side voltage of chassis
+   * @param the desired right side voltage of chassis
+   */
 
   void setVoltDrive(double leftVoltage,double rightVoltage);
 
   /**
-  * sets the chassis to drive at a velocity 
-  * @param the desired left side velocity
-  * @param the desired right side velocity
-  * @param the desired units of velocity (dps, rpm)
-  */
+   * sets the chassis to drive at a velocity 
+   * @param the desired left side velocity
+   * @param the desired right side velocity
+   * @param the desired units of velocity (dps, rpm)
+   */
 
   void setVelocityDrive(double leftVelocity, double rightVelocity, velocityUnits vel);
 
