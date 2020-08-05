@@ -1,44 +1,83 @@
-#include "vex.h"
-mp trapezoid;
-void generateTrapMP(const double maxVel, const double maxAcc,const double distance) {
-  trapezoid.maxVel = maxVel;
-  trapezoid.maxAcc = maxAcc;
-  trapezoid.distance = distance;
-  trapezoid.accelTime = trapezoid.maxVel/trapezoid.maxAcc;
-  
-  trapezoid.decelTime = trapezoid.maxVel/trapezoid.maxAcc;
-  trapezoid.distanceAccel =.5*trapezoid.accelTime*trapezoid.maxVel;
-  trapezoid.distanceCoast = (trapezoid.distance-(2*trapezoid.distanceAccel));
-  trapezoid.coastTime =trapezoid.distanceCoast/maxVel;
-  if (trapezoid.distanceCoast < 0) {
-    trapezoid.accelTime = sqrt(trapezoid.distance / trapezoid.maxAcc);
-    trapezoid.distanceCoast = 0;
+#include "motionprofile.h"
+#include <cmath>
+#include <string>
+
+TrapezoidalMotionProfile::TrapezoidalMotionProfile(const double maxVel, const double maxAcc,const double distanceTotal) {
+
+  m_maxVel = maxVel;
+
+  m_maxAcc = maxAcc;
+
+  m_distanceTotal = distanceTotal;
+
+  m_accelTime = m_maxVel / m_maxAcc;
+
+  m_decelTime = m_maxVel / m_maxAcc;
+
+  m_distanceAccel = .5 * m_accelTime * m_maxVel;
+
+  m_distanceDecel = .5 * m_decelTime * maxVel;
+
+  m_distanceCoast = m_distanceTotal - (2 * m_distanceAccel);
+
+  m_coastTime = m_distanceCoast / maxVel;
+
+  if (m_distanceCoast < 0) {
+
+    m_accelTime = sqrt(m_distanceTotal / m_maxAcc);
+
+		m_decelTime = sqrt(m_distanceTotal / m_maxAcc);
+
+    m_distanceCoast = 0;
+
+    m_distanceAccel = m_distanceDecel = m_distanceTotal / 2;
+		m_coastTime = 0;
   }
-  trapezoid.distanceDecel = .5*trapezoid.decelTime*maxVel;
-  trapezoid.totalTime = trapezoid.accelTime + trapezoid.coastTime + trapezoid.decelTime;
-  trapezoid.test = 10;
-} 
-double accelVelocity;
-double calculateMpVelocity(const double t) {
-  if(t<trapezoid.accelTime) {
-    //accelVelocity =(t*trapezoid.distanceAccel)/trapezoid.accelTime;
-    accelVelocity =(t*(trapezoid.maxAcc));
-    return(accelVelocity);}
-  else if(t>trapezoid.accelTime && t<(trapezoid.accelTime+trapezoid.coastTime))
-    return(trapezoid.maxVel);
-  else if(t>trapezoid.accelTime+trapezoid.coastTime && t<trapezoid.totalTime){
-    //return(((trapezoid.totalTime-t)*trapezoid.distanceDecel)/trapezoid.decelTime);
-    return(((trapezoid.totalTime-t)*(trapezoid.maxAcc)));
-  }
+
+
+
+  m_totalTime = m_accelTime + m_coastTime + m_decelTime;
+
+}
+
+double TrapezoidalMotionProfile::calculateMpVelocity(const double t) {
+
+  if(t < m_accelTime)
+    return(t * m_maxAcc);
+
+  else if(t > m_accelTime && t < (m_accelTime + m_coastTime))
+    return(m_maxVel);
+
+  else if(t > m_accelTime + m_coastTime && t < m_totalTime)
+    return((m_totalTime - t) * m_maxAcc);
+
   return 0;
 }
 
-std::string getMpStatus(const double t) {
-  if(t<trapezoid.accelTime)
+double TrapezoidalMotionProfile::calculateMpAcceleration(const double t) {
+
+  if(t < m_accelTime)
+    return(m_maxAcc);
+
+  else if(t > m_accelTime && t < (m_accelTime + m_coastTime))
+    return(0);
+
+  else if(t > m_accelTime + m_coastTime && t < m_totalTime)
+    return(m_maxAcc * -1);
+
+  return 0;
+}
+
+std::string TrapezoidalMotionProfile::getMpStatus(const double t) {
+
+  if(t < m_accelTime)
     return("accelerating");
-  else if(t>trapezoid.accelTime && t<trapezoid.accelTime+trapezoid.coastTime)
+
+  else if(t > m_accelTime && t < m_accelTime + m_coastTime)
     return("coasting");
-  else if(t>trapezoid.accelTime+trapezoid.coastTime && t<trapezoid.totalTime)
+
+  else if(t > m_accelTime + m_coastTime && t < m_totalTime)
     return("decelerating");
+
   return("done");
 }

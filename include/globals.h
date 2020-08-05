@@ -142,13 +142,19 @@ Limits m_chassisLimits;
   void driveStraightFeedforward(const double distance);
   void driveArcSortaWorks( const double angle,double radius);
   double getAverageEncoderValueMotors();
-  double getAverageEncoderValueEncoders();
+  
 }; 
 
 
 
 
+class WheelDistances{
+  public:
+    double R_DISTANCE;
+    double L_DISTANCE;
+    double B_DISTANCE;
 
+};
 
 class Tracking {
 private:
@@ -164,7 +170,10 @@ public:
     BACK_ENCODER,
   };
 
-
+  enum trackType {
+    THREE_ENCODER_MODEL,
+    IME_ENCODER_MODEL
+  };
 
   enum triportIndex {
     A,
@@ -179,24 +188,54 @@ public:
     brain brained;
     double trackWidth;
     double wheelRadius;
+    double backDistance;
     double ticksPerRev;
     double maxVelocity;
     double maxAcceleration;
+    WheelDistances m_odomImpl;
     encoder rightEncoder;
     encoder leftEncoder;
     encoder backEncoder;
     inertial inert;
-    Tracking( double trackWidth,double wheelRadius, double ticksPerRev,std::vector<triportIndex> enocoderPorts,int GyroPort) :
-    leftEncoder(brained.ThreeWirePort.Port[enocoderPorts[LEFT_ENCODER]]),
-    rightEncoder(brained.ThreeWirePort.Port[enocoderPorts[RIGHT_ENCODER]]),
-    backEncoder(brained.ThreeWirePort.Port[enocoderPorts[BACK_ENCODER]]),
-    inert(GyroPort)
-    {
-      this-> ticksPerRev = ticksPerRev;
-      this-> trackWidth = trackWidth;
-      this-> wheelRadius = wheelRadius;
-    }
+    
+    /**
+     * Constructor for 3 encoder model
+     * @param trackWidth of encoder model
+     * @param distance from tracking center to the back encoder
+     * @param encoder wheel radius
+     * @param encoder ticks per revolution
+     * @param list of triports (in order of left, right, back)
+     * @param gyroport (if any)
+     */
+
+    Tracking(WheelDistances wheels, double wheelRadius,std::vector<triportIndex> enocoderPorts, int GyroPort = NULL, double ticksPerRev = 360.0);
+
+    /**
+     * Constructor for 2 IME  and one backEncoder model
+     * @param trackWidth of encoder model
+     * @param distance from tracking center to the back encoder
+     * @param encoder wheel radius
+     * @param encoder ticks per revolution
+     * @param list of triports (in order of left, right, back)
+     * @param gyroport (if any)
+     */
+
+
+
+    Tracking(FourMotorDrive drive, triportIndex backPort, int GyroPort = NULL);
+
+
+
+    Tracking(FourMotorDrive drive, int GyroPort = NULL);
+    /**
+     * returns "fixed" inertial value
+     * @return intertial value
+     */
+
     double getInertialHeading();
+
+
+    double getAverageEncoderValueEncoders();
 };
 extern Tracking poseTracker;
 extern FourMotorDrive chassis;

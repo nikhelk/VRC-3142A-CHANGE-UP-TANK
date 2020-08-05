@@ -521,7 +521,6 @@ void FourMotorDrive::driveArc3( const double angle,double radius) {
       {
         driveTimer.close += 10;
       }
-      //Place mark if we haven't moved much
       else if (std::abs(distanceElapsed - lastDistance) <= threshold)
       {
         driveTimer.notMoved  +=10;
@@ -733,7 +732,7 @@ void FourMotorDrive::driveStraightFeedforward(const double distance) {
   bool atTarget = false;
   double startTimeA = Brain.timer(vex::timeUnits::sec);
   double mpVel;
-  generateTrapMP(42,260,distance);
+  TrapezoidalMotionProfile trap(42,260,distance);
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
 
@@ -767,11 +766,11 @@ void FourMotorDrive::driveStraightFeedforward(const double distance) {
     distanceElapsed = (currentLeft + currentRight) / 2.0; //this is the amount we travelled (something the vex discord told me)
     angleChange = currentLeft-currentRight;
     currentTime = Brain.timer(vex::timeUnits::sec) - startTimeA;
-    mpVel = calculateMpVelocity(currentTime)*60*(1/(4*M_PI));
-    double ogVel = calculateMpVelocity(currentTime);
+    mpVel = trap.calculateMpVelocity(currentTime)*60*(1/(4*M_PI));
+    double ogVel = trap.calculateMpVelocity(currentTime);
  
 
-    std::string currentStatus = getMpStatus(currentTime);
+    std::string currentStatus = trap.getMpStatus(currentTime);
     cout << mpVel << " " << distanceElapsed/26.3 << " " << currentStatus<<endl;
       setVelDrive(mpVel,mpVel); // setting the drive and adding the correction pid
 
@@ -834,7 +833,7 @@ double FourMotorDrive::getAverageEncoderValueMotors() {
   +leftBack.position(degrees)+rightBack.position(degrees))/4);
 }
 
-double FourMotorDrive::getAverageEncoderValueEncoders() {
-  return((poseTracker.leftEncoder.position(degrees)+
-  poseTracker.rightEncoder.position(degrees))/2);
+double Tracking::getAverageEncoderValueEncoders() {
+  return((this->leftEncoder.position(degrees)+
+  this->rightEncoder.position(degrees))/2);
 }

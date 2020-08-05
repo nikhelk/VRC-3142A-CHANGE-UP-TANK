@@ -2,6 +2,10 @@
 
 long double operator "" _in(long double x);
 
+
+long double operator "" _m(long double x);
+
+
 long double operator "" _rad(long double x);
 
 

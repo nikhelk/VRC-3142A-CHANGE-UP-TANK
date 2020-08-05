@@ -1,7 +1,7 @@
 #include "vex.h"
 
 long double operator "" _in(long double x) {
-  return(x);
+  return(x*0.0254);
 }
 
 long double operator "" _rad(long double x) {

@@ -153,8 +153,10 @@ ratio18_1 , //motor gear cartridge
 );    
 
 
-
+/*
 Tracking poseTracker(4.0_in,2.75_in,360.0,{Tracking::A,Tracking::C,Tracking::G},PORT7);
+*/
+Tracking poseTracker({4,4,5},2.75,{Tracking::A,Tracking::C,Tracking::G});
 
 competition Competition;
 task autonSelect;

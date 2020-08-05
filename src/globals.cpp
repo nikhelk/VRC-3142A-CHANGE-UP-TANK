@@ -124,6 +124,22 @@ Limits::Limits( long double maxVelocity, long double maxAcceleration) :
 {
 } 
 
+
+
+Tracking::Tracking(WheelDistances wheels, double wheelRadius,std::vector<triportIndex> enocoderPorts, int GyroPort, double ticksPerRev) :
+    leftEncoder(brained.ThreeWirePort.Port[enocoderPorts[LEFT_ENCODER]]),
+    rightEncoder(brained.ThreeWirePort.Port[enocoderPorts[RIGHT_ENCODER]]),
+    backEncoder(brained.ThreeWirePort.Port[enocoderPorts[BACK_ENCODER]]),
+    inert(GyroPort),
+    m_odomImpl(wheels)
+    {
+      this-> ticksPerRev = ticksPerRev;
+      this-> trackWidth = trackWidth;
+      this-> wheelRadius = wheelRadius;
+      this-> backDistance = backDistance;
+    }
+
+
 double Tracking::getInertialHeading() {
   if(this->inert.heading() > 180) {
     return(this->inert.heading() - 360);
