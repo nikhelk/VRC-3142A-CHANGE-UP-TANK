@@ -1,7 +1,8 @@
 #include "vex.h"
+#include "globals.h"
 using namespace std;
 
-void driveStraight( const double distance) {
+void FourMotorDrive::driveStraight( const double distance) {
   bool atTarget = false; //are we at target no!
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -84,7 +85,7 @@ void driveStraight( const double distance) {
 }
 
 
-void turnToDegree(double angle)
+void FourMotorDrive::turnToDegree(double angle)
 {
 	//Save left and right quad values instead of setting them to zero
 	const long encoderLeft = leftFront.position(degrees);
@@ -126,7 +127,7 @@ void turnToDegree(double angle)
 	long currentLeft, currentRight;
 
 	//Distance and angle PID output
-	int angleOutput;
+	double angleOutput;
   turnTimer.notMoved =0;
   turnTimer.close = 0;
 	while (!atTarget)
@@ -136,7 +137,7 @@ void turnToDegree(double angle)
 		currentRight = rightFront.position(degrees) - encoderRight;
 
 		angleChange = currentRight - currentLeft;
-
+    angleOutput = chassis.turnPID.calculatePower(targetAngle, angleChange);
 
 		//Set motors to angle PID output
 		setDrive(angleOutput*-1,angleOutput);
@@ -169,7 +170,7 @@ void turnToDegree(double angle)
 	setDrive(0,0);
 }
 double test2;
-void moveToPoint(const double x, const double y, bool backwards, long offset)
+void FourMotorDrive::moveToPoint(const double x, const double y, bool backwards, long offset)
 {
 	distanceAndAngle temp;
 	computeDistanceAndAngleToPoint(x, y, &temp);
@@ -188,7 +189,7 @@ void moveToPoint(const double x, const double y, bool backwards, long offset)
 
 
 
-void turnToAbsAngle(const double deg)
+void FourMotorDrive::turnToAbsAngle(const double deg)
 {
 	long theta = 0;
 	theta = positionArray[ODOM_THETA];
@@ -199,7 +200,7 @@ void turnToAbsAngle(const double deg)
 
 
 
-void driveArcSortaWorks( const double angle,double radius) {
+void FourMotorDrive::driveArcSortaWorks( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -249,9 +250,10 @@ void driveArcSortaWorks( const double angle,double radius) {
   //angleChange = positionArray[ODOM_THETA] - curAngle;
   distancePower = chassis.distancePID.calculatePower(targetDistance,distanceElapsed);
 
-    std::cout << ratio << " " << currentRatio << std::endl;
+    std::cout << ratio << " " << currentRatio << " " <<360-poseTracker.inert.heading(degrees) <<std::endl;
       setDrive(ratio*(distancePower)+0,distancePower-0);
-
+      if((360-poseTracker.inert.heading(degrees))-angle<2 &&(360-poseTracker.inert.heading(degrees))-angle>-2)
+        atTarget = true;
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance)
       {
         driveTimer.close += 10;
@@ -291,7 +293,7 @@ void driveArcSortaWorks( const double angle,double radius) {
 
 
 
-void driveArc( const double angle,double radius) {
+void FourMotorDrive::driveArc( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -365,7 +367,7 @@ void driveArc( const double angle,double radius) {
     setDrive(0,0);
 }
 
-void driveArc2( const double angle,double radius) {
+void FourMotorDrive::driveArc2( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -400,10 +402,11 @@ void driveArc2( const double angle,double radius) {
   driveTimer.notMoved =0;
   driveTimer.close = 0;
   double distancePower, anglePower,ratioPower;
+  posPID arcPID(9,.3);
   double curAngle = positionArray[ODOM_THETA];
   while(!atTarget) {
-    currentLeft = leftFront.position(degrees) - encoderLeft;
-    currentRight = rightFront.position(degrees) - encoderRight;
+    currentLeft = chassis.leftFront.position(degrees) - encoderLeft;
+    currentRight = chassis.rightFront.position(degrees) - encoderRight;
     if(currentRight ==0 || currentLeft ==0) {
       currentRatio =0;
     }
@@ -414,13 +417,12 @@ void driveArc2( const double angle,double radius) {
     distanceElapsed = (currentLeft + currentRight) / 2.0;
     angleChange = currentRight-currentLeft;
   //angleChange = positionArray[ODOM_THETA] - curAngle;
-
+  distancePower =  chassis.distancePID.calculatePower(targetDistance, distanceElapsed);
    // double realPower = distancePower/11;
     //anglePower = 0;
 
-   // std::cout << distancePower << " " << currentRatio << std::endl;
-    double realPower = distancePower*2;
-      setVelDrive(ratio*(distancePower/3)+ratioPower,distancePower/3-ratioPower);
+    std::cout << distancePower << " " << currentRatio << " " << ratio <<std::endl;
+      setDrive(ratio*(distancePower)+ratioPower,distancePower-ratioPower);
 
       if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance)
       {
@@ -458,7 +460,7 @@ void driveArc2( const double angle,double radius) {
     setDrive(0,0);
 }
 
-void driveArc3( const double angle,double radius) {
+void FourMotorDrive::driveArc3( const double angle,double radius) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -519,7 +521,6 @@ void driveArc3( const double angle,double radius) {
       {
         driveTimer.close += 10;
       }
-      //Place mark if we haven't moved much
       else if (std::abs(distanceElapsed - lastDistance) <= threshold)
       {
         driveTimer.notMoved  +=10;
@@ -554,7 +555,7 @@ void driveArc3( const double angle,double radius) {
 
 
 
-void driveArc4( const double x,const double y,double angle) {
+void FourMotorDrive::driveArc4( const double x,const double y,double angle) {
   posPID hi;
   
   bool atTarget = false;
@@ -636,7 +637,7 @@ void driveArc4( const double x,const double y,double angle) {
     setDrive(0,0);
 }
 
-void driveArc5(const double left, const double right) {
+void FourMotorDrive::driveArc5(const double left, const double right) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
@@ -718,7 +719,7 @@ void driveArc5(const double left, const double right) {
 }
 
 
-void moveToPointArc(const double x, const double y, const double theta) {
+void FourMotorDrive::moveToPointArc(const double x, const double y, const double theta) {
   distanceAndAngle temp2;
 	computeDistanceAndAngleToPoint(x, y, &temp2);
   double radius = temp2.length/(2*sin(toRadians(theta/2)));
@@ -727,11 +728,11 @@ void moveToPointArc(const double x, const double y, const double theta) {
 
 }
 
-void driveStraightFeedforward(const double distance) {
+void FourMotorDrive::driveStraightFeedforward(const double distance) {
   bool atTarget = false;
   double startTimeA = Brain.timer(vex::timeUnits::sec);
   double mpVel;
-  generateTrapMP(42,260,distance);
+  TrapezoidalMotionProfile trap(42,260,distance);
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
 
@@ -765,11 +766,11 @@ void driveStraightFeedforward(const double distance) {
     distanceElapsed = (currentLeft + currentRight) / 2.0; //this is the amount we travelled (something the vex discord told me)
     angleChange = currentLeft-currentRight;
     currentTime = Brain.timer(vex::timeUnits::sec) - startTimeA;
-    mpVel = calculateMpVelocity(currentTime)*60*(1/(4*M_PI));
-    double ogVel = calculateMpVelocity(currentTime);
+    mpVel = trap.calculateMpVelocity(currentTime)*60*(1/(4*M_PI));
+    double ogVel = trap.calculateMpVelocity(currentTime);
  
 
-    std::string currentStatus = getMpStatus(currentTime);
+    std::string currentStatus = trap.getMpStatus(currentTime);
     cout << mpVel << " " << distanceElapsed/26.3 << " " << currentStatus<<endl;
       setVelDrive(mpVel,mpVel); // setting the drive and adding the correction pid
 
@@ -812,14 +813,14 @@ void driveStraightFeedforward(const double distance) {
   
 }
 
-void setVelDrive(double leftVelocity, double rightVelocity) {
+void FourMotorDrive::setVelDrive(double leftVelocity, double rightVelocity) {
   leftFront.spin (fwd,leftVelocity, velocityUnits::rpm);
   leftBack.spin (fwd,leftVelocity, velocityUnits::rpm);
   rightFront.spin (fwd,rightVelocity, velocityUnits::rpm);
   rightBack.spin (fwd,rightVelocity, velocityUnits::rpm);
 }
 
-void setDrive(double leftVoltage,double rightVoltage) {
+void FourMotorDrive::setDrive(double leftVoltage,double rightVoltage) {
   leftFront.spin (fwd,leftVoltage, volt);
   leftBack.spin(fwd,leftVoltage,volt);
   rightFront.spin(fwd,rightVoltage,volt);
@@ -827,3 +828,12 @@ void setDrive(double leftVoltage,double rightVoltage) {
 }
 
 
+double FourMotorDrive::getAverageEncoderValueMotors() {
+  return((leftFront.position(degrees)+rightFront.position(degrees)
+  +leftBack.position(degrees)+rightBack.position(degrees))/4);
+}
+
+double Tracking::getAverageEncoderValueEncoders() {
+  return((this->leftEncoder.position(degrees)+
+  this->rightEncoder.position(degrees))/2);
+}

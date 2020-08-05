@@ -1,6 +1,5 @@
 #pragma once //DO NOT REMOVE
 #include "vex.h"
-
 void indexerUser();
 void flywheelUser();
 void intakeUser();

@@ -3,7 +3,11 @@
 
 FourMotorDrive::FourMotorDrive( std::vector<int32_t> leftGroup, 
     std::vector<int32_t> rightGroup,
-    vex::gearSetting setting,double gearRatio, std::initializer_list<PDcontroller> PDGains) :
+    vex::gearSetting setting,double gearRatio, Dimensions chassisDimensions,Limits chassisLimits,std::initializer_list<PDcontroller> PDGains) :
+    
+    m_chassisDimensions(chassisDimensions),
+
+    m_chassisLimits(chassisLimits),
 
     leftFront(leftGroup[FRONT],setting),
 
@@ -49,15 +53,101 @@ FourMotorDrive::FourMotorDrive( std::vector<int32_t> leftGroup,
 
   }
 
-Dimensions::Dimensions( FourMotorDrive *drive,double trackWidth, double wheelRadius)
+
+
+void FourMotorDrive::setVoltDrive(double leftVoltage,double rightVoltage) {
+  this->leftFront.spin (fwd,leftVoltage, volt);
+  this->leftBack.spin(fwd,leftVoltage,volt);
+  this->rightFront.spin(fwd,rightVoltage,volt);
+  this->rightBack.spin(fwd,rightVoltage,volt);
+}
+
+
+void FourMotorDrive::setVelocityDrive(double leftVelocity, double rightVelocity, velocityUnits vel) {
+  this->leftFront.spin (fwd,leftVelocity, vel);
+  this->leftBack.spin(fwd,leftVelocity,vel);
+  this->rightFront.spin(fwd,leftVelocity,vel);
+  this->rightBack.spin(fwd,leftVelocity,vel);
+
+
+}
+
+void FourMotorDrive::turnToDegreeGyro(double degree) {
+  double atTarget = false;
+  double atTargetAngle = .1/2;
+  while(!atTarget) {
+      double currentAngleRadians = toRadians(poseTracker.getInertialHeading());
+      double targetAngleRadians = toRadians(degree);
+
+      double angleOutput = chassis.turnPID.calculatePower(targetAngleRadians,currentAngleRadians);
+      pidTimer turnTimer;
+      double timeoutPeriod = 250;
+      setVoltDrive(angleOutput,-1*angleOutput);
+    if (std::abs(targetAngleRadians - currentAngleRadians) <= atTargetAngle)
+		{
+			turnTimer.close += 10;
+		}
+		else
+		{
+			turnTimer.close = 0;
+      turnTimer.notMoved =0;
+		}
+    //cout << currentRight <<" " << currentLeft<< " " << " " << targetAngle/conv << " " <<angleChange/conv <<endl;
+		//If we've been close enough for long enough, we're there
+		if (turnTimer.close >= timeoutPeriod||turnTimer.notMoved >=timeoutPeriod)
+		{
+			atTarget = true;
+		}
+    std::cout << toDegrees(currentAngleRadians) <<std::endl;
+    task::sleep(10);
+
+
+
+
+  }
+
+
+
+}
+Dimensions::Dimensions(long  double trackWidth, long  double wheelRadius) :
+
+    m_trackWidth(trackWidth),
+    m_wheelRadius(wheelRadius)
 {
-      drive->trackWidth = trackWidth;
-      drive->wheelRadius = wheelRadius;
+
 } 
 
 
-Limits::Limits( FourMotorDrive *drive,double maxVelocity, double maxAcceleration)
+Limits::Limits( long double maxVelocity, long double maxAcceleration) :
+    m_maxVelocity(maxVelocity),
+    m_maxAcceleration(maxAcceleration)
 {
-      drive->maxVelocity  = maxVelocity;
-      drive->maxAcceleration = maxAcceleration;
 } 
+
+
+
+Tracking::Tracking(WheelDistances wheels, double wheelRadius,std::vector<triportIndex> enocoderPorts, int GyroPort, double ticksPerRev) :
+    leftEncoder(brained.ThreeWirePort.Port[enocoderPorts[LEFT_ENCODER]]),
+    rightEncoder(brained.ThreeWirePort.Port[enocoderPorts[RIGHT_ENCODER]]),
+    backEncoder(brained.ThreeWirePort.Port[enocoderPorts[BACK_ENCODER]]),
+    inert(GyroPort),
+    m_odomImpl(wheels)
+    {
+      this-> ticksPerRev = ticksPerRev;
+      this-> trackWidth = trackWidth;
+      this-> wheelRadius = wheelRadius;
+      this-> backDistance = backDistance;
+    }
+
+
+double Tracking::getInertialHeading() {
+  if(this->inert.heading() > 180) {
+    return(this->inert.heading() - 360);
+  }
+  else if(this->inert.heading()  <-180) {
+    return(this->inert.heading() + 360);
+  }
+  else {
+    return(this->inert.heading());
+  }
+}
