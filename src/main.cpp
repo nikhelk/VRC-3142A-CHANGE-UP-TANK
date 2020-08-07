@@ -127,7 +127,7 @@
 
 
 #include "vex.h"
-
+#include "Selector\selectorImpl.h"
 using namespace vex;
 
 FourMotorDrive chassis( 

@@ -25,7 +25,6 @@
 #include "literals.h"
 #include "mathAndConstants.h"
 #include "chassisfunctions.h"
-#include "selectorsource.h"
 #include "motionprofile.h"
 #include "macros.h"
 #include "usercontrol.h"
