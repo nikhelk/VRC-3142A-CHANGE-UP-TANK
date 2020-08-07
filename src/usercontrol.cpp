@@ -1,5 +1,6 @@
 #include "vex.h"
-void usercontrol(void) {
+void usercontrol(void) 
+{
 
 
   while(true) {
