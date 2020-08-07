@@ -1,15 +1,24 @@
 #include "Selector\selectorAPI.h"
 #include "Selector\selectorImpl.h"
 #include "premacros.h"
+
+
+
+/* ***************************************************************************************************** */
+
+// We would like to thank jpearman and walshbots for providing us a template for the autonomous selector
+
+// <https://www.vexforum.com/t/walshbots-autonomous-feature-selector/51534>
+
+// <https://www.vexforum.com/t/can-anyone-explain-jpearmans-code-buttons-one/51060/5>
+
+/* ****************************************************************************************************** */
+
+//values store what tab selection on (used for debugging)
 int   tabSelection = -1;
 int chassisSelection = -1;
 int nonChassisSelection = -1;
-bool enableGraph = false;
-void makeLoadingScreen();
-
-// Button array definitions for each software button. The purpose of each button data structure
-// is defined above.  The array size can be extended, so you can have as many buttons as you 
-// wish as long as it fits.
+// Button group definitions
 ButtonGroupMaker tabButtons ( {
     {  0,  0, 70, 30,  false, 0x303030, 0xD0D0D0, "Auton" },
     {  80,  0, 70, 30,  false, 0x303030, 0xD0D0D0, "Set." },
@@ -55,9 +64,9 @@ ButtonGroupMaker pidNonChassisTabButtons ( {
 });
 
 pidValues chassisPidControllers[] = {
-  {1,2,3,"distance"}, //lateral 
-  {4,5,6,"angle"},
-  {7,8,9,"turn"} //turn
+  {1,2,3,"distance"}, //lateral pid values 
+  {4,5,6,"angle"}, //anglespid values
+  {7,8,9,"turn"} //turn pid values
 };
 
 ButtonGroupMaker hiButtons( {
@@ -71,10 +80,10 @@ ButtonGroupMaker hiButtons( {
 
 
 pidValues nonChassisPidControllers[] = {
-  {1,2,3,"leftFly"}, //leftFly 
-  {4,5,6,"rightFly"}, //leftIntake
-  {34,324,23,"leftIntake"}, //rightFly
-  {12,123,321,"rightIntake"}, //righttIntake
+  {1,2,3,"leftFly"}, //leftFly pid values
+  {4,5,6,"rightFly"}, //leftIntake pid values
+  {34,324,23,"leftIntake"}, //rightFly pid values
+  {12,123,321,"rightIntake"}, //righttIntake pid values
 };
 
 ButtonGroupMaker confirmButton( {
@@ -82,12 +91,12 @@ ButtonGroupMaker confirmButton( {
 });
 
 
-std::string settings[] = {"speed","angle"};
-double doubleSettings[] = {50,50};
-int settingsLen = sizeof(settings)/sizeof(settings[0]);
+std::string settings[] = {"speed","angle"}; //settings buttons names
+double doubleSettings[] = {50,50}; //settings buttons values
+int settingsLen = sizeof(settings)/sizeof(settings[0]); //size of the setting button array
 
-std::string pidToggle[] = {"chassis","non-chassis"};
-int pidSettingsLen = sizeof(pidToggle)/sizeof(pidToggle[0]);
+std::string pidToggle[] = {"chassis","non-chassis"}; //pid menu names
+int pidSettingsLen = sizeof(pidToggle)/sizeof(pidToggle[0]); //size of pid menu names (2)
 
 void makeBackground() {
     Brain.Screen.setFillColor( vex::color(0x404040) );
@@ -98,36 +107,51 @@ void makeBackground() {
     Brain.Screen.drawRectangle( 0, 120, 480, 120 );
 }
 
-int countSettingsPress = 0;
-int countPidSettingsPress = 0;
-bool togglePressed = false; 
-bool togglePidPressed = false;
+int countSettingsPress = 0; //number of times the settings switch has been pressed
+int countPidSettingsPress = 0; //number of times the pid settings switch has been pressed
+bool togglePressed = false; //state of a settings toggle button press
+bool togglePidPressed = false; //state of a pid settings toggle button press
 
 
 void 
 changeChassisPidValues(int type) {
+  /**
+   * enum pidChassisToggles. Keeps track of what value to change depending on press
+   */
+
+  enum pidChassisToggles {
+    SETTINGS_TOGGLE,
+    INCREASE_KP,
+    DECREASE_KP,
+    INCREASE_KI,
+    DECREASE_KI,
+    INCREASE_KD,
+    DECREASE_KD,
+  };
+
   int xpos = Brain.Screen.xPosition();
   int ypos = Brain.Screen.yPosition();
-  int valueIndex = pidToggleButtons.findButton( xpos, ypos );
+
+  int valueIndex = pidToggleButtons.findButton( xpos, ypos ); //which toggle button is pressed
     switch(valueIndex) {
-      case 0:
+      case SETTINGS_TOGGLE:
         break;
-      case 1:
+      case INCREASE_KP:
         chassisPidControllers[type].kP += 2;
         break;
-      case 2: 
+      case DECREASE_KP: 
         chassisPidControllers[type].kP -= 2;
         break;
-      case 3:
+      case INCREASE_KI:
         chassisPidControllers[type].kI += 2;
         break;
-      case 4:
+      case DECREASE_KI:
         chassisPidControllers[type].kI -=2;
         break;
-      case 5:
+      case INCREASE_KD:
         chassisPidControllers[type].kD +=2;
         break;
-      case 6:
+      case DECREASE_KD:
         chassisPidControllers[type].kD -= 2;
         break;
       }
@@ -135,28 +159,40 @@ changeChassisPidValues(int type) {
 
 void
 changeNonChassisPidValues(int type ) {
+  /**
+   * enum pidNonChassisToggles. Keeps track of what value to change depending on press
+   */
+  enum pidNonChassisToggles {
+    SETTINGS_TOGGLE,
+    INCREASE_KP,
+    DECREASE_KP,
+    INCREASE_KI,
+    DECREASE_KI,
+    INCREASE_KD,
+    DECREASE_KD,
+  };
   int xpos = Brain.Screen.xPosition();
   int ypos = Brain.Screen.yPosition();
   int valueIndex = pidToggleButtons.findButton( xpos, ypos );
     switch(valueIndex) {
-      case 0:
+      case SETTINGS_TOGGLE:
         break;
-      case 1:
+      case INCREASE_KP:
         nonChassisPidControllers[type].kP += 2;
         break;
-      case 2: 
+      case DECREASE_KP: 
         nonChassisPidControllers[type].kP -= 2;
         break;
-      case 3:
+      case INCREASE_KI:
         nonChassisPidControllers[type].kI += 2;
         break;
-      case 4:
+      case DECREASE_KI:
         nonChassisPidControllers[type].kI -=2;
         break;
-      case 5:
+      case INCREASE_KD:
         nonChassisPidControllers[type].kD +=2;
         break;
-      case 6:
+      case DECREASE_KD:
         nonChassisPidControllers[type].kD -= 2;
         break;
       }
@@ -165,38 +201,43 @@ changeNonChassisPidValues(int type ) {
 
 
 
-int confirmPress = 0;
+int confirmPress = 0; //number of times confirm button has beem pressed
 
 void
 userTouchCallbackPressed() {
   int index;
   int xpos = Brain.Screen.xPosition();
   int ypos = Brain.Screen.yPosition();
-  if(confirmPress == 0) {
-  int currentSettingsPos = countSettingsPress % settingsLen;
-  if( (index = tabButtons.findButton( xpos, ypos )) >= 0 ) {
+  if(confirmPress == 0) { //only register when we have not hit the confirm button
+  int currentSettingsPos = countSettingsPress % settingsLen; // index of what setting we are on
+  if( (index = tabButtons.findButton( xpos, ypos )) >= 0 ) { 
+
     displayAllButtonControls( index, true );
-    }
+
+    } //if we are in auton button menu
   if(tabButtons.buttonList[0].state) {
     if( (index = autonButtons.findButton( xpos, ypos )) >= 0 ) {
-      displayAllButtonControls( index, true );
+      autonButtons.displayButtonControls( index, true );
       }
     }
-  if(tabButtons.buttonList[1].state) { 
+  if(tabButtons.buttonList[1].state) { //if we are in tabButton menu
     if( (index = settingButtons.findButton( xpos, ypos )) >= 0 ) {
-      if (index == 0) {
+      if (index == 0) { //if the settings toggle is pressed
         displayAllButtonControls( index, true );
-        countSettingsPress ++;
+        countSettingsPress ++; //changing the setting menu
         }
       else if(index >0) {
         togglePressed = true;
       }
+
+     // Changes the values of the settings buttons
+     // This is in a while loop to allow for increasing by press and hold
       while(togglePressed) {
-          if (index == 1) {
+          if (index == 1) { //if pressing increase
             displayAllButtonControls( index, true );
             doubleSettings[currentSettingsPos] += 5;
             }
-          if (index == 2) {
+          if (index == 2) { //if we are pressing decrease
             displayAllButtonControls( index, true );
             doubleSettings[currentSettingsPos] -= 5;
             }
@@ -204,8 +245,8 @@ userTouchCallbackPressed() {
         }
       }
     }
-  if(tabButtons.buttonList[2].state) {
-    if( (index = pidToggleButtons.findButton( xpos, ypos )) >= 0 ) {
+  if(tabButtons.buttonList[2].state) { // if we are in the PID tuner menu
+    if( (index = pidToggleButtons.findButton( xpos, ypos )) >= 0 ) { //display the "chassis" vs "non-chassis" toggle no matter what
       if (index ==0) {
         countPidSettingsPress ++;
         
@@ -215,24 +256,27 @@ userTouchCallbackPressed() {
         togglePidPressed = true;
         }
       }
-    if(!(pidToggleButtons.buttonList[0].state)) {
+    if(!(pidToggleButtons.buttonList[0].state)) { //i we are in the chassis menu of pid tuner
       if( (index = pidChassisTabButtons.findButton( xpos, ypos )) >= 0 ) {
         displayAllButtonControls( index, true );
         }
-      while(togglePidPressed) {
+      while(togglePidPressed) { //similar to the settings button toggles
        for(int i = 0; i < pidChassisTabButtons.buttonList.size();i++) {
           if(pidChassisTabButtons.buttonList[i].state) {
+
             displayAllButtonControls( index, true );
+
             if(Brain.Screen.pressing())
               changeChassisPidValues(i);
             } 
           }
-          if(!(Brain.Screen.pressing())) 
+          if(!(Brain.Screen.pressing())) //make sure not to get stuck in loop!
             togglePidPressed = false;
+
           task::sleep(400); 
         }
       }
-    else {
+    else { //if we are in the non-chassis pid menu
       if( (index = pidNonChassisTabButtons.findButton( xpos, ypos )) >= 0 ) {
         displayAllButtonControls( index, true );
         }
@@ -256,11 +300,13 @@ userTouchCallbackPressed() {
   }
 
 }
-bool allianceBlue = false;
+//values to be used from the seletor
+//NOTE: This is not a final list of all variables
+bool allianceBlue = false; 
 bool simpleRun = false;
-/*-----------------------------------------------------------------------------*/
-/** @brief      Screen has been (un)touched                                    */
-/*-----------------------------------------------------------------------------*/
+
+
+
 void
 userTouchCallbackReleased() {
     int index;
@@ -269,64 +315,46 @@ userTouchCallbackReleased() {
     int currentSettingsPos = countSettingsPress % settingsLen;
     int currentPidSettingsPos = countPidSettingsPress % pidSettingsLen;
     if( (index = tabButtons.findButton( xpos, ypos )) >= 0 && confirmPress == 0) {
-      // clear all buttons to false, ie. unselected
+
+      // clear all buttons to false
+      //this allows for tab buttons to be chosen induvitually, instead of all at once
       tabButtons.initButtons(); 
 
-      // now set this one as true
-      if( tabButtons.buttonList[index].state == true) {
+      tabButtons.switchStates(index); //set the pressed one to true
 
-      tabButtons.buttonList[index].state = false; 
-      
-      }
-      else    {
-
-      tabButtons.buttonList[index].state = true;
-      }
       tabSelection = index;
 
       displayAllButtonControls( index, false );
-
-      // save as auton selection
- 
     }
     if(confirmPress == 0 ) {
-    if((index = confirmButton.findButton( xpos,  ypos))==0) {
+    if((index = confirmButton.findButton( xpos,  ypos))==0) { //if we have confirmed our selction
+
       tabButtons.initButtons();
-      if( confirmButton.buttonList[index].state == true) {
-        confirmButton.buttonList[index].state = false;}
-        
-        else    {
-        confirmButton.buttonList[index].state = true;
-        
-        }
+      confirmButton.switchStates(index);
+
       confirmPress += 1;
+
+      //store variables made in selector
       allianceBlue = autonButtons.buttonList[0].state;
       simpleRun = autonButtons.buttonList[2].state;
+
       Brain.Screen.clearScreen();
+
+      //generate loading screen
       makeLoadingScreen();
     }
     if(tabButtons.buttonList[0].state) {
       if( (index = autonButtons.findButton( xpos, ypos )) >= 0 ) {
-        if( autonButtons.buttonList[index].state == true) {
-        autonButtons.buttonList[index].state = false; 
-        std::cout << autonButtons.buttonList[index].state <<std::endl;}
-        
-        else    {
-        autonButtons.buttonList[index].state = true;
-        }
+        autonButtons.switchStates(index);
 
-        displayAllButtonControls( index, false );
+        autonButtons.displayButtonControls( index, false );
       }
     }
     if(tabButtons.buttonList[1].state) {
       if( (index = settingButtons.findButton( xpos, ypos )) >= 0 ) {
         if(index ==0)
-          settingButtons.buttonList[index].label = settings[currentSettingsPos].c_str();
-        if( settingButtons.buttonList[index].state == true) {
-        settingButtons.buttonList[index].state = false; }
-        else    {
-        settingButtons.buttonList[index].state = true;
-        }
+          settingButtons.buttonList[index].label = settings[currentSettingsPos].c_str(); //change the label of the setting button depending on toggle
+        settingButtons.switchStates(index);
         togglePressed = false;
         displayAllButtonControls( index, false );
       }
@@ -334,12 +362,8 @@ userTouchCallbackReleased() {
     if(tabButtons.buttonList[2].state) {
       if( (index = pidToggleButtons.findButton( xpos, ypos )) >= 0 ) {
         if(index == 0)
-          pidToggleButtons.buttonList[index].label = pidToggle[currentPidSettingsPos].c_str();
-        if( pidToggleButtons.buttonList[index].state == true) {
-          pidToggleButtons.buttonList[index].state = false; }
-          else    {
-          pidToggleButtons.buttonList[index].state = true;
-          }
+          pidToggleButtons.buttonList[index].label = pidToggle[currentPidSettingsPos].c_str(); //change the label of the pidsetting button depending on toggle
+          pidToggleButtons.switchStates(index);
           displayAllButtonControls( index, true );
           togglePidPressed = false;
         }
@@ -349,11 +373,8 @@ userTouchCallbackReleased() {
         if( (index = pidChassisTabButtons.findButton( xpos, ypos )) >= 0 ) {
           pidChassisTabButtons.initButtons();
 
-          if( pidChassisTabButtons.buttonList[index].state == true) {
-          pidChassisTabButtons.buttonList[index].state = false; }
-          else    {
-          pidChassisTabButtons.buttonList[index].state = true;
-          }
+          pidChassisTabButtons.switchStates(index);
+
           chassisSelection = index;
           displayAllButtonControls( index, true );
           }
@@ -361,11 +382,7 @@ userTouchCallbackReleased() {
       else {
         if( (index = pidNonChassisTabButtons.findButton( xpos, ypos )) >= 0 ) {
           pidNonChassisTabButtons.initButtons();
-          if( pidNonChassisTabButtons.buttonList[index].state == true) {
-          pidNonChassisTabButtons.buttonList[index].state = false; }
-          else    {
-          pidNonChassisTabButtons.buttonList[index].state = true;
-          }
+          pidNonChassisTabButtons.switchStates(index);
           nonChassisSelection = index;
           displayAllButtonControls( index, true );
           }
@@ -413,13 +430,13 @@ displayPIDControls(int index,bool pressed) {
   
   pidToggleButtons.displayButtonControls(0,false);
 
-  if(!(pidToggleButtons.buttonList[0].state)) { //displayPidChassisTab
+  if(!(pidToggleButtons.buttonList[0].state)) { //display chassis pid settings
     pidChassisTabButtons.displayButtonControls(0,false,false);
   }
 
 
   
-  else { //displayPidNonChassis
+  else { //display non chassis pid settings
     pidNonChassisTabButtons.displayButtonControls(0,false,false);
 
   }
@@ -435,21 +452,28 @@ displayPIDControls(int index,bool pressed) {
 void
 displayAllButtonControls( int index, bool pressed ) {
     vex::color c;
+
     Brain.Screen.setPenColor( vex::color(0xe0e0e0) );
     if (confirmPress == 0) {
+    //always display these buttons on the selector
     tabButtons.displayButtonControls(0, false,true);
     confirmButton.displayButtonControls(0,false,true);
+
     Brain.Screen.drawImageFromFile("logo_test.png",160,50);
-    if(tabButtons.buttonList[0].state)
+
+    if(tabButtons.buttonList[0].state) //display auton menu
      autonButtons.displayButtonControls(0,false);
-    else if(tabButtons.buttonList[1].state) {
+    
+    else if(tabButtons.buttonList[1].state) { //display settings menu
       settingButtons.displayButtonControls(0,false);
       displaySettingsValues();
       }
-    else if(tabButtons.buttonList[2].state) {
+
+    else if(tabButtons.buttonList[2].state) { //display pid settings menu
       displayPIDControls(0,false);
       displayPIDSettings();
       }
+
     }
 }
 
@@ -460,7 +484,12 @@ displayAllButtonControls( int index, bool pressed ) {
 
 
 void makeLoadingScreen() {
-  if(confirmButton.buttonList[0].state) {
+
+  // this function shows "a loading screen" of what features are loaded
+  //Some of them are time-based and are just for show :)
+  // But the clibration of the IMU is real time amd we can see it actually happening and know when it is done calibarting 
+
+  if(confirmButton.buttonList[0].state) { // check if we are in confirm menu
   double time = Brain.Timer.time(timeUnits::sec);
   double currentTime =0;
   bool firstDone = false;
@@ -480,7 +509,7 @@ void makeLoadingScreen() {
   Brain.Screen.printAt(330,100, "DONE");
   task::sleep(600);
   inert.calibrate();
-  while(inert.isCalibrating()) {
+  while(inert.isCalibrating()) { 
      Brain.Screen.printAt(100,150, "Calibrating Sensors...");
     //Brain.Screen.render();
   }

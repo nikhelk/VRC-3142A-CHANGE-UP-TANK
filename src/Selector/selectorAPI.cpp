@@ -1,9 +1,19 @@
 #include "Selector\selectorAPI.h"
 #include "Selector\selectorImpl.h"
 
+/* ***************************************************************************************************** */
+
+// We would like to thank jpearman and walshbots for providing us a template for the autonomous selector
+
+// <https://www.vexforum.com/t/walshbots-autonomous-feature-selector/51534>
+
+// <https://www.vexforum.com/t/can-anyone-explain-jpearmans-code-buttons-one/51060/5>
+
+/* ****************************************************************************************************** */
+
 ButtonGroupMaker::ButtonGroupMaker(std::initializer_list<button> butonList) {
 
-  this->buttonList.reserve(butonList.size());
+  this->buttonList.reserve(butonList.size()); // we need to convert initializer list to vector so we can index
 
   for (auto &aButton : butonList)  {
     buttonList.push_back(button
@@ -26,10 +36,10 @@ int ButtonGroupMaker::findButton(int16_t xpos, int16_t ypos) {
 
     for( int index=0;index < nButtons;index++) {
       button *pButton = &buttonList[ index ];
-      if( xpos < pButton->xpos || xpos > (pButton->xpos + pButton->width) )
+      if( xpos < pButton->xpos || xpos > (pButton->xpos + pButton->width) ) // if we are not in the xbounds, skip
         continue;
 
-      if( ypos < pButton->ypos || ypos > (pButton->ypos + pButton->height) )
+      if( ypos < pButton->ypos || ypos > (pButton->ypos + pButton->height) ) //if we are not in the ybounds, skip
         continue;
 
       return(index);
@@ -45,6 +55,14 @@ void ButtonGroupMaker::initButtons() {
       this->buttonList[index].state = false;
     
     }
+}
+
+void ButtonGroupMaker::switchStates(int index) {
+  if( this->buttonList[index].state) {
+    this->buttonList[index].state = false; }
+  else    
+    this->buttonList[index].state = true;
+    
 }
 
 int ButtonGroupMaker::displayButtonControls(int index, bool pressed, bool permanant) {
