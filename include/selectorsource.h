@@ -9,7 +9,7 @@ bool getAllianceColor();
 extern int test;
 
 
-typedef struct _button {
+struct button {
     int    xpos;
     int    ypos;
     int    width;
@@ -18,17 +18,36 @@ typedef struct _button {
     vex::color offColor;
     vex::color onColor;
     const char *label;
-} button;
-void Log(const char *message );
-typedef struct _pidValues {
+};
+
+struct pidValues {
     double    kP;
     double    kI;
     double    kD;
     const char *label;
-} pidValues;
+};
 
 int displayTabButtonControls(int index, bool pressed);
 extern bool enableGraph;
 extern bool allianceBlue;
 extern bool simpleRun;
 int makeGraph();
+
+class ButtonGroupMaker {
+    private:
+    public:
+        std::vector<button> buttonList;
+        ButtonGroupMaker(std::initializer_list<button> butonList);
+
+        int findButton(int16_t xpos, int16_t ypos);
+
+        void initButtons();
+
+        int displayButtonControls(int index, bool pressed);
+
+        int displayButtonControls(int index, bool pressed,bool permamant);
+
+
+    
+}; 
+extern ButtonGroupMaker hiButtons;

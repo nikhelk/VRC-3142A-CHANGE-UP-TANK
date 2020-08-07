@@ -191,7 +191,7 @@ void autonomous(void) {
   }
 }*/
 int main() {
-  std::cout << "BROOOOOOO" <<std::endl;
+
     // 4 lines, axis at position 120, 120
    /*
     int originX = 10;
@@ -235,7 +235,7 @@ int main() {
     task::sleep(100);
     //chassis.turnToDegreeGyro(-90);
   //  task::sleep(3000);
-    chassis.driveArc2(90, 20);
+    //chassis.driveArc2(90, 20);
     //turnToDegree(180);
     //driveStraightFeedforward(50);
     double time = Brain.Timer.time(timeUnits::sec);
