@@ -170,20 +170,20 @@ void FourMotorDrive::turnToDegree(double angle)
 	setDrive(0,0);
 }
 double test2;
-void FourMotorDrive::moveToPoint(const double x, const double y, bool backwards, long offset)
+void FourMotorDrive::moveToPoint(const double x, const double y, bool backwards)
 {
-	distanceAndAngle temp;
-	computeDistanceAndAngleToPoint(x, y, &temp);
+	pointVals vector;
+	computeDistanceAndAngleToPoint(x, y, &vector);
 	if (backwards)
 	{
-		temp.theta += 180;
-		temp.length *= -1;
+		vector.theta += 180;
+		vector.length *= -1;
 	}
 
-		turnToDegree(temp.theta);
+		turnToDegree(vector.theta);
 
 
-		driveStraight(temp.length - offset);
+		driveStraight(vector.length);
 }
 
 
@@ -561,7 +561,7 @@ void FourMotorDrive::driveArc4( const double x,const double y,double angle) {
   bool atTarget = false;
   double distanceElapsed =0, angleChange = 0;
   double lastDistance =0;
-  distanceAndAngle start;
+  pointVals start;
   computeDistanceAndAngleToPoint(x, y, &start);
   double distanceLeft = start.length;
   double unroundedTargetDistance = encoderToInch * distanceLeft;
@@ -588,7 +588,7 @@ void FourMotorDrive::driveArc4( const double x,const double y,double angle) {
   double distancePower, anglePower;
   double curAngle = positionArray[ODOM_THETA];
   while(!atTarget) {
-    distanceAndAngle temp;
+    pointVals temp;
     computeDistanceAndAngleToPoint(x, y, &temp);
     distanceLeft = temp.length;
     currentLeft = leftFront.position(degrees) - encoderLeft;
@@ -720,7 +720,7 @@ void FourMotorDrive::driveArc5(const double left, const double right) {
 
 
 void FourMotorDrive::moveToPointArc(const double x, const double y, const double theta) {
-  distanceAndAngle temp2;
+  pointVals temp2;
 	computeDistanceAndAngleToPoint(x, y, &temp2);
   double radius = temp2.length/(2*sin(toRadians(theta/2)));
   driveArc2(theta, radius);

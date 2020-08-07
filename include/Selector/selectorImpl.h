@@ -103,4 +103,4 @@ extern ButtonGroupMaker confirmButton;
 extern int confirmPress;
 
 extern bool allianceBlue;
-extern bool simpleRun;
+extern bool skills;

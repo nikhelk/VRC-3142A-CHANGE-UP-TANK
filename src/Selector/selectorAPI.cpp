@@ -70,7 +70,6 @@ int ButtonGroupMaker::displayButtonControls(int index, bool pressed, bool perman
   Brain.Screen.setPenColor( vex::color(0xe0e0e0) );
 
   for(int i=0;i<this->buttonList.size();i++) {
-    LOG("TEST");
     if( this->buttonList[i].state )
       c = this->buttonList[i].onColor;
     else

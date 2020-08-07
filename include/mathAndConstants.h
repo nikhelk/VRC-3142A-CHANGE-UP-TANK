@@ -42,11 +42,11 @@ double toDegrees(double angle);
 
 double toRadians(double angle);
 
-typedef struct distanceAndAngle_t
+struct pointVals
 {
-	float length;
-	float theta;
-} distanceAndAngle;
+	double length;
+	double theta;
+};
 
 typedef struct _pos
 {
@@ -60,7 +60,7 @@ typedef struct _pos
 } sPos; // Position of the robot
 
 
-void computeDistanceAndAngleToPoint(const long x, const long y, distanceAndAngle *out);
+void computeDistanceAndAngleToPoint(const long x, const long y, pointVals *out);
 int trackPosition();
 const double encoderToInch = 28.6479;
 

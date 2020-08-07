@@ -3,7 +3,6 @@
 #include "pid.h"
 
 
-
 /* 
 * Header file with all the global classes (motors, sensors) and other applications such as PID and Motion Profiling
 *
@@ -131,7 +130,7 @@ Limits m_chassisLimits;
   void turnToDegree(double angle);
   void setDrive(double leftVoltage,double rightVoltage);
   void setVelDrive(double leftVelocity,double rightVelocity);
-  void moveToPoint(const double x, const double y,bool backwards = false,long offset = 0);
+  void moveToPoint(const double x, const double y,bool backwards = false);
   void turnToAbsAngle(const double deg);
   void driveArc( const double angle,double radius);
   void driveArc2( const double angle,double radius);
