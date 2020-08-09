@@ -237,4 +237,5 @@ public:
     double getAverageEncoderValueEncoders();
 };
 extern Tracking poseTracker;
+extern FourMotorDrive testchassis;
 extern FourMotorDrive chassis;

@@ -13,7 +13,7 @@
 
 using namespace vex;
 
-FourMotorDrive chassis( 
+FourMotorDrive testchassis( 
 
 {PORT11,PORT12} , //Left motors (front and back)
 
@@ -34,7 +34,27 @@ ratio18_1 , //motor gear cartridge
 }
 
 );    
+FourMotorDrive chassis( 
 
+{PORT11,PORT12} , //Left motors (front and back)
+
+{PORT9,PORT10} , //Right motors (front and back)
+
+ratio18_1 , //motor gear cartridge
+
+1.66667, //gear ratio
+
+{15.0_in , 4.0_in}, //Dimensions (trackWidth and wheel size)
+
+{42.0_inps,3.3_inps2} , //Limits (maxVelocity and maxAcceleration)
+
+{
+  { .2 , 0 },     //Distance PD
+  { 0 , 0 },     //Angle PD
+  { 7 , 79.8 },      //Turn PD
+}
+
+);    
 
 /*
 Tracking poseTracker(4.0_in,2.75_in,360.0,{Tracking::A,Tracking::C,Tracking::G},PORT7);
@@ -47,7 +67,7 @@ task autonSelect;
 // define your global instances of motors and other devices here
 bool notSkills;
 void pre_auto(void) {
-  chassis.setReverseSettings({false,false}, {true,true});
+  chassis.setReverseSettings({true,true}, {false,false});
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   Brain.Screen.pressed( userTouchCallbackPressed );
