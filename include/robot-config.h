@@ -1,3 +1,5 @@
+
+
 using namespace vex;
 
 extern brain Brain;
@@ -10,10 +12,6 @@ extern inertial inert;
 extern line Line1;
 extern line Line2;
 extern controller Controller1;
-extern motor leftFront;
-extern motor leftBack;
-extern motor rightFront;
-extern motor rightBack;
 extern motor IntakeL;
 extern motor IntakeR;
 extern motor Flywheel;
@@ -32,4 +30,4 @@ extern vision Vision;
  * 
  * This should be called at the start of your int main function.
  */
-void  vexcodeInit( void );
+void vexcodeInit(void);

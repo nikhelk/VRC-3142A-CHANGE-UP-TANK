@@ -1,8 +1,7 @@
 #pragma once
 #include <vector>
 #include "vex.h"
-#include "premacros.h"
-
+#include "Util/premacros.h"
 
 /* ***************************************************************************************************** */
 
@@ -18,33 +17,35 @@
  * Button constructor with properties
  */
 
-struct button {
-    int    xpos; //x-coordanate
-    int    ypos; //y-coordanate
-    int    width; 
-    int    height;
-    bool   state; //if its been pressed or not
-    vex::color offColor; //color when state is "false"
-    vex::color onColor; //color wgen state is "true" 
-    const char *label; //name of button
+struct button
+{
+  int xpos; //x-coordanate
+  int ypos; //y-coordanate
+  int width;
+  int height;
+  bool state;          //if its been pressed or not
+  vex::color offColor; //color when state is "false"
+  vex::color onColor;  //color wgen state is "true"
+  const char *label;   //name of button
 };
 
-struct pidValues {
-    double    kP;
-    double    kI;
-    double    kD;
-    const char *label;
+struct pidValues
+{
+  double kP;
+  double kI;
+  double kD;
+  const char *label;
 };
 
 /**
  * Class buttonGroupMaler. Use to make and use a button type
  */
 
-class ButtonGroupMaker {
-  public:
-
+class ButtonGroupMaker
+{
+public:
   std::vector<button> buttonList; //list of buttons
-        
+
   /**
    * Button group constructor
    * @param initlizer list of buttons
@@ -80,13 +81,11 @@ class ButtonGroupMaker {
    * @param state of press on button 
    * @param if button is permamant (always true)
    */
-  int displayButtonControls(int index, bool pressed,bool permamant);
+  int displayButtonControls(int index, bool pressed, bool permamant);
 
   /**
    * switches the button state
    * @param index of button pressed
    */
   void switchStates(int index);
-
-    
-}; 
+};

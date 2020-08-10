@@ -1,46 +1,4 @@
 #pragma once
-#include "vex.h"
-
-/**
- * Determnies whether a number is negative or positive
- * @param number to be determined
- * @return -1 if negative, 1 if positive, 0 if 0
- */
-
-int sgn(double num);
-
-/**
- * Determnies cosine of value in degrees
- * @param value (degrees)
- * @return cosine of value 
- */
-
-
-double cosDegrees(double value);
-
-/**
- * Determnies sine of value in degrees
- * @param value (degrees)
- * @return sine of value 
- */
-
-double sinDegrees(double value);
-
-/**
- * Converts to degrees from radians
- * @param value (radians)
- * @return value (degrees)
- */
-
-double toDegrees(double angle);
-
-/**
- * Converts to radians from degrees
- * @param value (degrees)
- * @return value (radians)
- */
-
-double toRadians(double angle);
 
 struct pointVals
 {
@@ -56,9 +14,8 @@ typedef struct _pos
 	int leftLst;
 	int rightLst;
 	int backLst;
-  double angleLst;
+	double angleLst;
 } sPos; // Position of the robot
-
 
 void computeDistanceAndAngleToPoint(const long x, const long y, pointVals *out);
 int trackPosition();
@@ -67,13 +24,13 @@ const double encoderToInch = 28.6479;
 //POSITION TRACKING
 
 extern double test2;
-#define WHEEL_DIAMETER_IN_LR 4.0 // 2.843
-#define WHEEL_DIAMETER_IN_S 4.0 // 2.843
+#define WHEEL_DIAMETER_IN_LR 4.0	// 2.843
+#define WHEEL_DIAMETER_IN_S 0.06985 // 2.843
 
 // The distance between the tracking wheels and the centre of the robot in inches
-#define L_DISTANCE_IN 7.0//6.8198
-#define R_DISTANCE_IN 7.0 //6.8198
-#define S_DISTANCE_IN 8.0
+#define L_DISTANCE_IN 6.8
+#define R_DISTANCE_IN 6.8
+#define S_DISTANCE_IN 7.0
 
 // The number of tick per rotation of the tracking wheel
 #define TICKS_PER_ROTATION 360.0
@@ -87,10 +44,11 @@ extern double test2;
  * Stores odometry values
  */
 
-enum positionVals {
-  ODOM_X,
-  ODOM_Y,
-  ODOM_THETA,
+enum positionVals
+{
+	ODOM_X,
+	ODOM_Y,
+	ODOM_THETA,
 };
 
 extern double positionArray[3];
@@ -104,11 +62,7 @@ extern double positionArray[3];
 
 void setOdomOrigin(double x, double y, double a);
 
-
 int trackPosition2();
 void printPosition();
 int trackPositionGyro();
 extern float thetaDegrees;
-
-
-
