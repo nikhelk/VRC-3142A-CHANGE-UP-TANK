@@ -6,7 +6,7 @@ int flywheelTask()
   double slew = 0;
   while (true)
   {
-    Flywheel.spin(reverse, slew, volt);
+    Flywheel.spin(fwd, slew, volt);
     if (slew > 12)
       slew = 12;
     if (!startFlyDecel)

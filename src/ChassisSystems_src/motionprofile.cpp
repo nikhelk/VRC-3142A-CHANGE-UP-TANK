@@ -83,3 +83,9 @@ std::string TrapezoidalMotionProfile::getMpStatus(const double t)
 
   return ("done");
 }
+
+
+Feedfoward::Feedfoward(double kV, double kA) {
+  this->kV = kV;
+  this->kA = kA;
+}

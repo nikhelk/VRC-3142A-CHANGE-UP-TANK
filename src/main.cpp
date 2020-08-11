@@ -53,7 +53,7 @@ FourMotorDrive chassis(
 
     1.66667, //gear ratio
 
-    {15.0_in, 3.25_in}, //Dimensions (trackWidth and wheel size)
+    {12.0_in, 3.25_in}, //Dimensions (trackWidth and wheel size)
 
     {1.2, 2.1}, //Limits (maxVelocity and maxAcceleration)
 
@@ -134,14 +134,12 @@ int main()
   //chassis.driveArc2(90, 20);
   // chassis.crawl(3.25_in, 20);
   //chassis.turnToDegreeGyro(-60);
-  // chassis.driveStraightFeedforward(53.2_in);
+   chassis.driveArcFeedforward(20.0_in,90.0_deg);
   //driveStraightFeedforward(50);
   double time = Brain.Timer.time(timeUnits::sec);
   //driveArcSortaWorks(90, 20);
   //task flyTask(flywheelTask);
-  task taskIntake(intakeTask);
-  task taskFlywheel(flywheelTask);
-  task taskIndexer(indexerTask);
+
   //chassis.driveStraightFeedforward(70.0_in);
 
   while (true)

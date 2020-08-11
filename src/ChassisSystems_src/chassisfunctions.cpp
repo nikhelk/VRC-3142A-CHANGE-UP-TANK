@@ -2,6 +2,7 @@
 #include "ChassisSystems/chassisGlobals.h"
 #include "Util/mathAndConstants.h"
 #include "ChassisSystems/motionprofile.h"
+#include <algorithm>
 using namespace std;
 
 void FourMotorDrive::turnToDegreeGyro(double degree)
@@ -45,26 +46,29 @@ void FourMotorDrive::driveStraightFeedforward(const double distance)
 {
     double startTimeA = Brain.timer(vex::timeUnits::sec);
 
-    double mpVel;
-
     TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
+
+    double mpVel, mpAcc;
 
     double drift;
 
-    
-
-    double currentTime;
+    double currentTime, prevTime;
 
     const double initialMetersLeft = chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()); //this is my way of resetting the encoder vals instead of setting them to 0
     
     const double initialMetersRight = chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors());
 
-
     double pose = 0;
+
+    Feedfoward rFeed(11.2/trap.m_maxVel,.1);
+
+    Feedfoward lFeed(11/trap.m_maxVel,.08);
 
     posPID rPush(7, 0);
 
     posPID lPush(0, 0);
+
+    double rPower, lPower;
 
     double t = 0;
 
@@ -80,30 +84,149 @@ void FourMotorDrive::driveStraightFeedforward(const double distance)
       currentTime = Brain.timer(vex::timeUnits::sec) - startTimeA;
 
       mpVel = trap.calculateMpVelocity(currentTime);
-
-      double rPower = rPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()));
-
-      double lPower = lPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()));
+      
+      mpAcc = trap.calculateMpAcceleration(currentTime);
 
       std::string currentStatus = trap.getMpStatus(currentTime);
 
+      rPower = rPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()));
+
+      lPower = lPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()));
+
       cout << chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()) << " " << chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()) << " " << pose << endl;
       
-      this->setDrive((11 / trap.m_maxVel) * mpVel + .08 * trap.calculateMpAcceleration(currentTime) + lPower, (11.2 / trap.m_maxVel) * mpVel + .1 * trap.calculateMpAcceleration(currentTime) + rPower); // setting the drive and adding the correction pid
+      this->setDrive(lFeed.kV * mpVel + lFeed.kA * mpAcc + lPower, rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower); // setting the drive and adding the correction pid
       
+      pose += mpVel * (currentTime -prevTime);
+
       t = currentTime;
-     
+
+      prevTime = currentTime;
+
       task::sleep(10);
       
-     
     }
 
   this->setDrive(0, 0); //stopping bot
 }
 
 
+void FourMotorDrive::driveArcFeedforward(const double radius, const double exitAngle) {
+
+  double startTimeA = Brain.timer(vex::timeUnits::sec);
+
+  const double distance = radius *exitAngle;
+
+  double rRadius = radius + .15;
+  double lRadius = radius - .15;
+  double rDistance = rRadius * exitAngle;
+  double lDistance = lRadius * exitAngle;
+
+  double ratio = lDistance/rDistance;
+  TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
+
+  TrapezoidalMotionProfile trapR(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, rDistance);
+
+  TrapezoidalMotionProfile trapL(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, lDistance);
+
+    double mpVel, mpAcc;
+
+    double drift;
+
+    double currentTime, prevTime;
+
+    const double initialMetersLeft = chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()); //this is my way of resetting the encoder vals instead of setting them to 0
+    
+    const double initialMetersRight = chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors());
+
+    double rPose = 0;
+
+    double lPose = 0;
+
+    Feedfoward rFeed(11.2/trap.m_maxVel,.1);
+
+    Feedfoward lFeed(11/trap.m_maxVel,.08);
+
+    posPID rPush(7, 0);
+
+    posPID lPush(0, 0);
+
+    double rPower, lPower;
+
+    double t = 0;
+
+    double lastLeft, lastRight;
+    posPID r(0,0);
+    posPID l(1,0);
+
+  while(t <= trap.m_totalTime) {
+
+    double currLeftMoved = chassis.convertTicksToMeters((chassis.getLeftEncoderValueMotors()) - initialMetersLeft);
+
+    double currRightMoved = chassis.convertTicksToMeters((chassis.getRightEncoderValueMotors()) - initialMetersRight);
+
+    drift = currLeftMoved - currRightMoved;
+
+    currentTime = Brain.timer(vex::timeUnits::sec) - startTimeA;
+
+    mpVel = trap.calculateMpVelocity(currentTime);
+      
+    mpAcc = trap.calculateMpAcceleration(currentTime);
 
 
+    double rAdjust = mpVel * (2 - this->m_chassisDimensions.m_trackWidth * (1/radius)) / 2;
+
+    double lAdjust = mpVel * (2 + this->m_chassisDimensions.m_trackWidth * (1/radius)) / 2;
+
+    double R = trapR.calculateMpVelocity(currentTime);
+    double L = trapL.calculateMpVelocity(currentTime);
+
+   // chassis.normalize(lAdjust, rAdjust);
+
+
+    double rightVel = (currRightMoved-lastRight)/.01;
+    double leftVel = (currLeftMoved-lastLeft)/.01;
+    cout << lPose <<" " << chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()) << " "
+    << rPose << " " << chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()) <<  " " << 
+    chassis.convertTicksToMeters(chassis.getAverageEncoderValueMotors()) << " " << (rPose+lPose)/2<< " "
+    << rAdjust << " " << lAdjust << endl;
+
+
+    auto rPower = r.calculatePower(rPose, currRightMoved);
+    auto lPower = l.calculatePower(lPose, currLeftMoved);
+
+    setDrive(lAdjust*lFeed.kV + lPower ,rAdjust*rFeed.kV+rPower);
+    //setVelDrive(chassis.convertMetersToTicks(lAdjust), chassis.convertMetersToTicks(rAdjust));
+    t = currentTime;
+
+    rPose += rAdjust * .01;
+
+    lPose += lAdjust * .01;
+
+    lastLeft = currLeftMoved;
+    lastRight = currLeftMoved;
+    task::sleep(10);
+
+  }
+
+  setDrive(0, 0);
+  
+
+}
+
+void FourMotorDrive::normalize(double &left, double &right) {
+
+  double maxSpeed = std::max(std::abs(left), std::abs(right));
+
+  if (maxSpeed > this->m_chassisLimits.m_maxVelocity) {
+    std::cout << "NORMALIZING" << " " << maxSpeed << std::endl;
+
+    left = left / maxSpeed * this->m_chassisLimits.m_maxVelocity;
+
+    right = right / maxSpeed * this->m_chassisLimits.m_maxVelocity;
+
+  }
+}
 
 
 
@@ -129,10 +252,10 @@ void FourMotorDrive::driveStraightFeedforward(const double distance)
 
 void FourMotorDrive::setVelDrive(double leftVelocity, double rightVelocity)
 {
-    leftFront.spin(fwd, leftVelocity, velocityUnits::rpm);
-    leftBack.spin(fwd, leftVelocity, velocityUnits::rpm);
-    rightFront.spin(fwd, rightVelocity, velocityUnits::rpm);
-    rightBack.spin(fwd, rightVelocity, velocityUnits::rpm);
+    leftFront.spin(fwd, leftVelocity, velocityUnits::dps);
+    leftBack.spin(fwd, leftVelocity, velocityUnits::dps);
+    rightFront.spin(fwd, rightVelocity, velocityUnits::dps);
+    rightBack.spin(fwd, rightVelocity, velocityUnits::dps);
 }
 
 void FourMotorDrive::setDrive(double leftVoltage, double rightVoltage)

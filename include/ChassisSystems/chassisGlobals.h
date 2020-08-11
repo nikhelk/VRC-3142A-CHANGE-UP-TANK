@@ -9,6 +9,7 @@
 
 */
 
+
 class Dimensions
 {
 private:
@@ -89,22 +90,6 @@ public:
 
   void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
 
-  long double getTrackWidth()
-  {
-    return (m_chassisDimensions.m_trackWidth);
-  }
-  long double getWheelRadius()
-  {
-    return (m_chassisDimensions.m_wheelRadius);
-  }
-  long double getMaxVelocity()
-  {
-    return (m_chassisLimits.m_maxVelocity);
-  }
-  long double getMaxAcceleration()
-  {
-    return (m_chassisLimits.m_maxAcceleration);
-  }
 
   /**
    * sets the chassis to drive at a voltage
@@ -121,31 +106,40 @@ public:
    * @param the desired units of velocity (dps, rpm)
    */
 
-  void setVelocityDrive(double leftVelocity, double rightVelocity, velocityUnits vel);
 
   void turnToDegreeGyro(double degree);
 
   void driveStraight(const double distance);
-  void turnToDegree(double angle);
-  void setDrive(double leftVoltage, double rightVoltage);
-  void setVelDrive(double leftVelocity, double rightVelocity);
+
+  void normalize(double &left, double &right);
+
   void crawl(double distance, double speed);
+
   void moveToPoint(const double x, const double y, bool backwards = false);
+
   void turnToAbsAngle(const double deg);
-  void driveArc(const double angle, double radius);
+  
   void driveArc2(const double angle, double radius);
-  void driveArc3(const double angle, double radius);
-  void driveArc4(const double x, const double y, double angle);
-  void driveArc5(const double left, const double right);
-  void moveToPointArc(const double x, const double y, const double theta);
+
+  void driveArcFeedforward(const double radius, const double exitAngle);
+
   void driveStraightFeedforward(const double distance);
-  void driveArcSortaWorks(const double angle, double radius);
+
+  void setDrive(double leftVoltage, double rightVoltage);
+
+  void setVelDrive(double leftVelocity, double rightVelocity);
+
   double getAverageEncoderValueMotors();
+
   double getRightEncoderValueMotors();
+
   double getLeftEncoderValueMotors();
+
   double convertMetersToTicks(double num_meters);
+
   double convertTicksToMeters(double num_ticks);
 };
+
 
 class WheelDistances
 {
