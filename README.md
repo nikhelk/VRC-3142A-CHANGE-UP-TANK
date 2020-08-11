@@ -9,6 +9,6 @@ This is our code forour sumbission for the Annotated Programming Skills Challeng
 
 ### includes ###
 
--`include/vex.h` includes stdlib libraries and vex sdk 
--`include/robot-config.h` + `src/robot-config.cpp` stores all of the non chassis systens and the bulk of the sensors
--`
+ - `include/vex.h` includes stdlib libraries and vex sdk 
+ - `include/robot-config.h` + `src/robot-config.cpp` stores all of the non chassis systens and the bulk of the sensors
+ - `include/usercontrol.h` + `src/usercontrolcpp` driver controls and functions (in development)
