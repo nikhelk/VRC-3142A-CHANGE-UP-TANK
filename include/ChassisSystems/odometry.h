@@ -19,7 +19,7 @@ typedef struct _pos
 
 void computeDistanceAndAngleToPoint(const long x, const long y, pointVals *out);
 int trackPosition();
-const double encoderToInch = 28.6479;
+
 
 //POSITION TRACKING
 
@@ -62,7 +62,7 @@ extern double positionArray[3];
 
 void setOdomOrigin(double x, double y, double a);
 
-int trackPosition2();
+
 void printPosition();
 int trackPositionGyro();
 extern float thetaDegrees;

@@ -48,15 +48,15 @@ public:
 
   /**
    * Button group constructor
-   * @param initlizer list of buttons
+   * @param butonList initlializer list of buttons
    */
 
   ButtonGroupMaker(std::initializer_list<button> butonList);
 
   /**
    * gets the index of a button oressed in a button group
-   * @param x coordinate of brain press
-   * @param y coordinate of brain press
+   * @param xpos x coordinate of brain press
+   * @param ypos y coordinate of brain press
    * @return index of buton pressed in button group
    */
 
@@ -70,7 +70,7 @@ public:
   /**
    * Displays all of the temporary buttons in a group
    * @param index of button pressed
-   * @param state of press on button
+   * @param pressed state of press on button
    */
 
   int displayButtonControls(int index, bool pressed);
@@ -78,8 +78,8 @@ public:
   /**
    * Displays all of the permamant buttons in a group (PID, tab, and confirm)
    * @param index of button pressed
-   * @param state of press on button 
-   * @param if button is permamant (always true)
+   * @param pressed state of press on button 
+   * @param permamant if button is permamant (always true)
    */
   int displayButtonControls(int index, bool pressed, bool permamant);
 

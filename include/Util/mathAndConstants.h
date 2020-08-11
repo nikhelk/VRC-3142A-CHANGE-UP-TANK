@@ -4,7 +4,7 @@
 
 /**
  * Determnies whether a number is negative or positive
- * @param number to be determined
+ * @param num number to be determined
  * @return -1 if negative, 1 if positive, 0 if 0
  */
 
@@ -28,18 +28,8 @@ double sinDegrees(double value);
 
 /**
  * Converts to degrees from radians
- * @param value (radians)
+ * @param angle (radians)
  * @return value (degrees)
  */
-
-double toDegrees(double angle);
-
-/**
- * Converts to radians from degrees
- * @param value (degrees)
- * @return value (radians)
- */
-
-double toRadians(double angle);
 
 

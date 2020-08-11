@@ -74,7 +74,7 @@ void displayPIDSettings();
  * Displays all the PID tuner buttons
  * This had to be a standalone function (not part of ButtonGroupMaker) becuase it had different properties
  * @param index of button pressed
- * @param state of press on button
+ * @param pressed state of press on button
  */
 
 int displayPIDControls(int index, bool pressed);

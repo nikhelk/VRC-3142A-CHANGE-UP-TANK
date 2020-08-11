@@ -33,7 +33,7 @@ FourMotorDrive testchassis(
 
     {15.0_in, 4.0_in}, //Dimensions (trackWidth and wheel size)
 
-    {1.5, 2.5}, //Limits (maxVelocity and maxAcceleration)
+    {1.5, 2.2}, //Limits (maxVelocity and maxAcceleration)
 
     {
         {.2, 0},   //Distance PD
@@ -55,12 +55,12 @@ FourMotorDrive chassis(
 
     {12.0_in, 3.25_in}, //Dimensions (trackWidth and wheel size)
 
-    {1.2, 2.1}, //Limits (maxVelocity and maxAcceleration)
+    {1.2, 1.9}, //Limits (maxVelocity and maxAcceleration)
 
     {
         {.2, 0},  //Distance PD
         {0, 0},   //Angle PD
-        {18, 17}, //Turn PD
+        {18, 0}, //Turn PD
     }
 
 );
@@ -114,7 +114,19 @@ void autonomous(void)
     task::sleep(20);
   }
 }*/
+void DRIVE(double leftVelocity, double rightVelocity) {
+  chassis.leftFront.spin (fwd,leftVelocity, velocityUnits::rpm);
+  chassis.leftBack.spin (fwd,leftVelocity, velocityUnits::rpm);
+  chassis.rightFront.spin (fwd,rightVelocity, velocityUnits::rpm);
+  chassis.rightBack.spin (fwd,rightVelocity, velocityUnits::rpm);
+}
+#include "ChassisSystems/motionprofile.h"
 bool startFlyDecel = false;
+
+task spinFly;
+task spinIntakes;
+task spinIndexer;
+
 int main()
 {
 
@@ -134,14 +146,33 @@ int main()
   //chassis.driveArc2(90, 20);
   // chassis.crawl(3.25_in, 20);
   //chassis.turnToDegreeGyro(-60);
-   chassis.driveArcFeedforward(20.0_in,90.0_deg);
+   //chassis.driveArcFeedforward(20.0_in,90.0_deg);
   //driveStraightFeedforward(50);
   double time = Brain.Timer.time(timeUnits::sec);
   //driveArcSortaWorks(90, 20);
-  //task flyTask(flywheelTask);
-
+  task indexTask(indexerTask);
+  task spinFly(flywheelTask);
+  task intSpin(intakeTask);
+  //chassis.driveStraightFeedforward(50.0_in,true);
+  //chassis.turnToDegreeGyro(90.0_deg);
   //chassis.driveStraightFeedforward(70.0_in);
+  TrapezoidalMotionProfile trapp = TrapezoidalMotionProfile(1, 4, 0.8);
+   double t = 0;
+   double pose =0;
+ /* while(t<trapp.m_totalTime) {
+    double linearVel = trapp.calculateMpVelocity(t);
+    double linearAcc = trapp.calculateMpAcceleration(t);
+      pose += (linearVel*.01);
 
+    DRIVE(179.0269326118058*linearVel*(2+14*0.05)/2,179.0269326118058*linearVel*(2-14*0.05)/2);
+   // setVoltDrive(11.1*linearVel -lPower,11.1*linearVel - rPower);
+   t += .01;
+   
+   //std::cout << linearVel << std::endl;
+   
+  task::sleep(10);
+  }*/
+  DRIVE(0,0);
   while (true)
   {
     // std::cout << poseTracker.getInertialHeading() <<std::endl;

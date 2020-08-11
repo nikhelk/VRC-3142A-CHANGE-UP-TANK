@@ -18,11 +18,10 @@ public:
   long double m_wheelRadius;
 
   /**
-     * Initilizes dimensions for 4 motor drive
-     * @param four motor drive to add dimensions to
-     * @param track width of drive
-     * @param wheel radius of drive
-     */
+   * Initilizes dimensions for 4 motor drive
+   * @param trackWidth width of drive
+   * @param wheelRadius radius of  wheels on drive
+   */
   Dimensions(long double trackWidth, long double wheelRadius);
 };
 
@@ -32,12 +31,12 @@ private:
 public:
   long double m_maxVelocity;
   long double m_maxAcceleration;
+
   /**
-     * Initilizes kinematic limits for 4 motor drive
-     * @param four motor drive to add limits to
-     * @param max Velocity of drive (inches/sec)
-     * @param max Acceleration of drive (inches/sec^2)
-     */
+   * Initilizes kinematic limits for 4 motor drive
+   * @param maxVelocity of drive (inches/sec)
+   * @param maxAcceleration of drive (inches/sec^2)
+   */
   Limits(long double maxVelocity, long double maxAcceleration);
 
   //void setGearRatio(double ratio);
@@ -68,43 +67,33 @@ public:
   motor rightBack;
 
   /**
-     * Initilizes 4 motor drive
-     * @param vector of left motor ports (front,back)
-     * @param vector of right motor ports (front,back)
-     * @param gear cartridge
-     * @param gear ratio
-     * @param chassis dimensions (trackWidth and wheel size)
-     * @param chassis limits (max velocity and acceleration)
-     * @param PD Controller chassis parameters
-     */
+   * Initilizes 4 motor drive
+   * @param leftGroup vector of left motor ports (front,back)
+   * @param rightGroup vector of right motor ports (front,back)
+   * @param setting gear cartridge type (36:1.18:1,6:1)
+   * @param gearRatio gear ratio
+   * @param chassisDimensions chassis dimensions (trackWidth and wheel size)
+   * @param chassisLimits chassis limits (max velocity and acceleration)
+   * @param PDGains Controller chassis parameters
+   */
 
   FourMotorDrive(std::vector<int32_t> leftGroup,
                  std::vector<int32_t> rightGroup,
                  vex::gearSetting setting, double gearRatio, Dimensions chassisDimensions, Limits chassisLimits, std::initializer_list<PDcontroller> PDGains);
 
   /**
-     * Handles the reversal of motors.
-     * @param LeftReverseVals boolean array of leftFront and leftBack desired reversal states
-     * @param RightReverseVals boolean array of rightFront and rightBack desired reversal states
-     */
+   * Handles the reversal of motors.
+   * @param LeftReverseVals boolean array of leftFront and leftBack desired reversal states
+   * @param RightReverseVals boolean array of rightFront and rightBack desired reversal states
+   */
 
   void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
 
 
-  /**
-   * sets the chassis to drive at a voltage
-   * @param the desired left side voltage of chassis
-   * @param the desired right side voltage of chassis
-   */
+
 
   void setVoltDrive(double leftVoltage, double rightVoltage);
 
-  /**
-   * sets the chassis to drive at a velocity 
-   * @param the desired left side velocity
-   * @param the desired right side velocity
-   * @param the desired units of velocity (dps, rpm)
-   */
 
 
   void turnToDegreeGyro(double degree);
@@ -123,20 +112,75 @@ public:
 
   void driveArcFeedforward(const double radius, const double exitAngle);
 
-  void driveStraightFeedforward(const double distance);
+
+  /**
+   * Drives the robot using feedforward control
+   * 
+   * We calculate our final motor voltage kV*velocity + kA*acceleration + kP*(desiredPos-currentPos)
+   * 
+   * the velocity and acceleration values are generated from the trapezoidal motion profile described in motionprofile.h and .cpp
+   * 
+   * the kV and kA terms are "feedfoward" meaning they guess the pose at a certian timestep
+   * 
+   * We let the kV and kA terms do the brunt of the work and have a P loop on the current position and the actual desired pose ot the current time (not the final pose)
+   * 
+   * @param distance desired distance to travel
+   * @param backwards the desired path is backwards or not
+   * @see TrapezoidalMotionProfile#TrapezoidalMotionProfile
+   * @see TrapezoidalMotionProfile#calculateMpVelocity
+   * @see TrapezoidalMotionProfile#calculateMpAcceleration
+   * @see posPID#posPID
+   * @see posPID#calculatePower
+   * 
+   */
+
+  void driveStraightFeedforward(const double distance, bool backwards = false);
+
+  /**
+   * Sets the drive to a volatage
+   * @param leftVoltage desired left voltage
+   * @param  desired right voltage
+   */
 
   void setDrive(double leftVoltage, double rightVoltage);
 
+
+  /**
+   * sets the chassis to drive at a velocity 
+   * @param leftVelocity desired left side velocity
+   * @param rightVelocity desired right side velocity
+   */
+
+
   void setVelDrive(double leftVelocity, double rightVelocity);
+
+  
+  /**
+   * gets the encoder values of the all motors (average)
+   * @return the total average econder values
+   */
 
   double getAverageEncoderValueMotors();
 
+  /**
+   * gets the encoder values of the right encoders (average)
+   * @return the total average  of right econder values
+   */
+
   double getRightEncoderValueMotors();
+
+  /**
+   * gets the encoder values of the left encoders (average)
+   * @return the total average  of left encoder values
+   */
 
   double getLeftEncoderValueMotors();
 
+
+  //converts an imput meters to encoder ticks based off of gear ratio, gearbox etc.
   double convertMetersToTicks(double num_meters);
 
+  //converts an imput ticks meters based off of gear ratio, gearbox etc.
   double convertTicksToMeters(double num_ticks);
 };
 

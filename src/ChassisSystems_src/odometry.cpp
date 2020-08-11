@@ -107,7 +107,7 @@ int trackPositionGyro()
   position.angleLst = 0;
   position.x = positionArray[ODOM_X];
   position.y = positionArray[ODOM_Y];
-  position.a = toRadians(positionArray[ODOM_THETA]);
+  position.a = (M_PI/180)*(positionArray[ODOM_THETA]);
   while (true)
   {
     int left = chassis.leftFront.position(degrees);
@@ -125,7 +125,7 @@ int trackPositionGyro()
     double h;                                                                   // The hypotenuse of the triangle formed by the middle of the robot on the starting position and ending position and the middle of the circle it travels around
     double i;                                                                   // Half on the angle that I've traveled
     double h2;                                                                  // The same as h but using the back instead of the side wheels
-    double a = toRadians(poseTracker.getInertialHeading()) - position.angleLst; // The angle that I've traveled
+    double a = (M_PI/180)*(poseTracker.getInertialHeading()) - position.angleLst; // The angle that I've traveled
     //if(a <(toRadians(.0001))) {
     //  a = 0;
     //}
@@ -175,12 +175,12 @@ int trackPositionGyro()
     //cout << "hi" <<SPIN_TO_IN_LR <<endl;
     positionArray[ODOM_X] = position.x;
     positionArray[ODOM_Y] = position.y;
-    positionArray[ODOM_THETA] = toDegrees(position.a);
+    positionArray[ODOM_THETA] = (180/M_PI)*(position.a);
     //std::cout << positionArray[ODOM_X] << "," << positionArray[ODOM_Y] << ", " <<positionArray[ODOM_THETA] <<" ," << h * sinP << ", " <<h2<<std::endl;
     //cout << positionArray[ODOM_X] << "," << positionArray[ODOM_Y] <<endl;;
     //cout << positionArray[ODOM_X] << "," << positionArray[ODOM_Y] << " " << positionArray[ODOM_THETA] << " " << leftFront.position(degrees)<< " " << rightFront.position(degrees)<< " "<<
     //    (leftFront.position(degrees)/rightFront.position(degrees)) <<endl;
-    position.angleLst = toRadians(poseTracker.getInertialHeading());
+    position.angleLst = (M_PI/180)*(poseTracker.getInertialHeading());
     task::sleep(20);
   }
   return 1;

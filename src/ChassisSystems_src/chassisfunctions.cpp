@@ -11,14 +11,14 @@ void FourMotorDrive::turnToDegreeGyro(double degree)
   double atTargetAngle = 3;
   while (!atTarget)
   {
-    double currentAngleRadians = toRadians(poseTracker.getInertialHeading());
-    double targetAngleRadians = toRadians(degree);
+    double currentAngleRadians = (M_PI/180)*(poseTracker.getInertialHeading());
+    double targetAngleRadians = (degree);
 
     double angleOutput = chassis.turnPID.calculatePower(targetAngleRadians, currentAngleRadians);
     pidTimer turnTimer;
     double timeoutPeriod = 250;
     this->setDrive(-1 * angleOutput, angleOutput);
-    if (std::abs(degree - poseTracker.getInertialHeading()) <= atTargetAngle)
+    if (std::abs(degree - currentAngleRadians) < (M_PI/180)*(atTargetAngle))
     {
       turnTimer.close += 10;
     }
@@ -33,7 +33,7 @@ void FourMotorDrive::turnToDegreeGyro(double degree)
     {
       atTarget = true;
     }
-    std::cout << poseTracker.getInertialHeading() << std::endl;
+    std::cout << targetAngleRadians <<  " "  << currentAngleRadians <<std::endl;
     task::sleep(10);
   }
 }
@@ -42,8 +42,12 @@ void FourMotorDrive::turnToDegreeGyro(double degree)
 
 
 
-void FourMotorDrive::driveStraightFeedforward(const double distance)
+void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwards)
 {
+  int switchDirections =1;
+  if(backwards) {
+    switchDirections = -1;
+  }
     double startTimeA = Brain.timer(vex::timeUnits::sec);
 
     TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
@@ -95,7 +99,8 @@ void FourMotorDrive::driveStraightFeedforward(const double distance)
 
       cout << chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()) << " " << chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()) << " " << pose << endl;
       
-      this->setDrive(lFeed.kV * mpVel + lFeed.kA * mpAcc + lPower, rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower); // setting the drive and adding the correction pid
+      this->setDrive(switchDirections*lFeed.kV * mpVel + lFeed.kA * mpAcc + lPower, 
+      switchDirections * rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower); // setting the drive and adding the correction pid
       
       pose += mpVel * (currentTime -prevTime);
 

@@ -57,13 +57,6 @@ void FourMotorDrive::setVoltDrive(double leftVoltage, double rightVoltage)
   this->rightBack.spin(fwd, rightVoltage, volt);
 }
 
-void FourMotorDrive::setVelocityDrive(double leftVelocity, double rightVelocity, velocityUnits vel)
-{
-  this->leftFront.spin(fwd, leftVelocity, vel);
-  this->leftBack.spin(fwd, leftVelocity, vel);
-  this->rightFront.spin(fwd, leftVelocity, vel);
-  this->rightBack.spin(fwd, leftVelocity, vel);
-}
 
 
 Dimensions::Dimensions(long double trackWidth, long double wheelRadius) :

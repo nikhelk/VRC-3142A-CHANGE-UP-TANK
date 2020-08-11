@@ -18,8 +18,8 @@ private:
   double m_proportional;
   double m_derivative;
 
-  static const int m_upperBound = 10;
-  static const int m_lowerBound = -10;
+  static const int m_upperBound = 10; //max voltage
+  static const int m_lowerBound = -10; //min voltage
   double m_power;
 
 public:
@@ -27,43 +27,50 @@ public:
   double KD;
 
   /**
-     * default posPID constructor for values inputted in the FourMotorDrive constructor
-     */
+   * default posPID constructor for values inputted in the FourMotorDrive constructor
+   */
+
   posPID();
 
   /**
-     * Creates a PD controller for drivetrain
-     * @param kP value
-     * @param kD value
-     */
+   * Creates a PD controller for drivetrain
+   * @param kP value
+   * @param kD value
+   */
 
   posPID(double kP, double kD);
 
   /**
-     * Calculates power of PD drive controller definied in FourMotorDrive
-     * @param desired position of robot
-     * @param current position of robot
-     * @return output power of controller
-     */
+   * Calculates power of PD drive controller definied in FourMotorDrive
+   * @param targetPos  desired position of robot
+   * @param currentPos current position of robot
+   * @return output power of controller
+   */
 
   double calculatePower(double targetPos, double currentPos);
 
   /**
-     * gets the error of the PD controller
-     * @return error of controller
-     */
+   * gets the error of the PD controller
+   * @return error of controller
+   */
 
   double getError() { return (m_error); }
 
   /**
-     * gets the power of the PD controller
-     * @return error of controller
-     */
+   * gets the power of the PD controller
+   * @return error of controller
+   */
   double getPower() { return (m_power); }
 };
 
-struct pidTimer
+
+/**
+ * struct pidTimer
+ * timers for pid timeout
+ */
+
+struct pidTimer 
 {
-  int close;
-  int notMoved;
+  int close; //if robot is close to target
+  int notMoved; //if robot has not moved
 };
