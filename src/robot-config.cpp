@@ -5,13 +5,14 @@ using signature = vision::signature;
 using code = vision::code;
 
 // A global instance of brain used for printing to the V5 Brain screen
-brain  Brain;
+brain Brain;
 
 // VEXcode device constructors
-motor leftFront = motor(PORT11, ratio18_1, false);
-motor rightFront = motor(PORT13, ratio18_1, true);
-motor leftBack = motor(PORT12, ratio18_1, false);
-motor rightBack = motor(PORT16, ratio18_1, true);
+
+motor Flywheel = motor(PORT19, ratio6_1, true);
+motor IntakeL = motor(PORT18, ratio6_1, false);
+motor IntakeR = motor(PORT6, ratio6_1, true);
+motor Indexer = motor(PORT5, ratio6_1, false);
 encoder EncoderG = encoder(Brain.ThreeWirePort.G);
 inertial inert = inertial(PORT7);
 line Line1 = line(Brain.ThreeWirePort.A);
@@ -27,6 +28,7 @@ bool RemoteControlCodeEnabled = true;
  * 
  * This should be called at the start of your int main function.
  */
-void vexcodeInit( void ) {
+void vexcodeInit(void)
+{
   // nothing to initialize
 }

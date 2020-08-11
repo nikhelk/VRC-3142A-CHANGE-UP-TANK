@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-#define LOG(x)  std::cout << x  << std::endl
+#define LOG(x) std::cout << x << std::endl
 /*
 #define LOG(x,y)  std::cout << x << " "  << y << std::endl
 

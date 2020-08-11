@@ -16,7 +16,6 @@
  * Creates background for the selector
  */
 
-
 void makeBackground();
 
 /**
@@ -25,14 +24,13 @@ void makeBackground();
    * @param state of press on button
    */
 
-void displayAllButtonControls( int index, bool pressed );
+void displayAllButtonControls(int index, bool pressed);
 
 /**
  * tasked function that is called in main
  */
 
 int makeDisplay();
-
 
 /**
  * callback function for when Brain Screen is pressed
@@ -46,24 +44,19 @@ void userTouchCallbackPressed();
 
 void userTouchCallbackReleased();
 
-
-
 /**
  * Changes pid values of a chassis system
  * @param type of system to change PID settings (e.g. straight or turn)
  */
 
-void 
-changeChassisPidValues(int type);
+void changeChassisPidValues(int type);
 
 /**
  * Changes pid values of a non chassis system
  * @param type of system to change PID settings (e.g. flywheel or intake)
  */
 
-void 
-changeNonChassisPidValues(int type);
-
+void changeNonChassisPidValues(int type);
 
 /**
  * Displays values made in the "settings menu"
@@ -84,18 +77,13 @@ void displayPIDSettings();
  * @param state of press on button
  */
 
-int
-displayPIDControls(int index,bool pressed);
-
+int displayPIDControls(int index, bool pressed);
 
 /**
  * Generates the loading screen when the confirm button is pressed
  */
 
 void makeLoadingScreen();
-
-
-
 
 //externs that are used in mutiple src files
 extern ButtonGroupMaker tabButtons;

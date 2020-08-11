@@ -1,10 +1,10 @@
 #include "vex.h"
-void usercontrol(void) 
+void usercontrol(void)
 {
 
-
-  while(true) {
+  while (true)
+  {
 
     task::sleep(20);
   }
-} 
+}

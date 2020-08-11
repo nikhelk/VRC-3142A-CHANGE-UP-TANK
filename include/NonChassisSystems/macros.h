@@ -8,38 +8,30 @@
 
 void macrosUser();
 
-
 /**
  * Gets the state of line sensor 1
  * @return true if line sensor 1 detects ball
  */
 
-
-bool getS1Status ();
-
+bool getS1Status();
 
 /**
  * Gets the state of line sensor 2
  * @return true if line sensor 2 detects ball
  */
 
-
-bool getS2Status ();
-
+bool getS2Status();
 
 /**
  * Detects whether robot is in a shooting state
  * @return true if controller button L1 is pressed
  */
 
-
 bool getIsShooting();
-
 
 /**
  * Updates the enum botStates
  */
-
 
 void setMacroState();
 
@@ -50,17 +42,15 @@ void setMacroState();
 
 enum visionSensor
 {
-  RED, /**< Red ball detected */
+  RED,  /**< Red ball detected */
   BLUE, /**< Blue ball detected */
   BLACK /**< default; no ball detected */
 };
-
 
 /**
  * enum botStates
  * Stores every possibility of ball positions found from two line sensors, a vision sensor for ball ejection and the wattage of the intakes.
  */
-
 
 enum botStates
 {

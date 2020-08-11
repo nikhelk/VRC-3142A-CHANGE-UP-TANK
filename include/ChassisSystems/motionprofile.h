@@ -50,3 +50,9 @@ double calculateMpAcceleration(const double t);
 std::string getMpStatus(const double t);
 
 };
+
+struct Feedfoward {
+  double kV;
+  double kA;
+  Feedfoward(double kV, double kA);
+};

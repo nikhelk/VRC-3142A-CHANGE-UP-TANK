@@ -20,19 +20,12 @@
 #include <vector>
 #include <stdint.h>
 #include <string.h>
-#include "pid.h"
-#include "globals.h"
-#include "literals.h"
-#include "mathAndConstants.h"
-#include "chassisfunctions.h"
-#include "motionprofile.h"
-#include "macros.h"
-#include "usercontrol.h"
 #define GEAR_RATIO 1.666666667
-#define waitUntil(condition)                                                   \
-  do {                                                                         \
-    wait(5, msec);                                                             \
+#define waitUntil(condition) \
+  do                         \
+  {                          \
+    wait(5, msec);           \
   } while (!(condition))
 
-#define repeat(iterations)                                                     \
+#define repeat(iterations) \
   for (int iterator = 0; iterator < iterations; iterator++)
