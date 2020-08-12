@@ -15,6 +15,11 @@ Limits chassisLimits,
  rightBack(rightGroup[BACK], setting)
 
 {
+  enum posPIDType {
+    DISTANCEPID,
+    ANGLEPID,
+    TURNPID
+  };
   int count = 0;
   for (auto &element : PDGains)
   {
@@ -22,15 +27,15 @@ Limits chassisLimits,
     switch (count)
     {
 
-    case 0:
+    case DISTANCEPID:
       distancePID.KP = element.kP;
       distancePID.KD = element.kD;
       break;
-    case 1:
+    case ANGLEPID:
       anglePID.KP = element.kP;
       anglePID.KD = element.kD;
       break;
-    case 2:
+    case TURNPID:
       turnPID.KP = element.kP;
       turnPID.KD = element.kD;
       break;
