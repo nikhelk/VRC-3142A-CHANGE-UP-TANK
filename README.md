@@ -14,7 +14,6 @@ This is our code forour sumbission for the Annotated Programming Skills Challeng
  - `include/usercontrol.h` + `src/usercontrolcpp` driver controls and functions (in development)
  - `src/main.cpp` initializes robot and runs code
 
-
 ### Chassis Systems ###
 
  - `include/ChassisSystems/ChassisGlobals.h` + `src/ChassisSystems_src/ChassisGlobals.cpp` contains custom wrapper library for drive and tracking systems
@@ -29,3 +28,11 @@ This is our code forour sumbission for the Annotated Programming Skills Challeng
  - `include/NonChassisSystems/indexer.h` + `src/NonChassisSystems/indexer.cpp` indexer helper functions/tasks
  - `include/NonChassisSystems/intakes.h` + `src/NonChassisSystems/intakes.cpp` intakes helper functions/tasks
  
+### Brain Screen Selector ###
+
+ - `include/Selector/selectorAPI.h` + `include/Selector/selectorAPI.cpp` wrapper library for selector buttons
+ - `include/Selector/selectorImpl.h` + `include/Selector/selectorImpl.cpp` Implmentation of selector library 
+ 
+### Utilities ###
+
+ - 
