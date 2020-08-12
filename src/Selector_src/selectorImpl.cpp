@@ -561,8 +561,7 @@ void makeLoadingScreen()
     }
     if (thirdDone)
       Brain.Screen.printAt(330, 200, "DONE");
-    //Brain.Screen.printAt(100,150, "Calibrating Sensors...");
-    // Brain.Screen.printAt(100,200, "Configuring Robot...");
+
     Brain.Screen.printAt(50, 50, "hi");
   }
 }
@@ -570,10 +569,5 @@ void makeLoadingScreen()
 int makeDisplay()
 {
   displayAllButtonControls(0, false);
-
-  /*while(1) {
-    std::cout <<autonButtons[0].state << std::endl;
-    this_thread::sleep_for(10);
-  }*/
   return (-1);
 }
