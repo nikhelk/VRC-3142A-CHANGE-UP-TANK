@@ -81,6 +81,12 @@ pidValues nonChassisPidControllers[] = {
     {12, 123, 321, "rightIntake"}, //righttIntake pid values
 };
 
+enum tabID {
+  AUTON,
+  SETTINGS,
+  PID
+};
+
 ButtonGroupMaker confirmButton({{390, 120, 50, 50, false, 0x303030, 0x303030, "confirm"}});
 
 std::string settings[] = {"speed", "angle"};              //settings buttons names
@@ -128,26 +134,26 @@ void changeChassisPidValues(int type)
   int valueIndex = pidToggleButtons.findButton(xpos, ypos); //which toggle button is pressed
   switch (valueIndex)
   {
-  case SETTINGS_TOGGLE:
-    break;
-  case INCREASE_KP:
-    chassisPidControllers[type].kP += 2;
-    break;
-  case DECREASE_KP:
-    chassisPidControllers[type].kP -= 2;
-    break;
-  case INCREASE_KI:
-    chassisPidControllers[type].kI += 2;
-    break;
-  case DECREASE_KI:
-    chassisPidControllers[type].kI -= 2;
-    break;
-  case INCREASE_KD:
-    chassisPidControllers[type].kD += 2;
-    break;
-  case DECREASE_KD:
-    chassisPidControllers[type].kD -= 2;
-    break;
+    case SETTINGS_TOGGLE:
+      break;
+    case INCREASE_KP:
+      chassisPidControllers[type].kP += 2;
+      break;
+    case DECREASE_KP:
+      chassisPidControllers[type].kP -= 2;
+      break;
+    case INCREASE_KI:
+      chassisPidControllers[type].kI += 2;
+      break;
+    case DECREASE_KI:
+      chassisPidControllers[type].kI -= 2;
+      break;
+    case INCREASE_KD:
+      chassisPidControllers[type].kD += 2;
+      break;
+    case DECREASE_KD:
+      chassisPidControllers[type].kD -= 2;
+      break;
   }
 }
 
@@ -171,26 +177,26 @@ void changeNonChassisPidValues(int type)
   int valueIndex = pidToggleButtons.findButton(xpos, ypos);
   switch (valueIndex)
   {
-  case SETTINGS_TOGGLE:
-    break;
-  case INCREASE_KP:
-    nonChassisPidControllers[type].kP += 2;
-    break;
-  case DECREASE_KP:
-    nonChassisPidControllers[type].kP -= 2;
-    break;
-  case INCREASE_KI:
-    nonChassisPidControllers[type].kI += 2;
-    break;
-  case DECREASE_KI:
-    nonChassisPidControllers[type].kI -= 2;
-    break;
-  case INCREASE_KD:
-    nonChassisPidControllers[type].kD += 2;
-    break;
-  case DECREASE_KD:
-    nonChassisPidControllers[type].kD -= 2;
-    break;
+    case SETTINGS_TOGGLE:
+      break;
+    case INCREASE_KP:
+      nonChassisPidControllers[type].kP += 2;
+      break;
+    case DECREASE_KP:
+      nonChassisPidControllers[type].kP -= 2;
+      break;
+    case INCREASE_KI:
+      nonChassisPidControllers[type].kI += 2;
+      break;
+    case DECREASE_KI:
+      nonChassisPidControllers[type].kI -= 2;
+      break;
+    case INCREASE_KD:
+      nonChassisPidControllers[type].kD += 2;
+      break;
+    case DECREASE_KD:
+      nonChassisPidControllers[type].kD -= 2;
+      break;
   }
 }
 
@@ -210,14 +216,14 @@ void userTouchCallbackPressed()
       displayAllButtonControls(index, true);
 
     } //if we are in auton button menu
-    if (tabButtons.buttonList[0].state)
+    if (tabButtons.buttonList[AUTON].state)
     {
       if ((index = autonButtons.findButton(xpos, ypos)) >= 0)
       {
         autonButtons.displayButtonControls(index, true);
       }
     }
-    if (tabButtons.buttonList[1].state)
+    if (tabButtons.buttonList[SETTINGS].state)
     { //if we are in tabButton menu
       if ((index = settingButtons.findButton(xpos, ypos)) >= 0)
       {
@@ -249,7 +255,7 @@ void userTouchCallbackPressed()
         }
       }
     }
-    if (tabButtons.buttonList[2].state)
+    if (tabButtons.buttonList[PID].state)
     { // if we are in the PID tuner menu
       if ((index = pidToggleButtons.findButton(xpos, ypos)) >= 0)
       { //display the "chassis" vs "non-chassis" toggle no matter what
@@ -358,7 +364,7 @@ void userTouchCallbackReleased()
       //generate loading screen
       makeLoadingScreen();
     }
-    if (tabButtons.buttonList[0].state)
+    if (tabButtons.buttonList[AUTON].state)
     {
       if ((index = autonButtons.findButton(xpos, ypos)) >= 0)
       {
@@ -367,7 +373,7 @@ void userTouchCallbackReleased()
         autonButtons.displayButtonControls(index, false);
       }
     }
-    if (tabButtons.buttonList[1].state)
+    if (tabButtons.buttonList[SETTINGS].state)
     {
       if ((index = settingButtons.findButton(xpos, ypos)) >= 0)
       {
@@ -378,7 +384,7 @@ void userTouchCallbackReleased()
         displayAllButtonControls(index, false);
       }
     }
-    if (tabButtons.buttonList[2].state)
+    if (tabButtons.buttonList[PID].state)
     {
       if ((index = pidToggleButtons.findButton(xpos, ypos)) >= 0)
       {
@@ -483,16 +489,16 @@ void displayAllButtonControls(int index, bool pressed)
 
     Brain.Screen.drawImageFromFile("logo_test.png", 160, 50);
 
-    if (tabButtons.buttonList[0].state) //display auton menu
+    if (tabButtons.buttonList[AUTON].state) //display auton menu
       autonButtons.displayButtonControls(0, false);
 
-    else if (tabButtons.buttonList[1].state)
+    else if (tabButtons.buttonList[SETTINGS].state)
     { //display settings menu
       settingButtons.displayButtonControls(0, false);
       displaySettingsValues();
     }
 
-    else if (tabButtons.buttonList[2].state)
+    else if (tabButtons.buttonList[PID].state)
     { //display pid settings menu
       displayPIDControls(0, false);
       displayPIDSettings();
