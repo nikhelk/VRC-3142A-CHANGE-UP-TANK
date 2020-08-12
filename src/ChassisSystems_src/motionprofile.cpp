@@ -43,14 +43,17 @@ double TrapezoidalMotionProfile::calculateMpVelocity(const double t)
 {
 
   if (t < m_accelTime)
+  {
     return (t * m_maxAcc);
-
+  }
   else if (t > m_accelTime && t < (m_accelTime + m_coastTime))
+  {
     return (m_maxVel);
-
+  }
   else if (t > m_accelTime + m_coastTime && t < m_totalTime)
+  {
     return ((m_totalTime - t) * m_maxAcc);
-
+  }
   return 0;
 }
 
@@ -58,14 +61,17 @@ double TrapezoidalMotionProfile::calculateMpAcceleration(const double t)
 {
 
   if (t < m_accelTime)
+  {
     return (m_maxAcc);
-
+  }
   else if (t > m_accelTime && t < (m_accelTime + m_coastTime))
+  {
     return (0);
-
+  }
   else if (t > m_accelTime + m_coastTime && t < m_totalTime)
+  {
     return (m_maxAcc * -1);
-
+  }
   return 0;
 }
 
@@ -73,19 +79,22 @@ std::string TrapezoidalMotionProfile::getMpStatus(const double t)
 {
 
   if (t < m_accelTime)
+  {
     return ("accelerating");
-
+  }
   else if (t > m_accelTime && t < m_accelTime + m_coastTime)
+  {
     return ("coasting");
-
+  }
   else if (t > m_accelTime + m_coastTime && t < m_totalTime)
+  {
     return ("decelerating");
-
+  }
   return ("done");
 }
 
-
-Feedfoward::Feedfoward(double kV, double kA) {
+Feedfoward::Feedfoward(double kV, double kA)
+{
   this->kV = kV;
   this->kA = kA;
 }
