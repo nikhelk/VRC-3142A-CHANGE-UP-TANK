@@ -32,13 +32,13 @@ This is our sumbission for the Annotated Programming Skills Challenge
  
 ### Non-Chassis Systems ###
 
- - `include/NonChassisSystems/flywheel.h` + `src/NonChassisSystems/flywheel.cpp` flywheel helper functions/tasks
- - `include/NonChassisSystems/indexer.h` + `src/NonChassisSystems/indexer.cpp` indexer helper functions/tasks
- - `include/NonChassisSystems/intakes.h` + `src/NonChassisSystems/intakes.cpp` intakes helper functions/tasks
- - `include/NonChassisSystems/macros.h` + `src/NonChassisSystems/macros.cpp` macros helper functions/tasks for usercontrol (in development)
+ - `include/NonChassisSystems/flywheel.h` + `src/NonChassisSystems_src/flywheel.cpp` flywheel helper functions/tasks
+ - `include/NonChassisSystems/indexer.h` + `src/NonChassisSystems_src/indexer.cpp` indexer helper functions/tasks
+ - `include/NonChassisSystems/intakes.h` + `src/NonChassisSystems_src/intakes.cpp` intakes helper functions/tasks
+ - `include/NonChassisSystems/macros.h` + `src/NonChassisSystems_src/macros.cpp` macros helper functions/tasks for usercontrol (in development)
  
 ### Brain Screen Selector ###
 
- - `include/Selector/selectorAPI.h` + `include/Selector/selectorAPI.cpp` wrapper library for selector buttons
- - `include/Selector/selectorImpl.h` + `include/Selector/selectorImpl.cpp` Implmentation of selector library 
+ - `include/Selector/selectorAPI.h` + `include/Selector_src/selectorAPI.cpp` wrapper library for selector buttons
+ - `include/Selector/selectorImpl.h` + `include/Selector_src/selectorImpl.cpp` Implmentation of selector library 
  
