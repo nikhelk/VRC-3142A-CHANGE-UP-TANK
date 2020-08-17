@@ -3,7 +3,7 @@
 
 Hello! We are team 3142A from Atlanta, Georgia and this is our code for the VEX Robotics Competition 2020-2021 game: Change up.
 
-This is our code forour sumbission for the Annotated Programming Skills Challenge
+This is our sumbission for the Annotated Programming Skills Challenge
 
 ## File System ##
 
