@@ -1,6 +1,6 @@
 #pragma once //DO NOT REMOVE
 
-#include "vex.h"
+#include "Util/vex.h"
 
 /**
  * Handles all automation for driver control

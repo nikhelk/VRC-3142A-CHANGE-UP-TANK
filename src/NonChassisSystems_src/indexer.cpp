@@ -1,5 +1,5 @@
 #include "NonChassisSystems\indexer.h"
-#include "vex.h"
+
 
 int indexerTask()
 {

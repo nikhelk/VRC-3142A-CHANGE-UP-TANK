@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vex.h"
+#include "Util/vex.h"
 
 /**
  * Determnies whether a number is negative or positive

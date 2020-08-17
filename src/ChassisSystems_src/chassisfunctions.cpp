@@ -223,7 +223,8 @@ void FourMotorDrive::normalize(double &left, double &right) {
 
   double maxSpeed = std::max(std::abs(left), std::abs(right));
 
-  if (maxSpeed > this->m_chassisLimits.m_maxVelocity) {
+  if (maxSpeed > this->m_chassisLimits.m_maxVelocity) 
+  {
     std::cout << "NORMALIZING" << " " << maxSpeed << std::endl;
 
     left = left / maxSpeed * this->m_chassisLimits.m_maxVelocity;
@@ -289,6 +290,30 @@ double Tracking::getAverageEncoderValueEncoders()
 {
   return ((this->leftEncoder.position(degrees) + this->rightEncoder.position(degrees)) / 2);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
