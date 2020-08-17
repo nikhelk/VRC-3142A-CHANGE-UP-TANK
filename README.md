@@ -9,10 +9,18 @@ This is our code forour sumbission for the Annotated Programming Skills Challeng
 
 ###  Base files ###
 
- - `include/vex.h` includes stdlib libraries and vex sdk 
- - `include/robot-config.h` + `src/robot-config.cpp` stores all of the non chassis systens and the bulk of the sensors
- - `include/usercontrol.h` + `src/usercontrolcpp` driver controls and functions (in development)
- - `src/main.cpp` initializes robot and runs code
+ - `include/Impl/auto_skills.h` + `src/Impl/auto_skills.cpp` Initializes chassis and code for skills run
+ - `include/Impl/robot-config.h` + `src/Impl_src/robot-config.cpp` stores all of the non chassis systens and the bulk of the sensors
+ - `include/Impl/usercontrol.h` + `src/Impl_src/usercontrol.cpp` driver controls and functions (in development)
+ - `include/Impl/api.h` tree for files used in robot implementation
+ - `src/Impl_src/main.cpp` runs int main() function
+
+
+### Utilities ###
+
+ - `include/Util/vex.h` includes stdlib libraries and vex sdk 
+ - `include/Util/literals.h` + `src/Util_src/literals.cpp` literal implementation
+ - `include/Util/mathAndConstants.h` + `src/Util_src/mathAndConstants.cpp` math helper functions
 
 ### Chassis Systems ###
 
@@ -22,7 +30,7 @@ This is our code forour sumbission for the Annotated Programming Skills Challeng
  - `include/ChassisSystems/motionprofile.h` + `src/ChassisSystems_src/motionprofile.cpp` Library for motion profile and feedforward commands
  - `include/ChassisSystems/odometry.h` + `src/ChassisSystems_src/odometry.cpp` Robot odometry implementation
  
- ### Non-Chassis Systems ###
+### Non-Chassis Systems ###
 
  - `include/NonChassisSystems/flywheel.h` + `src/NonChassisSystems/flywheel.cpp` flywheel helper functions/tasks
  - `include/NonChassisSystems/indexer.h` + `src/NonChassisSystems/indexer.cpp` indexer helper functions/tasks
@@ -33,6 +41,3 @@ This is our code forour sumbission for the Annotated Programming Skills Challeng
  - `include/Selector/selectorAPI.h` + `include/Selector/selectorAPI.cpp` wrapper library for selector buttons
  - `include/Selector/selectorImpl.h` + `include/Selector/selectorImpl.cpp` Implmentation of selector library 
  
-### Utilities ###
-
- - 
