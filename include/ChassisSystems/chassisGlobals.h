@@ -1,6 +1,7 @@
 #pragma once
 #include "Util/vex.h"
 #include "ChassisSystems/posPID.h"
+#include "Util/premacros.h"
 
 /* 
 * Header file with all the global classes (motors, sensors) and other applications such as PID and Motion Profiling
