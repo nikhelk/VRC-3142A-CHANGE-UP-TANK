@@ -8,15 +8,8 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Util/vex.h"
-#include "NonChassisSystems/flywheel.h"
-#include "Selector/selectorImpl.h"
-#include "NonChassisSystems/intakes.h"
-#include "NonChassisSystems/indexer.h"
-#include "Util/mathAndConstants.h"
-#include "Util/literals.h"
-#include "ChassisSystems/chassisGlobals.h"
+#include "Impl/api.h"
 #include "Impl/usercontrol.h"
-#include "ChassisSystems/odometry.h"
 using namespace vex;
 
 
@@ -120,7 +113,7 @@ void DRIVE(double leftVelocity, double rightVelocity) {
   chassis.rightFront.spin (fwd,rightVelocity, velocityUnits::rpm);
   chassis.rightBack.spin (fwd,rightVelocity, velocityUnits::rpm);
 }
-#include "ChassisSystems/motionprofile.h"
+
 bool startFlyDecel = false;
 
 task spinFly;
