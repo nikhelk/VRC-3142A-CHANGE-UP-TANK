@@ -1,4 +1,4 @@
-
+#include "ChassisSystems/chassisGlobals.h"
 
 using namespace vex;
 
@@ -6,8 +6,12 @@ extern brain Brain;
 
 using signature = vision::signature;
 
+
+
+
+
 // VEXcode devices
-extern encoder EncoderG;
+
 extern inertial inert;
 extern line Line1;
 extern line Line2;
@@ -16,6 +20,12 @@ extern motor IntakeL;
 extern motor IntakeR;
 extern motor Flywheel;
 extern motor Indexer;
+
+extern triport Expander21;
+extern line bottomLine;
+extern line middleLine;
+extern line topLine;
+
 extern signature Vision__SIG_1;
 extern signature Vision__SIG_2;
 extern signature Vision__SIG_3;

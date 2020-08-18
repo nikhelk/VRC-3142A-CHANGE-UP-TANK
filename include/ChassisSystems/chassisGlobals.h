@@ -2,7 +2,8 @@
 #include "Util/vex.h"
 #include "ChassisSystems/posPID.h"
 #include "Util/premacros.h"
-
+#include <vector>
+using namespace vex;
 /* 
 * Header file with all the global classes (motors, sensors) and other applications such as PID and Motion Profiling
 *
@@ -273,6 +274,8 @@ public:
 
   double getAverageEncoderValueEncoders();
 };
+
+
 extern Tracking poseTracker;
 extern FourMotorDrive testchassis;
 extern FourMotorDrive chassis;

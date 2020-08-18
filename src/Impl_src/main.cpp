@@ -15,55 +15,6 @@ using namespace vex;
 
 
 
-FourMotorDrive testchassis(
-
-    {PORT11, PORT12}, //Left motors (front and back)
-
-    {PORT13, PORT16}, //Right motors (front and back)
-
-    ratio18_1, //motor gear cartridge
-
-    1.66667, //gear ratio
-
-    {15.0_in, 4.0_in}, //Dimensions (trackWidth and wheel size)
-
-    {1.5, 2.2}, //Limits (maxVelocity and maxAcceleration)
-
-    {
-        {.2, 0},   //Distance PD
-        {0, 0},    //Angle PD
-        {7, 79.8}, //Turn PD
-    }
-
-);
-
-FourMotorDrive chassis(
-
-    {PORT8, PORT7}, //Left motors (front and back)
-
-    {PORT9, PORT10}, //Right motors (front and back)
-
-    ratio18_1, //motor gear cartridge
-
-    1.66667, //gear ratio
-
-    {12.0_in, 3.25_in}, //Dimensions (trackWidth and wheel size)
-
-    {1.2, 1.9}, //Limits (maxVelocity and maxAcceleration)
-
-    {
-        {.2, 0},  //Distance PD
-        {0, 0},   //Angle PD
-        {18, 0}, //Turn PD
-    }
-
-);
-
-/*
-Tracking poseTracker(4.0_in,2.75_in,360.0,{Tracking::A,Tracking::C,Tracking::G},PORT7);
-*/
-Tracking poseTracker({4, 4, 5}, 2.75, {Tracking::G, Tracking::C, Tracking::A}, PORT4);
-
 competition Competition;
 task autonSelect;
 // A global instance of vex::brain used for printing to the V5 brain screen
@@ -132,9 +83,11 @@ int main()
   {
     task::sleep(1000);
   }
-  
+
   task trackPos(trackPosition);
-  runAutoSkills();
+ runAutoSkills();
+ 
+
   
   task::sleep(100);
 
@@ -159,16 +112,19 @@ int main()
   DRIVE(0,0);
   while (true)
   {
+ 
+   // chassis.setDrive(0, 12);
     // std::cout << poseTracker.getInertialHeading() <<std::endl;
     //std::cout << poseTracker.getInertialHeading() << std::endl;
     //std::cout <//Left motors (front and back) << std::endl;
     /*
+    
       
       Brain.Screen.setPenColor( vex::color(0xe0e0e0) );
       Brain.Screen.setFillColor ("black");
       Brain.Screen.printAt(50,50,"%d",inert.isCalibrating());*/
     //printPosition();
-    std::cout << "LFGGGG"<<std::endl;;
+   // std::cout << chassis.rightBack.ve()<<" " << chassis.rightFront.voltage()<<std::endl;;
     this_thread::sleep_for(10);
   }
 }

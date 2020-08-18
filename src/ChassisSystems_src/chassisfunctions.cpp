@@ -64,11 +64,11 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
     double pose = 0;
 
-    Feedfoward rFeed(11.2/trap.m_maxVel,.1);
+    Feedfoward rFeed(11/trap.m_maxVel,.1);
 
     Feedfoward lFeed(11/trap.m_maxVel,.08);
 
-    posPID rPush(7, 0);
+    posPID rPush(30, 0);
 
     posPID lPush(0, 0);
 
@@ -93,14 +93,15 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
       std::string currentStatus = trap.getMpStatus(currentTime);
 
-      rPower = rPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()));
+      //rPower = rPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()));
 
-      lPower = lPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()));
-
-      cout << chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()) << " " << chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()) << " " << pose << endl;
+      //lPower = lPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()));
+      lPower =0;
+      rPower =0;
+      cout << chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()) << " " << chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()) << " " << pose << endl;
       
-      this->setDrive(switchDirections*lFeed.kV * mpVel + lFeed.kA * mpAcc + lPower, 
-      switchDirections * rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower); // setting the drive and adding the correction pid
+      this->setDrive(lFeed.kV * mpVel + lFeed.kA * mpAcc + lPower, 
+      rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower); // setting the drive and adding the correction pid
       
       pose += mpVel * (currentTime -prevTime);
 
