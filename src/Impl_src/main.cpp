@@ -10,6 +10,7 @@
 #include "Util/vex.h"
 #include "Impl/api.h"
 #include "Impl/usercontrol.h"
+#include "Impl/auto_skills.h"
 using namespace vex;
 
 
@@ -131,24 +132,14 @@ int main()
   {
     task::sleep(1000);
   }
-
+  
   task trackPos(trackPosition);
+  runAutoSkills();
+  
   task::sleep(100);
-  //chassis.turnToDegreeGyro(-90);
-  //  task::sleep(3000);
-  //chassis.driveArc2(90, 20);
-  // chassis.crawl(3.25_in, 20);
-  //chassis.turnToDegreeGyro(-60);
-   //chassis.driveArcFeedforward(20.0_in,90.0_deg);
-  //driveStraightFeedforward(50);
+
   double time = Brain.Timer.time(timeUnits::sec);
-  //driveArcSortaWorks(90, 20);
-  //task indexTask(indexerTask);
- // task spinFly(flywheelTask);
-  //task intSpin(intakeTask);
-  //chassis.driveStraightFeedforward(50.0_in,true);
-  //chassis.turnToDegreeGyro(90.0_deg);
-  //chassis.driveStraightFeedforward(70.0_in);
+
   TrapezoidalMotionProfile trapp = TrapezoidalMotionProfile(1, 4, 0.8);
    double t = 0;
    double pose =0;
