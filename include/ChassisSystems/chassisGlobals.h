@@ -42,9 +42,6 @@ public:
    */
   Limits(long double maxVelocity, long double maxAcceleration);
 
-  //void setGearRatio(double ratio);
-  //double getGearRatio() {return(gearRatio);}
-  //void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
 };
 class FourMotorDrive
 {
@@ -99,7 +96,7 @@ public:
 
 
 
-  void turnToDegreeGyro(double degree);
+  void turnToDegreeGyro(double angle);
 
   void driveStraight(const double distance);
 

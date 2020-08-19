@@ -5,39 +5,48 @@
 #include "Config/chassis-config.h"
 #include "Config/other-config.h"
 #include <algorithm>
+#include "Util/literals.h"
 using namespace std;
 
-void FourMotorDrive::turnToDegreeGyro(double degree)
+void FourMotorDrive::turnToDegreeGyro(double angle)
 {
-  double atTarget = false;
-  double atTargetAngle = 3;
-  while (!atTarget)
-  {
-    double currentAngleRadians = (M_PI/180)*(poseTracker.getInertialHeading());
-    double targetAngleRadians = (degree);
+  bool atAngle = false;
 
-    double angleOutput = chassis.turnPID.calculatePower(targetAngleRadians, currentAngleRadians);
-    pidTimer turnTimer;
-    double timeoutPeriod = 250;
+  pidTimer turnTimer;
+
+  const double timeoutPeriod = 250;
+
+  const double acceptableError = 3.0_deg; // give three degrees of error
+
+  while (!atAngle)
+  {
+    double currentAngleRadians = (M_PI/180.0)*(poseTracker.getInertialHeading());
+
+    double angleOutput = chassis.turnPID.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
+    
     this->setDrive(-1 * angleOutput, angleOutput);
-    if (std::abs(degree - currentAngleRadians) < (M_PI/180)*(atTargetAngle))
+
+    if (std::abs(angle - currentAngleRadians) < (acceptableError))
     {
       turnTimer.close += 10;
     }
+
     else
     {
       turnTimer.close = 0;
-      turnTimer.notMoved = 0;
     }
-    //cout << currentRight <<" " << currentLeft<< " " << " " << targetAngle/conv << " " <<angleChange/conv <<endl;
+
     //If we've been close enough for long enough, we're there
-    if (turnTimer.close >= timeoutPeriod || turnTimer.notMoved >= timeoutPeriod)
+    if (turnTimer.close > timeoutPeriod)
     {
-      atTarget = true;
+      atAngle = true;
     }
-    std::cout << targetAngleRadians <<  " "  << currentAngleRadians <<std::endl;
+
+    std::cout << angle <<  " "  << currentAngleRadians <<std::endl;
+
     task::sleep(10);
   }
+
 }
 
 
@@ -46,11 +55,11 @@ void FourMotorDrive::turnToDegreeGyro(double degree)
 
 void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwards)
 {
-  int switchDirections =1;
+  double switchDirections =1;
   if(backwards) {
     switchDirections = -1;
   }
-    double startTimeA = Brain.timer(vex::timeUnits::sec);
+    const double startTime = Brain.timer(vex::timeUnits::sec);
 
     TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
 
@@ -60,9 +69,9 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
     double currentTime, prevTime;
 
-    const double initialMetersLeft = chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()); //this is my way of resetting the encoder vals instead of setting them to 0
+    const double initialMetersLeft = this->convertTicksToMeters(this->getLeftEncoderValueMotors()); //this is my way of resetting the encoder vals instead of setting them to 0
     
-    const double initialMetersRight = chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors());
+    const double initialMetersRight = this->convertTicksToMeters(this->getRightEncoderValueMotors());
 
     double pose = 0;
 
@@ -81,13 +90,13 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
     while (t <=trap.m_totalTime)
     {
 
-      double currLeftMoved = chassis.convertTicksToMeters((chassis.getLeftEncoderValueMotors()) - initialMetersLeft);
+      double currLeftMoved = this->convertTicksToMeters(this->getLeftEncoderValueMotors()) - initialMetersLeft;
 
-      double currRightMoved = chassis.convertTicksToMeters((chassis.getRightEncoderValueMotors()) - initialMetersRight);
+      double currRightMoved = this->convertTicksToMeters(this->getRightEncoderValueMotors()) - initialMetersRight;
 
       drift = currLeftMoved - currRightMoved;
 
-      currentTime = Brain.timer(vex::timeUnits::sec) - startTimeA;
+      currentTime = Brain.timer(vex::timeUnits::sec) - startTime;
 
       mpVel = trap.calculateMpVelocity(currentTime);
       
@@ -95,25 +104,34 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
       std::string currentStatus = trap.getMpStatus(currentTime);
 
-      rPower = rPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()));
+      rPower = rPush.calculatePower(pose, this->convertTicksToMeters(this->getRightEncoderValueMotors()));
 
-      lPower = lPush.calculatePower(pose, chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()));
+      lPower = lPush.calculatePower(pose, this->convertTicksToMeters(this->getLeftEncoderValueMotors()));
       
-      cout << chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()) << 
-      " " << chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()) << 
+      cout << this->convertTicksToMeters(this->getRightEncoderValueMotors()) << 
+      " " << this->convertTicksToMeters(this->getLeftEncoderValueMotors()) << 
       " " << pose <<
        " " << lPower <<" " << rPower << " " << lPush.getKp() << endl;
-      
-     // this->setDrive(lFeed.kV * mpVel + lFeed.kA * mpAcc + lPower, 
-     // rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower); // setting the drive and adding the correction pid
-      
-      pose += mpVel * (currentTime -prevTime);
 
-      t = currentTime;
+     double lVoltage =  lFeed.kV * mpVel + lFeed.kA * mpAcc + lPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
+     double rVoltage =  rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
+     // this->setDrive(switchDirections*lVoltage, switchDirections*rVoltage);
 
-      prevTime = currentTime;
+     if (backwards)
+     {
+       pose -= mpVel * (currentTime - prevTime);
+     }
 
-      task::sleep(10);
+     else
+     {
+       pose += mpVel * (currentTime - prevTime);
+     }
+
+     t = currentTime;
+
+     prevTime = currentTime;
+
+     task::sleep(10);
       
     }
 
@@ -145,9 +163,9 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
     double currentTime, prevTime;
 
-    const double initialMetersLeft = chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()); //this is my way of resetting the encoder vals instead of setting them to 0
+    const double initialMetersLeft = this->convertTicksToMeters(this->getLeftEncoderValueMotors()); //this is my way of resetting the encoder vals instead of setting them to 0
     
-    const double initialMetersRight = chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors());
+    const double initialMetersRight = this->convertTicksToMeters(this->getRightEncoderValueMotors());
 
     double rPose = 0;
 
@@ -171,9 +189,10 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
   while(t <= trap.m_totalTime) {
 
-    double currLeftMoved = chassis.convertTicksToMeters((chassis.getLeftEncoderValueMotors()) - initialMetersLeft);
+    double currLeftMoved = this->convertTicksToMeters(this->getLeftEncoderValueMotors()) - initialMetersLeft;
 
-    double currRightMoved = chassis.convertTicksToMeters((chassis.getRightEncoderValueMotors()) - initialMetersRight);
+    double currRightMoved = this->convertTicksToMeters(this->getRightEncoderValueMotors()) - initialMetersRight;
+
 
     drift = currLeftMoved - currRightMoved;
 
@@ -196,9 +215,9 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
     double rightVel = (currRightMoved-lastRight)/.01;
     double leftVel = (currLeftMoved-lastLeft)/.01;
-    cout << lPose <<" " << chassis.convertTicksToMeters(chassis.getLeftEncoderValueMotors()) << " "
-    << rPose << " " << chassis.convertTicksToMeters(chassis.getRightEncoderValueMotors()) <<  " " << 
-    chassis.convertTicksToMeters(chassis.getAverageEncoderValueMotors()) << " " << (rPose+lPose)/2<< " "
+    cout << lPose <<" " << this->convertTicksToMeters(this->getLeftEncoderValueMotors()) << " "
+    << rPose << " " << this->convertTicksToMeters(this->getRightEncoderValueMotors()) <<  " " << 
+    this->convertTicksToMeters(this->getAverageEncoderValueMotors()) << " " << (rPose+lPose)/2<< " "
     << rAdjust << " " << lAdjust << endl;
 
 

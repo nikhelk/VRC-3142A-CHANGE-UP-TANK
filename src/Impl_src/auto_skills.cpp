@@ -6,6 +6,7 @@ task indexTask;
 void testAutoSkills() {
 
   LOG("Running Test SKills!");
+  chassis.driveStraightFeedforward(20.0_in,true);
 
 }
 
