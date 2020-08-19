@@ -3,6 +3,7 @@
 #include "Util/mathAndConstants.h"
 #include "ChassisSystems/motionprofile.h"
 #include "Config/chassis-config.h"
+#include "Config/other-config.h"
 #include <algorithm>
 using namespace std;
 
