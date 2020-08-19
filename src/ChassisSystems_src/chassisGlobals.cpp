@@ -28,16 +28,13 @@ Limits chassisLimits,
     {
 
     case DISTANCEPID:
-      distancePID.KP = element.kP;
-      distancePID.KD = element.kD;
+      distancePID.setPD(element.kP,element.kD);
       break;
     case ANGLEPID:
-      anglePID.KP = element.kP;
-      anglePID.KD = element.kD;
+      anglePID.setPD(element.kP,element.kD);
       break;
     case TURNPID:
-      turnPID.KP = element.kP;
-      turnPID.KD = element.kD;
+      turnPID.setPD(element.kP,element.kD);
       break;
     }
 

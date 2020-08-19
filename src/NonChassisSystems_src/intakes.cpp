@@ -1,5 +1,5 @@
 #include "NonChassisSystems/intakes.h"
-
+#include "Util/vex.h"
 
 int intakeTask()
 {

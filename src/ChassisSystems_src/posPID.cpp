@@ -2,6 +2,11 @@
 
 posPID::posPID() {}
 
+void posPID::setPD(double kP, double kD) {
+  m_kP = kP;
+  m_kD = kD;
+}
+
 posPID::posPID(double kP, double kD)
 {
   m_kP = kP;
@@ -10,8 +15,7 @@ posPID::posPID(double kP, double kD)
 
 double posPID::calculatePower(double targetPos, double currentPos)
 {
-  m_kP = this->KP;
-  m_kD = this->KD;
+
   m_error = targetPos - currentPos;
 
   m_derivative = m_error - m_prevError;

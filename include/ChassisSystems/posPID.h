@@ -18,19 +18,26 @@ private:
   double m_proportional;
   double m_derivative;
 
-  static const int m_upperBound = 10; //max voltage
-  static const int m_lowerBound = -10; //min voltage
+  static const int m_upperBound = 11; //max voltage
+  static const int m_lowerBound = -11; //min voltage
   double m_power;
 
 public:
-  double KP;
-  double KD;
+
 
   /**
    * default posPID constructor for values inputted in the FourMotorDrive constructor
    */
 
   posPID();
+
+  /**
+   * sets the PD values for custom PIDs in FourMotorDrive constructor
+   * @param kP desired kP value
+   * @param kD desired kD value
+   */
+
+  void setPD(double kP, double kD);
 
   /**
    * Creates a PD controller for drivetrain
@@ -55,6 +62,10 @@ public:
    */
 
   double getError() { return (m_error); }
+
+  double getKp() {return (m_kP);}
+
+  double getKd() {return(m_kD);}
 
   /**
    * gets the power of the PD controller

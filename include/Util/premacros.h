@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-template <class T, class U>
+template <class T>
 void LOG(T x)
 {
     std::cout << x << std::endl;
