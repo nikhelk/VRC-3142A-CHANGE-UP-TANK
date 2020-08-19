@@ -11,7 +11,7 @@ using signature = vision::signature;
 
 
 // VEXcode devices
-
+extern encoder testEncoder;
 extern inertial inert;
 extern line Line1;
 extern line Line2;

@@ -22,7 +22,8 @@ task autonSelect;
 bool notSkills;
 void pre_auto(void)
 {
-  chassis.setReverseSettings({true, true}, {false, false});
+ // chassis.setReverseSettings({true, true}, {false, false});
+ chassis.setReverseSettings({false, false}, {true, true});
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   Brain.Screen.pressed(userTouchCallbackPressed);
@@ -83,9 +84,9 @@ int main()
   {
     task::sleep(1000);
   }
-
+  LOG(chassis.turnPID.getKp());
   task trackPos(trackPosition);
- runAutoSkills();
+// runAutoSkills();
  
 
   
@@ -112,7 +113,7 @@ int main()
   DRIVE(0,0);
   while (true)
   {
- 
+    //LOG(testEncoder.position(degrees));
    // chassis.setDrive(0, 12);
     // std::cout << poseTracker.getInertialHeading() <<std::endl;
     //std::cout << poseTracker.getInertialHeading() << std::endl;
