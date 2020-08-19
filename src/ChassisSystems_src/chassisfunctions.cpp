@@ -26,6 +26,13 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
     
     this->setDrive(-1 * angleOutput, angleOutput);
 
+
+
+    /******************************************************************************************************************/
+
+    // We would like to thank the developers of the BCI module for providing us a template of the PID exit function
+
+    /*************************************************************/
     if (std::abs(angle - currentAngleRadians) < (acceptableError))
     {
       turnTimer.close += 10;

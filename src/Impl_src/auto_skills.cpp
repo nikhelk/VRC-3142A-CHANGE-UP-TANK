@@ -6,7 +6,7 @@ task indexTask;
 void testAutoSkills() {
 
   LOG("Running Test SKills!");
-  chassis.driveStraightFeedforward(20.0_in,true);
+ 
 
 }
 
@@ -16,7 +16,7 @@ void runAutoSkills() {
   //PATH 1 (Starting position to first goal)
   
 
-/*   chassis.driveStraightFeedforward(6.5_in);
+ /*  chassis.driveStraightFeedforward(6.5_in);
   chassis.turnToDegreeGyro(-65.0_deg);
   std::cout <<"Done Turning" <<std::endl;
   task intakeSpin(intakeTask); //start intakes to pick up first ball
@@ -25,8 +25,7 @@ void runAutoSkills() {
   chassis.turnToDegreeGyro(-130.0_deg);
   std::cout <<"Done Turning" <<std::endl;
   task indexTask(indexerTask); //index up to line sensor
-  chassis.driveStraightFeedforward(21.0_in);
- */
+  chassis.driveStraightFeedforward(21.0_in); */
 
   //PATH 2 (first goal to second goal)
 
@@ -42,9 +41,6 @@ void runAutoSkills() {
   //stopWhenTopDetected = true;
   //chassis.leftFront.spinFor(fwd,360, degrees);
   
-  
-
-  task::sleep(2000);
   //indexTask.resume();
 
 
