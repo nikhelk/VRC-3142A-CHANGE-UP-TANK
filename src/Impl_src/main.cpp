@@ -84,9 +84,9 @@ int main()
   {
     task::sleep(1000);
   }
-
+  LOG(chassis.turnPID.getKp());
   task trackPos(trackPosition);
- runAutoSkills();
+// runAutoSkills();
  
 
   

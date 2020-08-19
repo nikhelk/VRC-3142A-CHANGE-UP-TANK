@@ -37,14 +37,6 @@ public:
    * @param kD desired kD value
    */
 
-  void setPD(double kP, double kD);
-
-  /**
-   * Creates a PD controller for drivetrain
-   * @param kP value
-   * @param kD value
-   */
-
   posPID(double kP, double kD);
 
   /**
@@ -53,6 +45,16 @@ public:
    * @param currentPos current position of robot
    * @return output power of controller
    */
+
+  void setPD(double kP, double kD);
+
+  /**
+   * Creates a PD controller for drivetrain
+   * @param kP value
+   * @param kD value
+   */
+
+
 
   double calculatePower(double targetPos, double currentPos);
 
