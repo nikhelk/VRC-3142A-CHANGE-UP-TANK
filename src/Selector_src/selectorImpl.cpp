@@ -363,6 +363,7 @@ void userTouchCallbackReleased()
 
       //generate loading screen
       makeLoadingScreen();
+     // runAutoSkills();
     }
     if (tabButtons.buttonList[AUTON].state)
     {
@@ -486,7 +487,7 @@ void displayAllButtonControls(int index, bool pressed)
     //always display these buttons on the selector
     tabButtons.displayButtonControls(0, false, true);
     confirmButton.displayButtonControls(0, false, true);
-
+    
     Brain.Screen.drawImageFromFile("logo_test.png", 160, 50);
 
     if (tabButtons.buttonList[AUTON].state) //display auton menu
@@ -520,50 +521,16 @@ void makeLoadingScreen()
     bool firstDone = false;
     bool secondDone = false;
     bool thirdDone = false;
-    currentTime = Brain.Timer.time(timeUnits::sec) - time;
-    while (currentTime < 2)
-    {
-      Brain.Screen.printAt(100, 100, "Generating Paths...");
-
-      currentTime = Brain.Timer.time(timeUnits::sec) - time;
-      //Brain.Screen.render();
-      if (currentTime > 1.96)
-      {
-        firstDone = true;
-        break;
-      }
-    }
-    Brain.Screen.printAt(330, 100, "DONE");
-    task::sleep(600);
-    inert.calibrate();
-    while (inert.isCalibrating())
+    poseTracker.inert.calibrate();
+    while (poseTracker.inert.isCalibrating())
     {
       Brain.Screen.printAt(100, 150, "Calibrating Sensors...");
-      //Brain.Screen.render();
     }
     secondDone = true;
     if (secondDone)
       Brain.Screen.printAt(330, 150, "DONE");
-    task::sleep(600);
-    double time2 = Brain.timer(timeUnits::sec);
-    double currentTime2 = 0;
-    while (currentTime2 < 2)
-    {
-      Brain.Screen.printAt(100, 200, "Configuring Robot...");
-
-      currentTime2 = Brain.Timer.time(timeUnits::sec) - time2;
-      //Brain.Screen.render();
-      if (currentTime2 > 1.95)
-      {
-        thirdDone = true;
-        break;
-      }
-    }
-    if (thirdDone)
-      Brain.Screen.printAt(330, 200, "DONE");
-
-    Brain.Screen.printAt(50, 50, "hi");
   }
+
 }
 
 int makeDisplay()

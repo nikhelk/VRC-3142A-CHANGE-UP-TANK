@@ -26,10 +26,6 @@ double cosDegrees(double value);
 
 double sinDegrees(double value);
 
-/**
- * Converts to degrees from radians
- * @param angle (radians)
- * @return value (degrees)
- */
+
 
 

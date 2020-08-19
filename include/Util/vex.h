@@ -16,11 +16,10 @@
 #include "v5.h"
 #include "v5_vcs.h"
 #include <iostream>
-#include "Impl/robot-config.h"
 #include <vector>
 #include <stdint.h>
 #include <string.h>
-#define GEAR_RATIO 1.666666667
+
 #define waitUntil(condition) \
   do                         \
   {                          \

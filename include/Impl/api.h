@@ -18,3 +18,7 @@
 
 #include "Selector/selectorAPI.h"
 #include "Selector/selectorImpl.h"
+
+
+#include "Config/chassis-config.h"
+#include "Config/other-config.h"

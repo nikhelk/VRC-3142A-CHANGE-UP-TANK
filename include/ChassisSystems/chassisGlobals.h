@@ -2,6 +2,7 @@
 #include "Util/vex.h"
 #include "ChassisSystems/posPID.h"
 #include "Util/premacros.h"
+
 #include <vector>
 using namespace vex;
 /* 
@@ -114,7 +115,9 @@ public:
 
   void driveArcFeedforward(const double radius, const double exitAngle);
 
+  void resetPosition();
 
+  void resetRotation();
   /**
    * Drives the robot using feedforward control
    * 
@@ -276,6 +279,3 @@ public:
 };
 
 
-extern Tracking poseTracker;
-extern FourMotorDrive testchassis;
-extern FourMotorDrive chassis;

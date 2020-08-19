@@ -1,7 +1,9 @@
 #pragma once //DO NOT REMOVE
 
 #include "Util/vex.h"
+#include "Config/other-config.h"
 
+using namespace vex;
 /**
  * Handles all automation for driver control
  */

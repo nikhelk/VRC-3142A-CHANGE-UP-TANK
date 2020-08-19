@@ -2,6 +2,7 @@
 #include "ChassisSystems/chassisGlobals.h"
 #include "Util/mathAndConstants.h"
 #include "ChassisSystems/motionprofile.h"
+#include "Config/chassis-config.h"
 #include <algorithm>
 using namespace std;
 

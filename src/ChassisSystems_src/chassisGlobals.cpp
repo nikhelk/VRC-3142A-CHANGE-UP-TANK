@@ -59,6 +59,21 @@ void FourMotorDrive::setVoltDrive(double leftVoltage, double rightVoltage)
   this->rightBack.spin(fwd, rightVoltage, volt);
 }
 
+void FourMotorDrive::resetPosition() {
+  this->leftFront.resetPosition();
+  this->leftBack.resetPosition();
+  this->rightFront.resetPosition();
+  this->rightBack.resetPosition();
+
+}
+
+void FourMotorDrive::resetRotation() {
+  this->leftFront.resetRotation();
+  this->leftBack.resetRotation();
+  this->rightFront.resetRotation();
+  this->rightBack.resetRotation();
+
+}
 
 
 Dimensions::Dimensions(long double trackWidth, long double wheelRadius) :
