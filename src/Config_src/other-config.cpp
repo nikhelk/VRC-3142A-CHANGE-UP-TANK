@@ -16,7 +16,7 @@ motor Indexer = motor(PORT5, ratio6_1, false);
 
 line Line1 = line(Brain.ThreeWirePort.A);
 line Line2 = line(Brain.ThreeWirePort.B);
-controller Controller1 = controller(primary);
+controller BigBrother = controller(primary);
 triport Expander21 = triport(PORT21);
 
 line bottomLine = line(Expander21.C);

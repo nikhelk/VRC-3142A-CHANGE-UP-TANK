@@ -84,12 +84,13 @@ void initChassis(void)
 
   poseTracker.inert.calibrate();
 
-  while (poseTracker.inert.isCalibrating()) {
+  do {
 
-    Controller1.Screen.print("Calibrating Inert");
+    BigBrother.Screen.print("Calibrating Inert");
+    task::sleep(200);
 
-    Controller1.Screen.clearLine(3);
-  }
-
-  Controller1.Screen.print("DONE!");
+    BigBrother.Screen.clearLine(3);
+  } while((poseTracker.inert.isCalibrating()) );
+  
+  BigBrother.Screen.print("DONE!");
 }

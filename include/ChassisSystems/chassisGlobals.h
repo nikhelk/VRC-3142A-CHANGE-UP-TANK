@@ -43,12 +43,9 @@ public:
   Limits(long double maxVelocity, long double maxAcceleration);
 
 };
-class FourMotorDrive
-{
-private:
-  vex::gearSetting setting;
 
-public:
+struct FourMotorDrive
+{
   Dimensions m_chassisDimensions;
   Limits m_chassisLimits;
   enum backOrFront
@@ -61,13 +58,14 @@ public:
   posPID turnPID;
 
   double gearRatio;
+  vex::gearSetting setting;
   motor leftFront;
   motor rightFront;
   motor leftBack;
   motor rightBack;
 
   /**
-   * Initilizes 4 motor drive
+   * Initializes 4 motor drive
    * @param leftGroup vector of left motor ports (front,back)
    * @param rightGroup vector of right motor ports (front,back)
    * @param setting gear cartridge type (36:1.18:1,6:1)
@@ -91,11 +89,6 @@ public:
 
 
 
-
-  void setVoltDrive(double leftVoltage, double rightVoltage);
-
-
-
   void turnToDegreeGyro(double angle);
 
   void driveStraight(const double distance);
@@ -112,9 +105,13 @@ public:
 
   void driveArcFeedforward(const double radius, const double exitAngle);
 
+  //resets the chassis encoders to 0
   void resetPosition();
 
+  //resets the chassis encoders to 0
   void resetRotation();
+
+
   /**
    * Drives the robot using feedforward control
    * 
@@ -122,9 +119,9 @@ public:
    * 
    * the velocity and acceleration values are generated from the trapezoidal motion profile described in motionprofile.h and .cpp
    * 
-   * the kV and kA terms are "feedfoward" meaning they guess the pose at a certian timestep
+   * the kV and kA terms are "feedfoward" meaning they guess the pose,velocity, acceleration at a certian timestep
    * 
-   * We let the kV and kA terms do the brunt of the work and have a P loop on the current position and the actual desired pose ot the current time (not the final pose)
+   * We let the kV and kA terms do the brunt of the work and have a P loop on the difference between current position and the actual desired pose ot the current time (not the final pose)
    * 
    * @param distance desired distance to travel
    * @param backwards the desired path is backwards or not

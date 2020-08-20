@@ -8,7 +8,7 @@ extern brain Brain;
 
 extern line Line1;
 extern line Line2;
-extern controller Controller1;
+extern controller BigBrother;
 extern motor IntakeL;
 extern motor IntakeR;
 extern motor Flywheel;

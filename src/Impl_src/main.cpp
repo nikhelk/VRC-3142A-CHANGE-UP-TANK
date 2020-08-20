@@ -16,10 +16,9 @@ using namespace vex;
 
 competition Competition;
 
-bool notSkills;
 void pre_auto(void) {
+
   initChassis();
-  
 
   Brain.Screen.pressed( userTouchCallbackPressed ); // set up callback for brain screen press
   Brain.Screen.released( userTouchCallbackReleased ); // set up callback for brain screen release
@@ -28,9 +27,6 @@ void pre_auto(void) {
   makeBackground();
   // auton selector task
   task autonSelect( makeDisplay);
-
-
-  
 }
 
 void autonomous(void) {}
@@ -41,9 +37,9 @@ int main() {
   Competition.drivercontrol(usercontrol);
   pre_auto();
 
-  Controller1.ButtonA.pressed( runAutoSkills );
+  BigBrother.ButtonA.pressed( runAutoSkills ); //Run autonomous skills when button "A" is pressed on controller
 
-  Controller1.ButtonX.pressed( testAutoSkills );
+  BigBrother.ButtonX.pressed( testAutoSkills );
 
   task trackPos(trackPosition);
 

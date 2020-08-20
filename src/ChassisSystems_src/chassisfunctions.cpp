@@ -11,10 +11,15 @@ using namespace std;
 void FourMotorDrive::turnToDegreeGyro(double angle)
 {
   bool atAngle = false;
+  /***************************************************************************************************************************/
 
+  // We would like to thank Team Optimistic for providing us a template of the PID exit function
+  // <https://github.com/Team-Optimistic/Team_Optimistic/blob/d6b11f7d5a9e58c72e2c5dd9d944369602bc20a7/turningFunctions.c#L69>
+
+  /****************************************************************************************************************************/
   pidTimer turnTimer;
 
-  const double timeoutPeriod = 250;
+  const double timeoutPeriod = 200;
 
   const double acceptableError = 3.0_deg; // give three degrees of error
 
@@ -25,15 +30,9 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
     double angleOutput = chassis.turnPID.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
     
     this->setDrive(-1 * angleOutput, angleOutput);
-
-
-
-    /******************************************************************************************************************/
-
-    // We would like to thank the developers of the BCI module for providing us a template of the PID exit function
-
-    /*************************************************************/
-    if (std::abs(angle - currentAngleRadians) < (acceptableError))
+    
+    //If we are close to the target start incrementing timeout
+    if (std::abs(angle - currentAngleRadians) < acceptableError)
     {
       turnTimer.close += 10;
     }
@@ -66,21 +65,24 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
   if(backwards) {
     switchDirections = -1;
   }
-    const double startTime = Brain.timer(vex::timeUnits::sec);
+    const double startTime = Brain.timer(vex::timeUnits::sec); //"resetting" timer
 
     TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
 
-    double mpVel, mpAcc;
+    double mpVel, mpAcc; //motion profile velocity and acceleration
 
     double drift;
 
     double currentTime, prevTime;
 
-    const double initialMetersLeft = this->convertTicksToMeters(this->getLeftEncoderValueMotors()); //this is my way of resetting the encoder vals instead of setting them to 0
+    const double initialMetersLeft = this->convertTicksToMeters(this->getLeftEncoderValueMotors()); //this is a way of resetting the encoder vals instead of setting them to 0
     
     const double initialMetersRight = this->convertTicksToMeters(this->getRightEncoderValueMotors());
 
-    double pose = 0;
+    double pose = 0; //position on the motion profile
+
+    // Here we use different feedfoward and P loops on both sides of the drivetrain
+    // Ideally, we would not have to do this but the frictional losses on the right side were significantly greater than the left
 
     Feedfoward rFeed(11/trap.m_maxVel,.1);
 
@@ -97,17 +99,17 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
     while (t <=trap.m_totalTime)
     {
 
-      double currLeftMoved = this->convertTicksToMeters(this->getLeftEncoderValueMotors()) - initialMetersLeft;
+      double currLeftMoved = this->convertTicksToMeters(this->getLeftEncoderValueMotors()) - initialMetersLeft; // (in meters)
 
-      double currRightMoved = this->convertTicksToMeters(this->getRightEncoderValueMotors()) - initialMetersRight;
+      double currRightMoved = this->convertTicksToMeters(this->getRightEncoderValueMotors()) - initialMetersRight; // (in meters)
 
       drift = currLeftMoved - currRightMoved;
 
       currentTime = Brain.timer(vex::timeUnits::sec) - startTime;
 
-      mpVel = trap.calculateMpVelocity(currentTime);
+      mpVel = trap.calculateMpVelocity(currentTime); //velocity of motion profile
       
-      mpAcc = trap.calculateMpAcceleration(currentTime);
+      mpAcc = trap.calculateMpAcceleration(currentTime); //acceleration of motion profile
 
       std::string currentStatus = trap.getMpStatus(currentTime);
 
@@ -124,14 +126,14 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
      double rVoltage =  rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
      // this->setDrive(switchDirections*lVoltage, switchDirections*rVoltage);
 
-     if (backwards)
+     if (!backwards)
      {
-       pose -= mpVel * (currentTime - prevTime);
+       pose += mpVel * (currentTime - prevTime); //Way of apporoximating position on the profile: pose_t += velocity_t * dt
      }
 
      else
      {
-       pose += mpVel * (currentTime - prevTime);
+       pose -= mpVel * (currentTime - prevTime); // When we go backwards we subtract pose
      }
 
      t = currentTime;
@@ -264,27 +266,6 @@ void FourMotorDrive::normalize(double &left, double &right) {
 
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void FourMotorDrive::setVelDrive(double leftVelocity, double rightVelocity)
