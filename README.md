@@ -9,13 +9,6 @@ This is our sumbission for the Annotated Programming Skills Challenge
 
 
 <a name="fileSys"></a>
-## 1. Description
-
-sometext
-
-<a name="usage"></a>
-## 2. Usage tips
-
 ## File System ##
 
 ###  Base files ###
