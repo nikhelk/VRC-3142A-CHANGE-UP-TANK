@@ -6,6 +6,8 @@ Hello! We are team 3142A from Atlanta, Georgia and this is our code for the VEX 
 This is our sumbission for the Annotated Programming Skills Challenge
 
 1. [ File System. ](#fileSys)
+2. [ Resources. ](#resources)
+3. [ Acknowledgements. ](#ack)
 
 
 <a name="fileSys"></a>
@@ -46,3 +48,8 @@ This is our sumbission for the Annotated Programming Skills Challenge
  - `include/Selector/selectorAPI.h` + `include/Selector_src/selectorAPI.cpp` wrapper library for selector buttons
  - `include/Selector/selectorImpl.h` + `include/Selector_src/selectorImpl.cpp` Implmentation of selector library 
  
+<a name = "resources"></a>
+## Resources
+
+<a name = "ack"></a>
+## Acknowledgements
