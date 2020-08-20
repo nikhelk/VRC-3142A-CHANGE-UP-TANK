@@ -114,7 +114,7 @@ int trackPositionGyro()
     int right = chassis.rightFront.position(degrees);
     int back = poseTracker.backEncoder.position(degrees);
     double L = chassis.convertTicksToMeters((left - position.leftLst)); // The amount the left side of the robot moved
-    double R = chassis.convertTicksToMeters((left - position.leftLst)); // The amount the right side of the robot moved
+    //double R = chassis.convertTicksToMeters((left - position.leftLst)); // The amount the right side of the robot moved
     double S = (back - position.backLst) * SPIN_TO_IN_S;                // The amount the back side of the robot moved
 
     // Update the last values

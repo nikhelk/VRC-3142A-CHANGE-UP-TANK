@@ -81,16 +81,17 @@ m_maxAcceleration(maxAcceleration)
 {
 }
 
-Tracking::Tracking(WheelDistances wheels, double wheelRadius, std::vector<triportIndex> enocoderPorts, int GyroPort, double ticksPerRev) : leftEncoder(brained.ThreeWirePort.Port[enocoderPorts[LEFT_ENCODER]]),
+Tracking::Tracking(WheelDistances wheels, double wheelRadius, std::vector<triportIndex> enocoderPorts, int GyroPort, double ticksPerRev) : 
 m_odomImpl(wheels),
 rightEncoder(brained.ThreeWirePort.Port[enocoderPorts[RIGHT_ENCODER]]),
+leftEncoder(brained.ThreeWirePort.Port[enocoderPorts[LEFT_ENCODER]]),
 backEncoder(brained.ThreeWirePort.Port[enocoderPorts[BACK_ENCODER]]),
 inert(GyroPort)
 {
   this->ticksPerRev = ticksPerRev;
-  this->trackWidth = trackWidth;
+
   this->wheelRadius = wheelRadius;
-  this->backDistance = backDistance;
+
 }
 
 double FourMotorDrive::convertMetersToTicks(double num_meters)
@@ -106,7 +107,7 @@ double Tracking::getInertialHeading()
   //change the direction to counter clockwise = positive
   double fixedRotation = -1 * this->inert.rotation();
 
-  //Fit the inertial value between [-180,180]
+  //Fix the inertial value between [-180,180]
   while (fixedRotation > 180)
   {
     (fixedRotation -= 360);

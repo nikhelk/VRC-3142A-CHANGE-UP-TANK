@@ -516,18 +516,14 @@ void makeLoadingScreen()
 
   if (confirmButton.buttonList[0].state)
   { // check if we are in confirm menu
-    double time = Brain.Timer.time(timeUnits::sec);
-    double currentTime = 0;
-    bool firstDone = false;
-    bool secondDone = false;
-    bool thirdDone = false;
+    bool calibartionDone = false;
     poseTracker.inert.calibrate();
     while (poseTracker.inert.isCalibrating())
     {
       Brain.Screen.printAt(100, 150, "Calibrating Sensors...");
     }
-    secondDone = true;
-    if (secondDone)
+    calibartionDone = true;
+    if (calibartionDone)
       Brain.Screen.printAt(330, 150, "DONE");
   }
 

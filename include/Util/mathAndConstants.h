@@ -26,6 +26,11 @@ double cosDegrees(double value);
 
 double sinDegrees(double value);
 
+//coverts input degree value to radians
+double toRadians(double value);
+
+//coverts input degree value to radians
+double toDegrees(double value);
 
 
 

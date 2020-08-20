@@ -31,3 +31,9 @@ void LOG(T x, U y, V z, W a, X b)
 {
     std::cout << x << " " << y << " " << z << " " << a << " " << b << std::endl;
 }
+
+template <class T>
+T bruh() {
+  int hi =1;
+  return hi;
+}

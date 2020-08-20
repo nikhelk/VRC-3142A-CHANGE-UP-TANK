@@ -26,7 +26,7 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
 
   while (!atAngle)
   {
-    double currentAngleRadians = (M_PI/180.0)*(poseTracker.getInertialHeading());
+    double currentAngleRadians = toRadians(poseTracker.getInertialHeading());
 
     double angleOutput = chassis.turnPID.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
     
@@ -50,6 +50,7 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
     }
 
     LOG(angle,currentAngleRadians);
+    
     task::sleep(10);
   }
 
@@ -114,8 +115,8 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
       lPower = lFeedback.calculatePower(pose, this->convertTicksToMeters(this->getLeftEncoderValueMotors()));
       
-      cout << this->convertTicksToMeters(this->getRightEncoderValueMotors()) << 
-      " " << this->convertTicksToMeters(this->getLeftEncoderValueMotors()) << 
+      cout << convertTicksToMeters(getRightEncoderValueMotors()) << 
+      " " << convertTicksToMeters(getLeftEncoderValueMotors()) << 
       " " << pose <<
        " " << lPower <<" " << rPower << " " << lFeedback.getKp() << endl;
 
