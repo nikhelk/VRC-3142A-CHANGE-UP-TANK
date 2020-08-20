@@ -49,8 +49,7 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
       atAngle = true;
     }
 
-    std::cout << angle <<  " "  << currentAngleRadians <<std::endl;
-
+    LOG(angle,currentAngleRadians);
     task::sleep(10);
   }
 

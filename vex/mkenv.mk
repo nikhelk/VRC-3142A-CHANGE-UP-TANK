@@ -86,7 +86,7 @@ CFLAGS    = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -ansi -std=g
 CXX_FLAGS = ${CFLAGS_CL} ${CFLAGS_V7} -Os -Wall -Werror=return-type -fno-rtti -fno-threadsafe-statics -fno-exceptions  -std=gnu++11 -ffunction-sections -fdata-sections $(DEFINES)
 
 # linker flags
-LNK_FLAGS = -nostdlib -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB}
+LNK_FLAGS = --defsym _HEAP_SIZE=0x800000 -nostdlib -T "$(TOOLCHAIN)/$(PLATFORM)/lscript.ld" -R "$(TOOLCHAIN)/$(PLATFORM)/stdlib_0.lib" -Map="$(BUILD)/$(PROJECT).map" --gc-section -L"$(TOOLCHAIN)/$(PLATFORM)" ${TOOL_LIB}
 
 # future statuc library
 PROJECTLIB = lib$(PROJECT)
