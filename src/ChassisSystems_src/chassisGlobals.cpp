@@ -1,7 +1,8 @@
 #include "Util/vex.h"
 #include "ChassisSystems/chassisGlobals.h"
-FourMotorDrive::FourMotorDrive(std::vector<int32_t> leftGroup, 
-std::vector<int32_t> rightGroup, 
+
+FourMotorDrive::FourMotorDrive(std::array<int32_t,2> leftGroup, 
+std::array<int32_t,2> rightGroup, 
 vex::gearSetting setting, 
 double gearRatio, 
 Dimensions chassisDimensions, 
@@ -51,14 +52,6 @@ void FourMotorDrive::setReverseSettings(std::vector<bool> LeftReverseVals, std::
   rightBack.setReversed(RightReverseVals[1]);
 }
 
-void FourMotorDrive::setVoltDrive(double leftVoltage, double rightVoltage)
-{
-  this->leftFront.spin(fwd, leftVoltage, volt);
-  this->leftBack.spin(fwd, leftVoltage, volt);
-  this->rightFront.spin(fwd, rightVoltage, volt);
-  this->rightBack.spin(fwd, rightVoltage, volt);
-}
-
 void FourMotorDrive::resetPosition() {
   this->leftFront.resetPosition();
   this->leftBack.resetPosition();
@@ -89,10 +82,10 @@ m_maxAcceleration(maxAcceleration)
 }
 
 Tracking::Tracking(WheelDistances wheels, double wheelRadius, std::vector<triportIndex> enocoderPorts, int GyroPort, double ticksPerRev) : leftEncoder(brained.ThreeWirePort.Port[enocoderPorts[LEFT_ENCODER]]),
+m_odomImpl(wheels),
 rightEncoder(brained.ThreeWirePort.Port[enocoderPorts[RIGHT_ENCODER]]),
 backEncoder(brained.ThreeWirePort.Port[enocoderPorts[BACK_ENCODER]]),
-inert(GyroPort),
-m_odomImpl(wheels)
+inert(GyroPort)
 {
   this->ticksPerRev = ticksPerRev;
   this->trackWidth = trackWidth;
@@ -102,15 +95,18 @@ m_odomImpl(wheels)
 
 double FourMotorDrive::convertMetersToTicks(double num_meters)
 {
-  return (num_meters * (360 / (this->m_chassisDimensions.m_wheelRadius * M_PI)) * this->gearRatio);
+  return (num_meters * (360 / (m_chassisDimensions.m_wheelRadius * M_PI)) * this->gearRatio);
 }
 double FourMotorDrive::convertTicksToMeters(double num_ticks)
 {
-  return (num_ticks * (this->m_chassisDimensions.m_wheelRadius * M_PI / 360) * this->gearRatio);
+  return (num_ticks * (m_chassisDimensions.m_wheelRadius * M_PI / 360) * this->gearRatio);
 }
 double Tracking::getInertialHeading()
 {
+  //change the direction to counter clockwise = positive
   double fixedRotation = -1 * this->inert.rotation();
+
+  //Fit the inertial value between [-180,180]
   while (fixedRotation > 180)
   {
     (fixedRotation -= 360);

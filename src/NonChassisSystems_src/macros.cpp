@@ -1,6 +1,7 @@
 #include "Util/vex.h"
 #include "NonChassisSystems/macros.h"
 
+/*
 botStates myBot;
 visionSensor ejector = visionSensor::BLACK;
 bool getS1();
@@ -130,3 +131,4 @@ void macrosUser()
     break;
   }
 }
+*/

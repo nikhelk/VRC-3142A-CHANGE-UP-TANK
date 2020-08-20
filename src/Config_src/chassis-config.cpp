@@ -28,11 +28,11 @@ using namespace vex;
 
 ); */
 
-FourMotorDrive chassis(
+ FourMotorDrive chassis(
 
-    {PORT8, PORT7}, //Left motors (front and back)
+    {{PORT8, PORT7}}, //Left motors (front and back)
 
-    {PORT9, PORT10}, //Right motors (front and back)
+    {{PORT9, PORT10}}, //Right motors (front and back)
 
     ratio18_1, //motor gear cartridge
 
@@ -40,15 +40,15 @@ FourMotorDrive chassis(
 
     {12.0_in, 3.25_in}, //Dimensions (trackWidth and wheel size)
 
-    {1.2, 1.9}, //Limits (maxVelocity and maxAcceleration)
+    {1.2_mps, 1.9_mps2}, //Limits (maxVelocity and maxAcceleration)
 
     {
-        {.2, 0}, //Distance PD (deprecated thanks to feedforwards control)
+        {0, 0}, //Distance PD (deprecated thanks to feedforwards control)
         {0, 0},   //Angle PD (deprecated thanks to feedforwards control)
         {20, 0},  //Turn PD (used for inertial sensor based turns)
     }
 
-);
+); 
 
 /**
  * This is the implementation of the poseTracker.
@@ -75,8 +75,10 @@ bool RemoteControlCodeEnabled = true;
  */
 void initChassis(void)
 {
-  chassis.setReverseSettings( {true, true} , {false, false} );
+  //right side of bot reversed and left is not
+  chassis.setReverseSettings( {false, false} , {true, true} );
   // chassis.setReverseSettings({false, false}, {true, true});
+  
   chassis.resetPosition();
   chassis.resetRotation();
 
@@ -91,6 +93,8 @@ void initChassis(void)
 
     BigBrother.Screen.clearLine(3);
   } while((poseTracker.inert.isCalibrating()) );
+
   
+
   BigBrother.Screen.print("DONE!");
 }

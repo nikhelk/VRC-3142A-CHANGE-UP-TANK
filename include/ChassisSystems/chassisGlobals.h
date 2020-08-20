@@ -2,7 +2,7 @@
 #include "Util/vex.h"
 #include "ChassisSystems/posPID.h"
 #include "Util/premacros.h"
-
+#include "chassisConstraints.h"
 #include <vector>
 using namespace vex;
 /* 
@@ -13,52 +13,25 @@ using namespace vex;
 */
 
 
-class Dimensions
-{
-private:
-public:
-  long double m_trackWidth;
-  long double m_wheelRadius;
-
-  /**
-   * Initilizes dimensions for 4 motor drive
-   * @param trackWidth width of drive
-   * @param wheelRadius radius of  wheels on drive
-   */
-  Dimensions(long double trackWidth, long double wheelRadius);
-};
-
-class Limits
-{
-private:
-public:
-  long double m_maxVelocity;
-  long double m_maxAcceleration;
-
-  /**
-   * Initilizes kinematic limits for 4 motor drive
-   * @param maxVelocity of drive (inches/sec)
-   * @param maxAcceleration of drive (inches/sec^2)
-   */
-  Limits(long double maxVelocity, long double maxAcceleration);
-
-};
-
 struct FourMotorDrive
 {
+
   Dimensions m_chassisDimensions;
   Limits m_chassisLimits;
-  enum backOrFront
-  {
-    FRONT,
-    BACK,
-  };
+  
   posPID distancePID;
   posPID anglePID;
   posPID turnPID;
 
   double gearRatio;
   vex::gearSetting setting;
+
+  enum backOrFront
+  {
+    FRONT,
+    BACK,
+  };
+
   motor leftFront;
   motor rightFront;
   motor leftBack;
@@ -75,8 +48,8 @@ struct FourMotorDrive
    * @param PDGains Controller chassis parameters
    */
 
-  FourMotorDrive(std::vector<int32_t> leftGroup,
-                 std::vector<int32_t> rightGroup,
+  FourMotorDrive(std::array<int32_t,2> leftGroup,
+                 std::array<int32_t,2> rightGroup,
                  vex::gearSetting setting, double gearRatio, Dimensions chassisDimensions, Limits chassisLimits, std::initializer_list<PDcontroller> PDGains);
 
   /**
@@ -87,33 +60,17 @@ struct FourMotorDrive
 
   void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
 
-
+  /**
+   * Does a point turn based off of inertial value
+   * @param angle the desired ABSOLUTE angle for the robot to turn to
+   * @see posPID#posPID
+   * @see posPID#calculatePower
+   */
 
   void turnToDegreeGyro(double angle);
 
-  void driveStraight(const double distance);
-
-  void normalize(double &left, double &right);
-
-  void crawl(double distance, double speed);
-
-  void moveToPoint(const double x, const double y, bool backwards = false);
-
-  void turnToAbsAngle(const double deg);
-  
-  void driveArc2(const double angle, double radius);
-
-  void driveArcFeedforward(const double radius, const double exitAngle);
-
-  //resets the chassis encoders to 0
-  void resetPosition();
-
-  //resets the chassis encoders to 0
-  void resetRotation();
-
-
   /**
-   * Drives the robot using feedforward control
+   * Drives the robot straight using feedforward control
    * 
    * We calculate our final motor voltage kV*velocity + kA*acceleration + kP*(desiredPos-currentPos)
    * 
@@ -130,15 +87,32 @@ struct FourMotorDrive
    * @see TrapezoidalMotionProfile#calculateMpAcceleration
    * @see posPID#posPID
    * @see posPID#calculatePower
-   * 
    */
 
   void driveStraightFeedforward(const double distance, bool backwards = false);
 
+
+  void normalize(double &left, double &right);
+
+
+  void moveToPoint(const double x, const double y, bool backwards = false);
+
+
+  void driveArcFeedforward(const double radius, const double exitAngle);
+
+  //resets the chassis encoders to 0
+  void resetPosition();
+
+  //resets the chassis encoders to 0
+  void resetRotation();
+
+
+  
+
   /**
-   * Sets the drive to a volatage
+   * sets the chassis to drive at a voltage 
    * @param leftVoltage desired left voltage
-   * @param  desired right voltage
+   * @param rightVoltage desired right voltage
    */
 
   void setDrive(double leftVoltage, double rightVoltage);
@@ -148,10 +122,11 @@ struct FourMotorDrive
    * sets the chassis to drive at a velocity 
    * @param leftVelocity desired left side velocity
    * @param rightVelocity desired right side velocity
+   * @param units desired velocity units (rpm, dps, etc)
    */
 
 
-  void setVelDrive(double leftVelocity, double rightVelocity);
+  void setVelDrive(double leftVelocity, double rightVelocity, velocityUnits units);
 
   
   /**
@@ -184,22 +159,19 @@ struct FourMotorDrive
 };
 
 
-class WheelDistances
+
+
+
+struct WheelDistances
 {
-public:
   double R_DISTANCE;
   double L_DISTANCE;
   double B_DISTANCE;
 };
 
-class Tracking
+struct Tracking
 {
-private:
-  double gearRatio;
 
-  vex::gearSetting gearCart;
-
-public:
   enum trackingWheelID
   {
     LEFT_ENCODER,
@@ -263,13 +235,12 @@ public:
 
   Tracking(FourMotorDrive drive, int GyroPort = NULL);
   /**
-     * returns "fixed" inertial value
-     * @return intertial value
-     */
+   * returns "fixed" inertial value
+   * @return intertial value
+   */
 
   double getInertialHeading();
 
   double getAverageEncoderValueEncoders();
 };
-
 

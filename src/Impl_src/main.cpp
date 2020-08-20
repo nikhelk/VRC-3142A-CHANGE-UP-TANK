@@ -18,23 +18,26 @@ competition Competition;
 
 void pre_auto(void) {
 
-  initChassis();
+  initChassis(); //initlizing chassis (see Config_src/chassis-config.cpp)
 
   Brain.Screen.pressed( userTouchCallbackPressed ); // set up callback for brain screen press
   Brain.Screen.released( userTouchCallbackReleased ); // set up callback for brain screen release
 
   // make background
   makeBackground();
+
   // auton selector task
   task autonSelect( makeDisplay);
+
 }
 
-void autonomous(void) {}
+//void autonomous(void) {}
 
 int main() {
 
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(usercontrol);
+  //Competition.autonomous(autonomous);
+  //Competition.drivercontrol(usercontrol);
+  
   pre_auto();
 
   BigBrother.ButtonA.pressed( runAutoSkills ); //Run autonomous skills when button "A" is pressed on controller
@@ -44,6 +47,7 @@ int main() {
   task trackPos(trackPosition);
 
   while (true) {
+    
     this_thread::sleep_for(10);
   }
 }

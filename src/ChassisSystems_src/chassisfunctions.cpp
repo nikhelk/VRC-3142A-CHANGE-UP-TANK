@@ -6,6 +6,7 @@
 #include "Config/other-config.h"
 #include <algorithm>
 #include "Util/literals.h"
+#include <memory>
 using namespace std;
 
 void FourMotorDrive::turnToDegreeGyro(double angle)
@@ -56,9 +57,6 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
 }
 
 
-
-
-
 void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwards)
 {
   double switchDirections =1;
@@ -84,13 +82,13 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
     // Here we use different feedfoward and P loops on both sides of the drivetrain
     // Ideally, we would not have to do this but the frictional losses on the right side were significantly greater than the left
 
-    Feedfoward rFeed(11/trap.m_maxVel,.1);
+    Feedfoward rFeedforwardConstants(11/trap.m_maxVel,.1);
 
-    Feedfoward lFeed(11/trap.m_maxVel,.08);
+    Feedfoward lFeedforwardConstants(11/trap.m_maxVel,.08);
 
-    posPID rPush(0, 0);
+    posPID rFeedback(0, 0);
 
-    posPID lPush(0,  0);
+    posPID lFeedback(0,  0);
 
     double rPower, lPower;
 
@@ -113,17 +111,17 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
       std::string currentStatus = trap.getMpStatus(currentTime);
 
-      rPower = rPush.calculatePower(pose, this->convertTicksToMeters(this->getRightEncoderValueMotors()));
+      rPower = rFeedback.calculatePower(pose, this->convertTicksToMeters(this->getRightEncoderValueMotors()));
 
-      lPower = lPush.calculatePower(pose, this->convertTicksToMeters(this->getLeftEncoderValueMotors()));
+      lPower = lFeedback.calculatePower(pose, this->convertTicksToMeters(this->getLeftEncoderValueMotors()));
       
       cout << this->convertTicksToMeters(this->getRightEncoderValueMotors()) << 
       " " << this->convertTicksToMeters(this->getLeftEncoderValueMotors()) << 
       " " << pose <<
-       " " << lPower <<" " << rPower << " " << lPush.getKp() << endl;
+       " " << lPower <<" " << rPower << " " << lFeedback.getKp() << endl;
 
-     double lVoltage =  lFeed.kV * mpVel + lFeed.kA * mpAcc + lPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
-     double rVoltage =  rFeed.kV * mpVel + rFeed.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
+     double lVoltage =  lFeedforwardConstants.kV * mpVel + lFeedforwardConstants.kA * mpAcc + lPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
+     double rVoltage =  rFeedforwardConstants.kV * mpVel + rFeedforwardConstants.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
      // this->setDrive(switchDirections*lVoltage, switchDirections*rVoltage);
 
      if (!backwards)
@@ -256,24 +254,24 @@ void FourMotorDrive::normalize(double &left, double &right) {
 
   double maxSpeed = std::max(std::abs(left), std::abs(right));
 
-  if (maxSpeed > this->m_chassisLimits.m_maxVelocity) 
+  if (maxSpeed > m_chassisLimits.m_maxVelocity) 
   {
     std::cout << "NORMALIZING" << " " << maxSpeed << std::endl;
 
-    left = left / maxSpeed * this->m_chassisLimits.m_maxVelocity;
+    left = left / maxSpeed * m_chassisLimits.m_maxVelocity;
 
-    right = right / maxSpeed * this->m_chassisLimits.m_maxVelocity;
+    right = right / maxSpeed * m_chassisLimits.m_maxVelocity;
 
   }
 }
 
 
-void FourMotorDrive::setVelDrive(double leftVelocity, double rightVelocity)
+void FourMotorDrive::setVelDrive(double leftVelocity, double rightVelocity, velocityUnits units)
 {
-    leftFront.spin(fwd, leftVelocity, velocityUnits::dps);
-    leftBack.spin(fwd, leftVelocity, velocityUnits::dps);
-    rightFront.spin(fwd, rightVelocity, velocityUnits::dps);
-    rightBack.spin(fwd, rightVelocity, velocityUnits::dps);
+    leftFront.spin(fwd, leftVelocity, units);
+    leftBack.spin(fwd, leftVelocity, units);
+    rightFront.spin(fwd, rightVelocity, units);
+    rightBack.spin(fwd, rightVelocity, units);
 }
 
 void FourMotorDrive::setDrive(double leftVoltage, double rightVoltage)

@@ -30,6 +30,7 @@ double posPID::calculatePower(double targetPos, double currentPos)
   {
     m_power = m_lowerBound;
   }
+  
   m_prevError = m_error;
   return (m_power);
 }
