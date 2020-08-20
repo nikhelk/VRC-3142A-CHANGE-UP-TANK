@@ -16,3 +16,13 @@ int flywheelTask()
     task::sleep(5);
   }
 }
+
+int outyTask()
+{
+  double slew = 0;
+  while (true)
+  {
+    Flywheel.spin(fwd, -12, volt);
+    task::sleep(5);
+  }
+}
