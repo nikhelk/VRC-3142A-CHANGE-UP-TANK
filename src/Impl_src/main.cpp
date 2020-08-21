@@ -40,7 +40,7 @@ int main() {
   
   pre_auto();
 
-  BigBrother.ButtonA.pressed( runAutoSkills ); //Run autonomous skills when button "A" is pressed on controller
+  BigBrother.ButtonB.pressed( runAutoSkills ); //Run autonomous skills when button "A" is pressed on controller
 
   BigBrother.ButtonX.pressed( testAutoSkills );
 

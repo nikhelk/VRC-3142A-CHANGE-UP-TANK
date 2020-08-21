@@ -4,6 +4,7 @@
 using namespace vex;
 int flywheelTask();
 
-int outyTask();
+void outyTask();
 
 extern bool startFlyDecel;
+extern bool outy;

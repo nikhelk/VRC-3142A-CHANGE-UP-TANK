@@ -2,17 +2,25 @@
 #include "Impl/api.h"
 task indexTask;
 
-
+void outyy();
 void testAutoSkills() {
 
   LOG("Running Test Skills!");
   task intakes(intakeTask);
   task taskedIndex(indexerTask);
-  task fly(flywheelTask); //or task fly(outyTask) for outy
+  task fly(flywheelTask);
+  BigBrother.ButtonA.pressed( outyy );
+
+
+ 
 
 
 }
 
+
+void outyy() {
+   outy = true;
+}
 void runAutoSkills() {
 
   LOG("Running Skills!");

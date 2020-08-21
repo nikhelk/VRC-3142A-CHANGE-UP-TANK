@@ -1,27 +1,21 @@
 #include "NonChassisSystems/flywheel.h"
-
+#include "Config/other-config.h"
 bool startFlyDecel = false;
+bool outy =false;
 int flywheelTask()
 {
   double slew = 0;
   while (true)
   {
-    Flywheel.spin(fwd, slew, volt);
-    if (slew > 12)
-      slew = 12;
-    if (!startFlyDecel)
-      slew += .1;
+    if(outy)
+       Flywheel.spin(fwd, -12, volt);
     else
-      slew -= .1;
+      Flywheel.spin(fwd, 12, volt);
     task::sleep(5);
   }
 }
 
-int outyTask()
+void outyTask()
 {
-  while (true)
-  {
-    Flywheel.spin(fwd, -12, volt);
-    task::sleep(5);
-  }
+  Flywheel.spin(fwd, -12, volt);
 }
