@@ -5,7 +5,7 @@ task indexTask;
 
 void testAutoSkills() {
 
-  LOG("Running Test SKills!");
+  LOG("Running Test Skills!");
   task intakes(intakeTask);
   task taskedIndex(indexerTask);
   task fly(flywheelTask); //or task fly(outyTask) for outy

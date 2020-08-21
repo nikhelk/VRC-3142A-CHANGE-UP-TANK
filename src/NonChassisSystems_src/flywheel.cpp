@@ -1,6 +1,6 @@
 #include "NonChassisSystems/flywheel.h"
 
-
+bool startFlyDecel = false;
 int flywheelTask()
 {
   double slew = 0;
@@ -19,7 +19,6 @@ int flywheelTask()
 
 int outyTask()
 {
-  double slew = 0;
   while (true)
   {
     Flywheel.spin(fwd, -12, volt);
