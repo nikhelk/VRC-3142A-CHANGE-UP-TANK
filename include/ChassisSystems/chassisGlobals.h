@@ -48,10 +48,9 @@ struct FourMotorDrive
    * @param PDGains Controller chassis parameters
    */
 
-  FourMotorDrive(std::array<int32_t,2> leftGroup,
-                 std::array<int32_t,2> rightGroup,
-                 vex::gearSetting setting, double gearRatio, Dimensions chassisDimensions, Limits chassisLimits, std::initializer_list<PDcontroller> PDGains);
 
+  FourMotorDrive(std::array<int32_t,2> leftGroup, std::array<int32_t,2> rightGroup, vex::gearSetting setting, double gearRatio, Dimensions chassisDimensions, Limits chassisLimits, std::initializer_list<PDcontroller> PDGains);
+  
   /**
    * Handles the reversal of motors.
    * @param LeftReverseVals boolean array of leftFront and leftBack desired reversal states
@@ -91,7 +90,14 @@ struct FourMotorDrive
 
   void driveStraightFeedforward(const double distance, bool backwards = false);
 
+/**
+  Frame and construction style.
 
+  - Road: For streets or trails.
+  - Touring: For long journeys.
+  - Cruiser: For casual trips around town.
+  - Hybrid: For general-purpose transportation.
+*/
   void normalize(double &left, double &right);
 
 
@@ -100,10 +106,10 @@ struct FourMotorDrive
 
   void driveArcFeedforward(const double radius, const double exitAngle);
 
-  //resets the chassis encoders to 0
+  /// resets the chassis encoders to 0
   void resetPosition();
 
-  //resets the chassis encoders to 0
+  /// resets the chassis encoders to 0
   void resetRotation();
 
 
@@ -151,10 +157,10 @@ struct FourMotorDrive
   double getLeftEncoderValueMotors();
 
 
-  //converts an imput meters to encoder ticks based off of gear ratio, gearbox etc.
+  /// converts an imput meters to encoder ticks based off of gear ratio, gearbox etc.
   double convertMetersToTicks(double num_meters);
 
-  //converts an imput ticks meters based off of gear ratio, gearbox etc.
+  /// converts an imput ticks meters based off of gear ratio, gearbox etc.
   double convertTicksToMeters(double num_ticks);
 };
 

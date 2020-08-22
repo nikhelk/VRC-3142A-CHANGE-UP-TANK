@@ -7,6 +7,9 @@ struct PDcontroller
   double kD;
 };
 
+
+
+
 class posPID
 {
 private:
@@ -28,7 +31,6 @@ public:
   /**
    * default posPID constructor for values inputted in the FourMotorDrive constructor
    */
-
   posPID();
 
   /**
@@ -36,7 +38,6 @@ public:
    * @param kP desired kP value
    * @param kD desired kD value
    */
-  
   void setPD(double kP, double kD);
   
   
@@ -50,7 +51,7 @@ public:
 
 
 
-/**
+  /**
    * Calculates power of PD drive controller
    * @param targetPos  desired position of robot
    * @param currentPos current position of robot
@@ -66,10 +67,10 @@ public:
 
   double getError() { return (m_error); }
 
-  //gets kP value of controller
+  /// gets kP value of controller
   double getKp() {return (m_kP);}
 
-  //gets kD value of controller 
+  /// gets kD value of controller 
   double getKd() {return(m_kD);}
 
   /**

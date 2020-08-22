@@ -2,6 +2,19 @@
 #include <cmath>
 #include <string>
 
+/**
+ * Initilizes TrapezoidalMotionProfile with constraints
+ * 
+ * We use a trapezoidal motion profile generator for our 1D motion generator
+ * 
+ * The user inputs wheel velcoity constraints and a distance to travelled 
+ * 
+ * Using kinematic formulas, we are able to find the position, acceleration and most importantly the velocity at every timestep in the motion
+ * 
+ * @param maxVel max Velocity
+ * @param maxAcc max acceleration
+ * @param distance desired distance
+ */
 TrapezoidalMotionProfile::TrapezoidalMotionProfile(const double maxVel, const double maxAcc, const double distanceTotal)
 {
 
@@ -39,8 +52,8 @@ TrapezoidalMotionProfile::TrapezoidalMotionProfile(const double maxVel, const do
   m_totalTime = m_accelTime + m_coastTime + m_decelTime;
 }
 
-double TrapezoidalMotionProfile::calculateMpVelocity(const double t)
-{
+
+double TrapezoidalMotionProfile::calculateMpVelocity(const double t) {
 
   if (t < m_accelTime)
   {
@@ -59,6 +72,7 @@ double TrapezoidalMotionProfile::calculateMpVelocity(const double t)
 
 double TrapezoidalMotionProfile::calculateMpAcceleration(const double t)
 {
+
 
   if (t < m_accelTime)
   {

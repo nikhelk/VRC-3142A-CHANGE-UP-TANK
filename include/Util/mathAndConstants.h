@@ -7,8 +7,8 @@
  * @param num number to be determined
  * @return -1 if negative, 1 if positive, 0 if 0
  */
-
 int sgn(double num);
+
 
 /**
  * Determnies cosine of value in degrees

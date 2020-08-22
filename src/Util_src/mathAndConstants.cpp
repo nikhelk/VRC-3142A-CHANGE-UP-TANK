@@ -2,8 +2,8 @@
 
 double positionArray[3];
 
-int sgn(double num)
-{
+
+int sgn(double num) {
   if (num > 0)
     return 1;
   if (num < 0)

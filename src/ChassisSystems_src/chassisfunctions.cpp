@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "Util/literals.h"
 #include <memory>
+
 using namespace std;
 
 void FourMotorDrive::turnToDegreeGyro(double angle)
@@ -200,7 +201,7 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
     double currRightMoved = this->convertTicksToMeters(this->getRightEncoderValueMotors()) - initialMetersRight;
 
-
+  
     drift = currLeftMoved - currRightMoved;
 
     currentTime = Brain.timer(vex::timeUnits::sec) - startTimeA;

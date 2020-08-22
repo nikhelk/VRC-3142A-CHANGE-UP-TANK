@@ -11,7 +11,7 @@
 #include "Impl/auto_skills.h"
 #include "Impl/usercontrol.h"
 #include "Util/vex.h"
-
+#include "ChassisSystems/posPID.h"
 using namespace vex;
 
 competition Competition;
@@ -31,6 +31,7 @@ void pre_auto(void) {
 
 }
 
+
 //void autonomous(void) {}
 
 int main() {
@@ -40,11 +41,17 @@ int main() {
   
   pre_auto();
 
+  TrapezoidalMotionProfile trap(3,4,5);
+  //trap.calculateMpVelocity(())
+
+  
   BigBrother.ButtonB.pressed( runAutoSkills ); //Run autonomous skills when button "A" is pressed on controller
 
   BigBrother.ButtonX.pressed( testAutoSkills );
 
   task trackPos(trackPosition);
+
+
 
   while (true) {
     
