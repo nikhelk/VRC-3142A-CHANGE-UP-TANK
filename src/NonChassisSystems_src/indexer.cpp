@@ -2,18 +2,46 @@
 #include <iostream>
 
 
-bool stopWhenTopDetected = false;
+bool IndexerStopWhenTopDetected = false;
+bool IndexerStopWhenMiddleDetected = false;
+bool IndexerStopWhenBottomDetected = false;
 int indexerTask()
 {
+  bool ballAtTop = topLine.value(analogUnits::range10bit) < 705;
+  bool ballAtMiddle = middleLine.value(analogUnits::range10bit) <705;
   while (true)
   {
-    Indexer.spin(fwd, 12, volt);
-    if(stopWhenTopDetected)
-        Indexer.spin(fwd, 0, volt);
+    if(IndexerStopWhenTopDetected) {
+      std::cout <<topLine.value(analogUnits::range10bit) <<std::endl;
+      if(ballAtTop) {
+          Indexer.spin(fwd,0,volt);
+          std::cout << "Top ball detected!" << std::endl;
+        }
+        else {
+          Indexer.spin(fwd,12,volt);
+        }
+
+    }
+    if(IndexerStopWhenMiddleDetected) {
+      if(ballAtMiddle) {
+        Indexer.spin(fwd,0,volt);
+      }
+      else if (ballAtTop) {
+        Indexer.spin(fwd,0,volt);
+      }
+      else {
+        Indexer.spin(fwd,12,volt);
+      }
+
+    }
+    else {
+      Indexer.spin(fwd,12,volt);
+    }
+
+
     task::sleep(5);
   }
-  Indexer.spin(fwd, 0, volt);
-  std::cout <<"DONE" <<std::endl;
+
 }
 
 void stopIndexerTask(task taskID) {

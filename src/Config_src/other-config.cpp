@@ -17,6 +17,6 @@ motor Indexer = motor(PORT5, ratio6_1, false);
 
 
 triport Expander21 = triport(PORT21);
-line bottomLine = line(Expander21.C);
-line middleLine = line(Expander21.B);
-line topLine = line(Expander21.A);
+line bottomLine = line(Expander21.F);
+line middleLine = line(Expander21.G);
+line topLine = line(Expander21.H);

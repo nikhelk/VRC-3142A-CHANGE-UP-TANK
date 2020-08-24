@@ -9,6 +9,8 @@ void testAutoSkills() {
   task intakes(intakeTask);
   task taskedIndex(indexerTask);
   task fly(flywheelTask);
+  FlywheelStopWhenTopDetected = true;
+  IndexerStopWhenTopDetected = true;
   BigBrother.ButtonA.pressed( outyy );
 
 

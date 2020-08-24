@@ -8,3 +8,4 @@ void outyTask();
 
 extern bool startFlyDecel;
 extern bool outy;
+extern bool FlywheelStopWhenTopDetected;

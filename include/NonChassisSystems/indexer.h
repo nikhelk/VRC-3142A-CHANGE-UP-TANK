@@ -5,4 +5,6 @@
 using namespace vex;
 int indexerTask();
 void stopIndexerTask(task taskID);
-extern bool stopWhenTopDetected;
+extern bool IndexerStopWhenTopDetected;
+extern bool IndexerStopWhenMiddleDetected;
+extern bool IndexerStopWhenBottomDetected;
