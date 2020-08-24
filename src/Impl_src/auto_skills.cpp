@@ -1,18 +1,21 @@
 #include "Impl/auto_skills.h"
 #include "Impl/api.h"
+#include "Impl/goal.h"
 task indexTask;
 
 void outyy();
 void testAutoSkills() {
 
+  Goal1.atGoal = false;
+  Goal2.atGoal = false;
+  Goal3.atGoal= false;
   LOG("Running Test Skills!");
   task intakes(intakeTask);
   task taskedIndex(indexerTask);
-  task fly(flywheelTask);
-  FlywheelStopWhenTopDetected = true;
-  IndexerStopWhenTopDetected = true;
+  //task fly(flywheelTask);
+ // FlywheelStopWhenTopDetected = true;
+  IndexerStopWhenMiddleDetected = true;
   BigBrother.ButtonA.pressed( outyy );
-
 
  
 

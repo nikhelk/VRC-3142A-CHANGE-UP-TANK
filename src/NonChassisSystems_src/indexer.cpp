@@ -5,10 +5,13 @@
 bool IndexerStopWhenTopDetected = false;
 bool IndexerStopWhenMiddleDetected = false;
 bool IndexerStopWhenBottomDetected = false;
+bool IndexerRunContinuously =false;
 int indexerTask()
 {
   bool ballAtTop = topLine.value(analogUnits::range10bit) < 705;
-  bool ballAtMiddle = middleLine.value(analogUnits::range10bit) <705;
+  bool ballAtMiddle = middleLine.value(analogUnits::range10bit) <630;
+  bool ballAtBottom = bottomLine.value(analogUnits::range10bit) < 705;
+
   while (true)
   {
     if(IndexerStopWhenTopDetected) {
@@ -26,7 +29,7 @@ int indexerTask()
       if(ballAtMiddle) {
         Indexer.spin(fwd,0,volt);
       }
-      else if (ballAtTop) {
+      else if (ballAtMiddle && ballAtTop) {
         Indexer.spin(fwd,0,volt);
       }
       else {
@@ -34,7 +37,21 @@ int indexerTask()
       }
 
     }
-    else {
+    if(IndexerStopWhenBottomDetected) {
+      if(ballAtBottom) {
+        Indexer.spin(fwd,0,volt);
+      }
+      if(ballAtBottom && ballAtMiddle) {
+        Indexer.spin(fwd,0,volt);
+      }
+      if(ballAtBottom && ballAtMiddle && ballAtTop) {
+        Indexer.spin(fwd,0,volt);
+      }
+      else {
+        Indexer.spin(fwd,12,volt);
+      } 
+    }
+    if(IndexerRunContinuously) {
       Indexer.spin(fwd,12,volt);
     }
 

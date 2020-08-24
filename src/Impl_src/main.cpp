@@ -55,6 +55,7 @@ int main() {
 
   while (true) {
    // Flywheel.spin(fwd);
+   LOG(middleLine.value(analogUnits::range10bit));
     
     this_thread::sleep_for(10);
   }
