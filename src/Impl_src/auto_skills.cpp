@@ -8,7 +8,7 @@ void testAutoSkills() {
 
   Goal1.atGoal = false;
   Goal2.atGoal = false;
-  Goal3.atGoal= false;
+
   LOG("Running Test Skills!");
   task intakes(intakeTask);
   task taskedIndex(indexerTask);

@@ -54,7 +54,7 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
     
     task::sleep(10);
   }
-
+  this->setDrive(0, 0);
 }
 
 
@@ -68,11 +68,9 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
     TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
 
-    double mpVel, mpAcc; //motion profile velocity and acceleration
+    double mpVel, mpAcc; //forward ref for motion profile velocity and acceleration
 
-    double drift;
-
-    double currentTime, prevTime;
+    double currentTime = 0, prevTime = 0;
 
     const double initialMetersLeft = this->convertTicksToMeters(this->getLeftEncoderValueMotors()); //this is a way of resetting the encoder vals instead of setting them to 0
     
@@ -82,10 +80,12 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
     // Here we use different feedfoward and P loops on both sides of the drivetrain
     // Ideally, we would not have to do this but the frictional losses on the right side were significantly greater than the left
+    // Our estamate for kV was 11V / maxVel as the inputted max velocity in the FourMotorDrive constructor was base on the robot travelling at 11V
+    // the values for kA had to be tuned, but again it took consideriably less time than tuning PID
 
-    Feedfoward rFeedforwardConstants(11/trap.m_maxVel,.1);
+    const Feedfoward rFeedforwardConstants(11/trap.m_maxVel,.1);
 
-    Feedfoward lFeedforwardConstants(11/trap.m_maxVel,.08);
+    const Feedfoward lFeedforwardConstants(11/trap.m_maxVel,.08);
 
     posPID rFeedback(0, 0);
 
@@ -93,16 +93,12 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
     double rPower, lPower;
 
-    double t = 0;
-
-    while (t <=trap.m_totalTime)
+    while (currentTime <=trap.m_totalTime)
     {
 
       double currLeftMoved = this->convertTicksToMeters(this->getLeftEncoderValueMotors()) - initialMetersLeft; // (in meters)
 
       double currRightMoved = this->convertTicksToMeters(this->getRightEncoderValueMotors()) - initialMetersRight; // (in meters)
-
-      drift = currLeftMoved - currRightMoved;
 
       currentTime = Brain.timer(vex::timeUnits::sec) - startTime;
 
@@ -110,16 +106,13 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
       
       mpAcc = trap.calculateMpAcceleration(currentTime); //acceleration of motion profile
 
-      std::string currentStatus = trap.getMpStatus(currentTime);
+      auto currentStatus = trap.getMpStatus(currentTime);
 
-      rPower = rFeedback.calculatePower(pose, this->convertTicksToMeters(this->getRightEncoderValueMotors()));
+      rPower = rFeedback.calculatePower(pose, currRightMoved);
 
-      lPower = lFeedback.calculatePower(pose, this->convertTicksToMeters(this->getLeftEncoderValueMotors()));
+      lPower = lFeedback.calculatePower(pose, currLeftMoved);
       
-      cout << convertTicksToMeters(getRightEncoderValueMotors()) << 
-      " " << convertTicksToMeters(getLeftEncoderValueMotors()) << 
-      " " << pose <<
-       " " << lPower <<" " << rPower << " " << lFeedback.getKp() << endl;
+      LOG(currLeftMoved,currRightMoved,pose,lPower,rPower);
 
      double lVoltage =  lFeedforwardConstants.kV * mpVel + lFeedforwardConstants.kA * mpAcc + lPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
      double rVoltage =  rFeedforwardConstants.kV * mpVel + rFeedforwardConstants.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
@@ -134,8 +127,6 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
      {
        pose -= mpVel * (currentTime - prevTime); // When we go backwards we subtract pose
      }
-
-     t = currentTime;
 
      prevTime = currentTime;
 
@@ -179,9 +170,9 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
     double lPose = 0;
 
-    Feedfoward rFeed(11.2/trap.m_maxVel,.1);
+    Feedfoward rFeed(8/trap.m_maxVel,.1);
 
-    Feedfoward lFeed(11/trap.m_maxVel,.08);
+    Feedfoward lFeed(8/trap.m_maxVel,.08);
 
     posPID rPush(7, 0);
 
@@ -215,14 +206,12 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
     double lAdjust = mpVel * (2 + this->m_chassisDimensions.m_trackWidth * (1/radius)) / 2;
 
-    double R = trapR.calculateMpVelocity(currentTime);
-    double L = trapL.calculateMpVelocity(currentTime);
-
    // chassis.normalize(lAdjust, rAdjust);
 
 
     double rightVel = (currRightMoved-lastRight)/.01;
     double leftVel = (currLeftMoved-lastLeft)/.01;
+
     cout << lPose <<" " << this->convertTicksToMeters(this->getLeftEncoderValueMotors()) << " "
     << rPose << " " << this->convertTicksToMeters(this->getRightEncoderValueMotors()) <<  " " << 
     this->convertTicksToMeters(this->getAverageEncoderValueMotors()) << " " << (rPose+lPose)/2<< " "
