@@ -8,14 +8,13 @@
 #include "Util/literals.h"
 #include <memory>
 
-using namespace std;
-
 void FourMotorDrive::turnToDegreeGyro(double angle)
 {
   bool atAngle = false;
   /***************************************************************************************************************************/
 
   // We would like to thank Team Optimistic for providing us a template of the PID exit function
+  
   // <https://github.com/Team-Optimistic/Team_Optimistic/blob/d6b11f7d5a9e58c72e2c5dd9d944369602bc20a7/turningFunctions.c#L69>
 
   /****************************************************************************************************************************/
@@ -212,10 +211,10 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
     double rightVel = (currRightMoved-lastRight)/.01;
     double leftVel = (currLeftMoved-lastLeft)/.01;
 
-    cout << lPose <<" " << this->convertTicksToMeters(this->getLeftEncoderValueMotors()) << " "
+    std::cout << lPose <<" " << this->convertTicksToMeters(this->getLeftEncoderValueMotors()) << " "
     << rPose << " " << this->convertTicksToMeters(this->getRightEncoderValueMotors()) <<  " " << 
     this->convertTicksToMeters(this->getAverageEncoderValueMotors()) << " " << (rPose+lPose)/2<< " "
-    << rAdjust << " " << lAdjust << endl;
+    << rAdjust << " " << lAdjust << std::endl;
 
 
     auto rPower = r.calculatePower(rPose, currRightMoved);
@@ -294,40 +293,6 @@ double Tracking::getAverageEncoderValueEncoders()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 
 void FourMotorDrive::moveToPoint(const double x, const double y, bool backwards)
@@ -344,104 +309,5 @@ void FourMotorDrive::moveToPoint(const double x, const double y, bool backwards)
 
     driveStraight(vector.length);
 }
-
-void FourMotorDrive::turnToAbsAngle(const double deg)
-{
-    long theta = 0;
-    theta = positionArray[ODOM_THETA];
-
-    turnToDegree(deg - theta);
-}
-
-
-void FourMotorDrive::driveArc2(const double angle, double radius)
-{
-    bool atTarget = false;
-    double distanceElapsed = 0, angleChange = 0;
-    double lastDistance = 0;
-    double distance = toRadians(angle) * (radius);
-    double rRadius = radius + 7.0;
-    double lRadius = radius - 7.0;
-    double rDistance = rRadius * toRadians(angle);
-    double lDistance = lRadius * toRadians(angle);
-    double ratio = lDistance / rDistance;
-
-    double unroundedTargetDistance = encoderToInch * distance;
-    double targetDistance = truncf(unroundedTargetDistance * 10) / 10;
-
-    const long encoderLeft = leftFront.position(degrees);
-    const long encoderRight = rightFront.position(degrees);
-
-    const double atTargetDistance = 26 / 4;
-    pidTimer driveTimer;
-    const double threshold = 2;
-
-    double currentRatio = 0;
-    const int timeoutPeriod = 2000;
-    long currentLeft, currentRight;
-    driveTimer.notMoved = 0;
-    driveTimer.close = 0;
-    double distancePower, anglePower, ratioPower;
-    posPID arcPID(9, .3);
-    double curAngle = positionArray[ODOM_THETA];
-    while (!atTarget)
-    {
-        currentLeft = chassis.leftFront.position(degrees) - encoderLeft;
-        currentRight = chassis.rightFront.position(degrees) - encoderRight;
-        if (currentRight == 0 || currentLeft == 0)
-        {
-            currentRatio = 0;
-        }
-        else
-        {
-            currentRatio = (double)currentLeft / currentRight;
-        }
-        // std::cout << targetDistance << " " << 1/curvature << " " <<angleChange << " " << angle*(720/102.0)<<std::endl;
-        distanceElapsed = (currentLeft + currentRight) / 2.0;
-        angleChange = currentRight - currentLeft;
-        //angleChange = positionArray[ODOM_THETA] - curAngle;
-        distancePower = chassis.distancePID.calculatePower(targetDistance, distanceElapsed);
-        // double realPower = distancePower/11;
-        //anglePower = 0;
-
-        std::cout << distancePower << " " << currentRatio << " " << ratio << std::endl;
-        setDrive(ratio * (distancePower) + ratioPower, distancePower - ratioPower);
-
-        if (std::abs(targetDistance - distanceElapsed) <= atTargetDistance)
-        {
-            driveTimer.close += 10;
-        }
-        //Place mark if we haven't moved much
-        else if (std::abs(distanceElapsed - lastDistance) <= threshold)
-        {
-            driveTimer.notMoved += 10;
-        }
-        else
-        {
-            driveTimer.close = 0;
-            driveTimer.notMoved = 0;
-        }
-        bool close = std::abs(targetDistance - distanceElapsed) <= atTargetDistance;
-        bool stop = std::abs(distanceElapsed - lastDistance) <= threshold;
-        bool pass = driveTimer.notMoved >= timeoutPeriod;
-        bool pass2 = driveTimer.close >= timeoutPeriod;
-
-        //printf("%.1f %ld %ld \n",angleChange,currentLeft,currentRight);
-        lastDistance = distanceElapsed;
-
-        //If we've been close enough for long enough, we're there
-        if (driveTimer.close >= timeoutPeriod || driveTimer.notMoved >= timeoutPeriod)
-        {
-            atTarget = true;
-        }
-        Brain.Screen.printAt(100, 150, "%f", leftFront.position(degrees));
-        Brain.Screen.printAt(0, 150, "timerClose: %.0f, timerNotMoved: %.0f", driveTimer.close, driveTimer.notMoved);
-        Brain.Screen.printAt(0, 200, "distanceElapsed: %.2f,Error %.2f  ", distanceElapsed, targetDistance);
-        task::sleep(10);
-    }
-    Brain.Screen.clearScreen();
-    setDrive(0, 0);
-}
-
 
 */
