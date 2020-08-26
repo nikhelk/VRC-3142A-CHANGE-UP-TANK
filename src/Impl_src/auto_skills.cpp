@@ -10,11 +10,32 @@ void testAutoSkills() {
   Goal2.atGoal = false;
 
   LOG("Running Test Skills!");
-  task intakes(intakeTask);
-  task taskedIndex(indexerTask);
+  //task intakes(intakeTask);
+  //task taskedIndex(indexerTask);
   //task fly(flywheelTask);
  // FlywheelStopWhenTopDetected = true;
-  IndexerStopWhenMiddleDetected = true;
+ // IndexerStopWhenMiddleDetected = true;
+
+
+  poseTracker.inert.setRotation(136, degrees);
+ 
+  chassis.driveStraightFeedforward(20.0_in,true);
+
+  task::sleep(100);
+
+  chassis.turnToDegreeGyro(-3.0_deg);
+
+  chassis.driveStraightFeedforward(55.0_in);
+
+  task::sleep(100);
+
+  chassis.turnToDegreeGyro(-90.0_deg);
+
+  chassis.driveStraightFeedforward(13.0_in);
+
+
+
+
   BigBrother.ButtonA.pressed( outyy );
 
  
@@ -41,14 +62,48 @@ void runAutoSkills() {
   chassis.turnToDegreeGyro(-130.0_deg);
   std::cout <<"Done Turning" <<std::endl;
   task indexTask(indexerTask); //index up to line sensor
-  chassis.driveStraightFeedforward(21.0_in); */
+  chassis.driveStraightFeedforward(21.0_in); 
 
   //PATH 2 (first goal to second goal)
 
+  poseTracker.inert.setRotation(145, degrees);
+ 
+  chassis.driveStraightFeedforward(20.0_in,true);
 
+  task::sleep(100);
 
+  chassis.turnToDegreeGyro(0.0_deg);
+
+  chassis.driveStraightFeedforward(55.0_in);
+
+  task::sleep(100);
+
+  chassis.turnToDegreeGyro(-90.0_deg);
+
+  chassis.driveStraightFeedforward(13.0_in);
+
+  */
 
   //PATH 3 (second goal to third goal)
+
+
+/*
+  poseTracker.inert.setRotation(90, degrees);
+
+  chassis.driveStraightFeedforward(24.0_in,true);
+  task::sleep(100);
+
+  chassis.turnToDegreeGyro(0.0_deg);
+
+  chassis.driveStraightFeedforward(50.0_in);
+  task::sleep(100);
+
+  chassis.turnToDegreeGyro(-140.0_deg);
+
+  chassis.driveStraightFeedforward(30.0_in);
+
+  */
+
 
 
 

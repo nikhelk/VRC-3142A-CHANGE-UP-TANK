@@ -45,7 +45,7 @@ using namespace vex;
     {
         {0, 0}, //Distance PD (deprecated thanks to feedforwards control)
         {0, 0},   //Angle PD (deprecated thanks to feedforwards control)
-        {20, 0},  //Turn PD (used for inertial sensor based turns)
+        {25, 65},  //Turn PD (used for inertial sensor based turns)
     }
 
 ); 
@@ -58,7 +58,7 @@ using namespace vex;
 Tracking poseTracker({4, 4, 5}, //Tracking wheel distances (left, right, back)
  2.75, //Tracking wheel radius
  {Tracking::G, Tracking::C, Tracking::A}, //Tracking wheel ports (left, right, back)
- PORT7); //Intertial Sensor port
+ PORT4); //Intertial Sensor port
 
 
 
@@ -76,7 +76,7 @@ bool RemoteControlCodeEnabled = true;
 void initChassis(void)
 {
   //right side of bot reversed and left is not
-  chassis.setReverseSettings( {false, false} , {true, true} );
+  chassis.setReverseSettings( {true, true} , {false, false} );
   // chassis.setReverseSettings({false, false}, {true, true});
   
   chassis.resetPosition();

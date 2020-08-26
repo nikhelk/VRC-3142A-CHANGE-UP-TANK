@@ -14,13 +14,15 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
   /***************************************************************************************************************************/
 
   // We would like to thank Team Optimistic for providing us a template of the PID exit function
-  
+
   // <https://github.com/Team-Optimistic/Team_Optimistic/blob/d6b11f7d5a9e58c72e2c5dd9d944369602bc20a7/turningFunctions.c#L69>
 
   /****************************************************************************************************************************/
   pidTimer turnTimer;
 
   const double timeoutPeriod = 200;
+  
+
 
   const double acceptableError = 3.0_deg; // give three degrees of error
 
@@ -28,9 +30,16 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
   {
     double currentAngleRadians = toRadians(poseTracker.getInertialHeading());
 
+    int optimize =1;
+
+    if(angle - toRadians(poseTracker.getInertialHeading()) > M_PI || angle - toRadians(poseTracker.getInertialHeading())  < -1 * M_PI ) {
+
+    optimize = -1;
+    }
+
     double angleOutput = chassis.turnPID.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
     
-    this->setDrive(-1 * angleOutput, angleOutput);
+    this->setDrive(-1 * angleOutput *  optimize, angleOutput * optimize);
     
     //If we are close to the target start incrementing timeout
     if (std::abs(angle - currentAngleRadians) < acceptableError)
@@ -49,7 +58,7 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
       atAngle = true;
     }
 
-    LOG(angle,currentAngleRadians);
+    LOG(toDegrees(angle),toDegrees(currentAngleRadians));
     
     task::sleep(10);
   }
@@ -115,7 +124,7 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
      double lVoltage =  lFeedforwardConstants.kV * mpVel + lFeedforwardConstants.kA * mpAcc + lPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
      double rVoltage =  rFeedforwardConstants.kV * mpVel + rFeedforwardConstants.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
-     // this->setDrive(switchDirections*lVoltage, switchDirections*rVoltage);
+     this->setDrive(switchDirections*lVoltage, switchDirections*rVoltage);
 
      if (!backwards)
      {
@@ -169,11 +178,11 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
     double lPose = 0;
 
-    Feedfoward rFeed(8/trap.m_maxVel,.1);
+    Feedfoward rFeed(9/trap.m_maxVel,.1);
 
-    Feedfoward lFeed(8/trap.m_maxVel,.08);
+    Feedfoward lFeed(9/trap.m_maxVel,.08);
 
-    posPID rPush(7, 0);
+    posPID rPush(0, 0);
 
     posPID lPush(0, 0);
 
@@ -182,8 +191,6 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
     double t = 0;
 
     double lastLeft, lastRight;
-    posPID r(0,0);
-    posPID l(1,0);
 
   while(t <= trap.m_totalTime) {
 
@@ -217,8 +224,8 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
     << rAdjust << " " << lAdjust << std::endl;
 
 
-    auto rPower = r.calculatePower(rPose, currRightMoved);
-    auto lPower = l.calculatePower(lPose, currLeftMoved);
+    auto rPower = rPush.calculatePower(rPose, currRightMoved);
+    auto lPower = lPush.calculatePower(lPose, currLeftMoved);
 
     setDrive(lAdjust*lFeed.kV + lPower ,rAdjust*rFeed.kV+rPower);
     //setVelDrive(chassis.convertMetersToTicks(lAdjust), chassis.convertMetersToTicks(rAdjust));
