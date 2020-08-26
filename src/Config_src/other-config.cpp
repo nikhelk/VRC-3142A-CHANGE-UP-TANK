@@ -20,3 +20,4 @@ triport Expander21 = triport(PORT21);
 line bottomLine = line(Expander21.F);
 line middleLine = line(Expander21.G);
 line topLine = line(Expander21.H);
+line outyLine = line(Expander21.E);

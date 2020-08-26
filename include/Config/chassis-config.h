@@ -8,7 +8,7 @@ extern FourMotorDrive chassis;
 
 // VEXcode devices
 extern encoder testEncoder;
-
+extern line intakeDetect;
 extern brain Brain;
 
 

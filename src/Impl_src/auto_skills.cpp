@@ -6,17 +6,29 @@ task indexTask;
 void outyy();
 void testAutoSkills() {
 
-  Goal1.atGoal = false;
   Goal2.atGoal = false;
 
   LOG("Running Test Skills!");
-  //task intakes(intakeTask);
-  //task taskedIndex(indexerTask);
-  //task fly(flywheelTask);
- // FlywheelStopWhenTopDetected = true;
+  task intakes(intakeTask);
+  //intakeRunCont = true;
+
+  task taskedIndex(indexerTask);
+  
+ // doOuty = true;
+  task fly(flywheelTask);
+
+  Goal1.atGoal = true;
+
+
+  //doOuty2 =true;
+  //FlywheelStopWhenTopDetected = true;
+  //IndexerStopWhenBottomDetected = true;
+  //task::sleep(3000);
+  //FlywheelStopWhenTopDetected = false;
+ // Goal1.atGoal = true;
  // IndexerStopWhenMiddleDetected = true;
 
-
+  /*
   poseTracker.inert.setRotation(136, degrees);
  
   chassis.driveStraightFeedforward(20.0_in,true);
@@ -31,10 +43,10 @@ void testAutoSkills() {
 
   chassis.turnToDegreeGyro(-90.0_deg);
 
-  chassis.driveStraightFeedforward(13.0_in);
+  chassis.driveStraightFeedforward(13.0_in); */
 
 
-
+  //topLine.changed(increment);
 
   BigBrother.ButtonA.pressed( outyy );
 
@@ -53,7 +65,7 @@ void runAutoSkills() {
   //PATH 1 (Starting position to first goal)
   
 
- /*  chassis.driveStraightFeedforward(6.5_in);
+   chassis.driveStraightFeedforward(8.0_in);
   chassis.turnToDegreeGyro(-65.0_deg);
   std::cout <<"Done Turning" <<std::endl;
   task intakeSpin(intakeTask); //start intakes to pick up first ball
@@ -62,7 +74,9 @@ void runAutoSkills() {
   chassis.turnToDegreeGyro(-130.0_deg);
   std::cout <<"Done Turning" <<std::endl;
   task indexTask(indexerTask); //index up to line sensor
-  chassis.driveStraightFeedforward(21.0_in); 
+  chassis.driveStraightFeedforward(30.0_in); 
+
+  task::sleep(2000);
 
   //PATH 2 (first goal to second goal)
 
@@ -81,13 +95,14 @@ void runAutoSkills() {
   chassis.turnToDegreeGyro(-90.0_deg);
 
   chassis.driveStraightFeedforward(13.0_in);
+  task::sleep(2000);
 
-  */
+  
 
   //PATH 3 (second goal to third goal)
 
 
-/*
+
   poseTracker.inert.setRotation(90, degrees);
 
   chassis.driveStraightFeedforward(24.0_in,true);
@@ -102,7 +117,7 @@ void runAutoSkills() {
 
   chassis.driveStraightFeedforward(30.0_in);
 
-  */
+  
 
 
 

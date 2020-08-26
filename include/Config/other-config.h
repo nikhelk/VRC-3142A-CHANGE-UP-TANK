@@ -18,4 +18,6 @@ extern triport Expander21;
 extern line bottomLine;
 extern line middleLine;
 extern line topLine;
+extern line outyLine;
+
 

@@ -8,17 +8,17 @@ bool IndexerStopWhenBottomDetected = false;
 bool IndexerRunContinuously =false;
 int indexerTask()
 {
-  bool ballAtTop = topLine.value(analogUnits::range10bit) < 705;
+  bool ballAtTop = topLine.value(analogUnits::range10bit) < 700;
   bool ballAtMiddle = middleLine.value(analogUnits::range10bit) <715;
-  bool ballAtBottom = bottomLine.value(analogUnits::range10bit) < 705;
+  bool ballAtBottom = bottomLine.value(analogUnits::range10bit) < 711;
 
   while (true)
   {
     if(IndexerStopWhenTopDetected) {
       std::cout <<topLine.value(analogUnits::range10bit) <<std::endl;
-      if(ballAtTop) {
+      if(topLine.value(analogUnits::range10bit) < 711) {
           Indexer.spin(fwd,0,volt);
-          std::cout << "Top ball detected!" << std::endl;
+          
         }
         else {
           Indexer.spin(fwd,12,volt);
@@ -26,13 +26,11 @@ int indexerTask()
 
     }
     if(IndexerStopWhenMiddleDetected) {
-      LOG( middleLine.value(analogUnits::range10bit));
-      if(middleLine.value(analogUnits::range10bit) <710) {
-        LOG("Ball detected");
+      if(middleLine.value(analogUnits::range10bit) <697) {
+        LOG(" Middle Ball detected");
         Indexer.spin(fwd,0,volt);
-      }
-      else if (ballAtMiddle && ballAtTop) {
-        Indexer.spin(fwd,0,volt);
+        task::sleep(200);
+        Goal1.atGoal = false;
       }
       else {
         Indexer.spin(fwd,7,volt);
@@ -40,21 +38,21 @@ int indexerTask()
 
     }
     if(IndexerStopWhenBottomDetected) {
-      if(ballAtBottom) {
+      if(bottomLine.value(analogUnits::range10bit) < 695) {
+        LOG("ball at bottom");
         Indexer.spin(fwd,0,volt);
-      }
-      if(ballAtBottom && ballAtMiddle) {
-        Indexer.spin(fwd,0,volt);
-      }
-      if(ballAtBottom && ballAtMiddle && ballAtTop) {
-        Indexer.spin(fwd,0,volt);
+
       }
       else {
-        Indexer.spin(fwd,12,volt);
+        Indexer.spin(fwd,10,volt);
       } 
     }
     if(IndexerRunContinuously) {
       Indexer.spin(fwd,12,volt);
+    }
+    if(Goal1.atGoal) {
+      IndexerStopWhenMiddleDetected = true;
+
     }
 
 

@@ -62,7 +62,7 @@ Tracking poseTracker({4, 4, 5}, //Tracking wheel distances (left, right, back)
 
 
 
-
+line intakeDetect = line(Brain.ThreeWirePort.G);
 encoder testEncoder = encoder(Brain.ThreeWirePort.A);
 
 
