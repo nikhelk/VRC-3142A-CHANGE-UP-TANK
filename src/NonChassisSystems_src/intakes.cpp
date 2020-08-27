@@ -13,6 +13,8 @@ int intakeTask()
   {
   
     if(Goal1.atGoal) {
+      intakeRunCont = false;
+      backUp = false;
       
       while(ballCount <1) {
       IntakeL.spin(fwd, 10, volt);

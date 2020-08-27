@@ -69,12 +69,18 @@ void runAutoSkills() {
   chassis.turnToDegreeGyro(-65.0_deg);
   std::cout <<"Done Turning" <<std::endl;
   task intakeSpin(intakeTask); //start intakes to pick up first ball
+  intakeRunCont = true;
 
   chassis.driveStraightFeedforward(34.0_in);
   chassis.turnToDegreeGyro(-130.0_deg);
   std::cout <<"Done Turning" <<std::endl;
   task indexTask(indexerTask); //index up to line sensor
   chassis.driveStraightFeedforward(30.0_in); 
+
+  // Goal1.atGoal = true;
+  // while(Goal1.atGoal){
+  //   task::sleep(1000);
+  // }
 
   task::sleep(2000);
 
@@ -83,10 +89,15 @@ void runAutoSkills() {
   poseTracker.inert.setRotation(145, degrees);
  
   chassis.driveStraightFeedforward(20.0_in,true);
+  backUp = false;
+
+
 
   task::sleep(100);
 
   chassis.turnToDegreeGyro(0.0_deg);
+
+  intakeRunCont = true;
 
   chassis.driveStraightFeedforward(55.0_in);
 
@@ -95,7 +106,12 @@ void runAutoSkills() {
   chassis.turnToDegreeGyro(-90.0_deg);
 
   chassis.driveStraightFeedforward(13.0_in);
-  task::sleep(2000);
+
+  // Goal1.atGoal = true;
+  // while(Goal1.atGoal)
+  // {
+  //   task::sleep(1000);
+  // }
 
   
 
@@ -106,9 +122,12 @@ void runAutoSkills() {
   poseTracker.inert.setRotation(90, degrees);
 
   chassis.driveStraightFeedforward(24.0_in,true);
+  backUp = false;
   task::sleep(100);
 
   chassis.turnToDegreeGyro(0.0_deg);
+
+  intakeRunCont = true;
 
   chassis.driveStraightFeedforward(50.0_in);
   task::sleep(100);

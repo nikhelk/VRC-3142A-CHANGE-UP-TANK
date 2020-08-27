@@ -1,4 +1,5 @@
 #include "NonChassisSystems/indexer.h"
+#include "NonChassisSystems/flywheel.h"
 #include <iostream>
 
 
@@ -51,7 +52,17 @@ int indexerTask()
       Indexer.spin(fwd,12,volt);
     }
     if(Goal1.atGoal) {
-      IndexerStopWhenMiddleDetected = true;
+      IndexerRunContinuously = false;
+      IndexerStopWhenBottomDetected = false;
+      IndexerStopWhenTopDetected = false;
+      if(!scored) {
+        IndexerStopWhenMiddleDetected = true;
+      }
+      else {
+        IndexerStopWhenMiddleDetected = false;
+        Indexer.spin(fwd, 600*.5, velocityUnits::rpm);
+
+      }
 
     }
 
