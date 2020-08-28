@@ -31,7 +31,7 @@ int indexerTask()
         LOG(" Middle Ball detected");
         Indexer.spin(fwd,0,volt);
         task::sleep(200);
-        Goal1.atGoal = false;
+        
       }
       else {
         Indexer.spin(fwd,7,volt);
@@ -51,7 +51,7 @@ int indexerTask()
     if(IndexerRunContinuously) {
       Indexer.spin(fwd,12,volt);
     }
-    if(Goal1.atGoal) {
+    if(atGoal) {
       IndexerRunContinuously = false;
       IndexerStopWhenBottomDetected = false;
       IndexerStopWhenTopDetected = false;

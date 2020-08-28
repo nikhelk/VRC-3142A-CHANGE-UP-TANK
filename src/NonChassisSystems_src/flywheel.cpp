@@ -18,11 +18,6 @@ int flywheelTask()
        Flywheel.spin(fwd, -12, volt);
     }
 
-    else if (doOuty2) {
-
-
-    }
-
     else {
       if(FlywheelStopWhenTopDetected) {
         if(topLine.value(analogUnits::range10bit) < 711) {
@@ -32,7 +27,7 @@ int flywheelTask()
           Flywheel.spin(fwd,10,volt);
         }
       }
-      if(Goal1.atGoal) {
+      if(atGoal) {
 
         FlywheelStopWhenTopDetected = false;
         while(!scored) {
@@ -65,8 +60,7 @@ int flywheelTask()
         double outyTimeOutTimer =  Brain.timer(timeUnits::sec) -start;
 
         if(outyTimeOutTimer>2) {
-          Goal1.atGoal = false;
-          backUp = true;
+          
           outied = true;
         }
 
@@ -75,6 +69,9 @@ int flywheelTask()
       task::sleep(3);
 
       }
+      
+      atGoal = false;
+      backUp = true;
       FlywheelStopWhenTopDetected = true;
 
       }

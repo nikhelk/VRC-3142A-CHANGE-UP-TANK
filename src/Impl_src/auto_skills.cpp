@@ -4,9 +4,10 @@
 task indexTask;
 
 void outyy();
+bool atGoal = false;
 void testAutoSkills() {
 
-  Goal2.atGoal = false;
+
 
   LOG("Running Test Skills!");
   task intakes(intakeTask);
@@ -17,7 +18,7 @@ void testAutoSkills() {
  // doOuty = true;
   task fly(flywheelTask);
 
-  Goal1.atGoal = true;
+  atGoal = true;
 
 
   //doOuty2 =true;

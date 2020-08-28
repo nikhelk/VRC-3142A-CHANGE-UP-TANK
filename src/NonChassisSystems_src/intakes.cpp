@@ -1,18 +1,19 @@
 #include "NonChassisSystems/intakes.h"
 #include "Util/vex.h"
 #include "Util/premacros.h"
+
 static int ballCount =0;
-void increment() {
-  ballCount =1;
-}
+
 bool backUp = false;
+
 bool intakeRunCont = false;
+
 int intakeTask()
 {
   while (true)
   {
   
-    if(Goal1.atGoal) {
+    if(atGoal) {
       intakeRunCont = false;
       backUp = false;
       
@@ -29,8 +30,8 @@ int intakeTask()
 
     }
     else if (backUp) {
-    IntakeL.spin(fwd, 8, volt);
-    IntakeR.spin(fwd, 8, volt);
+    IntakeL.spin(fwd, -8, volt);
+    IntakeR.spin(fwd, -8, volt);
     }
     else if(intakeRunCont) {
     IntakeL.spin(fwd, 12, volt);

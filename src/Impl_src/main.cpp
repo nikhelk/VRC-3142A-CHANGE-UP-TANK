@@ -41,30 +41,18 @@ int main() {
   
   pre_auto();
 
-  TrapezoidalMotionProfile trap(3,4,5);
-  //trap.calculateMpVelocity(())
-
-  
   BigBrother.ButtonB.pressed( runAutoSkills ); //Run autonomous skills when button "A" is pressed on controller
 
   BigBrother.ButtonX.pressed( testAutoSkills );
 
   task trackPos(trackPosition);
 
-
-
-
-
   while (true) {
-   // Flywheel.spin(fwd);
   //   LOG(topLine.value(analogUnits::range10bit),
   //   middleLine.value(analogUnits::range10bit),
   //  bottomLine.value(analogUnits::range10bit),
   //  outyLine.value(analogUnits::range10bit),
   //  intakeDetect.value(analogUnits::range10bit));
-
-
-
     
     this_thread::sleep_for(10);
   }
