@@ -5,3 +5,5 @@
 void runAutoSkills();
 
 void testAutoSkills();
+
+extern bool atGoal;

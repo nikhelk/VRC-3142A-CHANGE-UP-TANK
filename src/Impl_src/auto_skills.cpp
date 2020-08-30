@@ -1,6 +1,6 @@
 #include "Impl/auto_skills.h"
 #include "Impl/api.h"
-#include "Impl/goal.h"
+
 task indexTask;
 
 void outyy();
