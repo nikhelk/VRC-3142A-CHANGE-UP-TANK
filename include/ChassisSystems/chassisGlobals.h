@@ -49,7 +49,7 @@ struct FourMotorDrive
    */
 
 
-  FourMotorDrive(std::array<int32_t,2> leftGroup, std::array<int32_t,2> rightGroup, vex::gearSetting setting, double gearRatio, Dimensions chassisDimensions, Limits chassisLimits, std::initializer_list<PDcontroller> PDGains);
+  FourMotorDrive(const std::array<int32_t,2>& leftGroup, const std::array<int32_t,2>& rightGroup, vex::gearSetting setting, double gearRatio, Dimensions chassisDimensions, Limits chassisLimits, std::initializer_list<PDcontroller> PDGains);
   
   /**
    * Handles the reversal of motors.
@@ -57,7 +57,7 @@ struct FourMotorDrive
    * @param RightReverseVals boolean array of rightFront and rightBack desired reversal states
    */
 
-  void setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals);
+  void setReverseSettings(const std::array<bool,2>& LeftReverseVals, const  std::array<bool,2>& RightReverseVals);
 
   /**
    * Does a point turn based off of inertial value

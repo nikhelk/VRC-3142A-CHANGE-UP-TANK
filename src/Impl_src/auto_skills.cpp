@@ -79,9 +79,7 @@ void runAutoSkills() {
   chassis.driveStraightFeedforward(30.0_in); 
 
   // Goal1.atGoal = true;
-  // while(Goal1.atGoal){
-  //   task::sleep(1000);
-  // }
+  //waitUntil(!atGoal);
 
   task::sleep(2000);
 

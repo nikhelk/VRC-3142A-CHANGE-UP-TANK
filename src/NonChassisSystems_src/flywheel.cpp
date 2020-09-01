@@ -47,6 +47,8 @@ int flywheelTask()
       }
       bool outied = false;
       IndexerStopWhenMiddleDetected = false;
+      bool startOutyTimer = false;
+
       while(!outied) {
       
 
@@ -57,15 +59,17 @@ int flywheelTask()
 
       if(outyLine.value(analogUnits::range10bit) < 700) {
 
-        double outyTimeOutTimer =  Brain.timer(timeUnits::sec) -start;
+        startOutyTimer =  true;
 
-        if(outyTimeOutTimer>2) {
+      }
+
+      if(startOutyTimer) {
           
           outied = true;
         }
 
 
-      }
+
       task::sleep(3);
 
       }

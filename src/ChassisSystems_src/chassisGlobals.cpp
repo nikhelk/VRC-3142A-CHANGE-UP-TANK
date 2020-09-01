@@ -1,8 +1,8 @@
 #include "Util/vex.h"
 #include "ChassisSystems/chassisGlobals.h"
 
-FourMotorDrive::FourMotorDrive(std::array<int32_t,2> leftGroup, 
-std::array<int32_t,2> rightGroup, 
+FourMotorDrive::FourMotorDrive(const std::array<int32_t,2>& leftGroup, 
+const std::array<int32_t,2>& rightGroup, 
 vex::gearSetting setting, 
 double gearRatio, 
 Dimensions chassisDimensions, 
@@ -44,7 +44,7 @@ Limits chassisLimits,
   this->gearRatio = gearRatio;
   this->setting = setting;
 }
-void FourMotorDrive::setReverseSettings(std::vector<bool> LeftReverseVals, std::vector<bool> RightReverseVals)
+void FourMotorDrive::setReverseSettings(const std::array<bool,2>& LeftReverseVals, const std::array<bool,2>& RightReverseVals)
 {
   leftFront.setReversed(LeftReverseVals[0]);
   leftBack.setReversed(LeftReverseVals[1]);
