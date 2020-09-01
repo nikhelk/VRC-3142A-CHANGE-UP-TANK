@@ -28,7 +28,7 @@ using namespace vex;
 
 ); */
 
- FourMotorDrive chassis(
+FourMotorDrive chassis{
 
     {{PORT8, PORT7}}, //Left motors (front and back)
 
@@ -48,7 +48,7 @@ using namespace vex;
         {25, 65},  //Turn PD (used for inertial sensor based turns)
     }
 
-); 
+ }; 
 
 /**
  * This is the implementation of the poseTracker.
