@@ -8,12 +8,7 @@
 #include "Util/literals.h"
 #include <memory>
 
-void FourMotorDrive::adjustOutput(double targetAngle,double& angleOutput) {
-    if(targetAngle - toRadians(poseTracker.getInertialHeading()) > M_PI || targetAngle - toRadians(poseTracker.getInertialHeading())  < -1 * M_PI ) {
 
-    angleOutput = -1*angleOutput;
-    }
-}
 
 void FourMotorDrive::turnToDegreeGyro(double angle)
 {
@@ -28,21 +23,12 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
   pidTimer turnTimer;
 
   const double timeoutPeriod = 200;
-  
-
 
   const double acceptableError = 3.0_deg; // give three degrees of error
 
   while (!atAngle)
   {
     double currentAngleRadians = toRadians(poseTracker.getInertialHeading());
-
-    int optimize =1;
-
-    if(angle - toRadians(poseTracker.getInertialHeading()) > M_PI || angle - toRadians(poseTracker.getInertialHeading())  < -1 * M_PI ) {
-
-    optimize = -1;
-    }
 
     double angleOutput = chassis.turnPID.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
     
@@ -72,13 +58,6 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
     task::sleep(10);
   }
   this->setDrive(0, 0);
-}
-
-void FourMotorDrive::checkBackwards(double& lVoltage , double& rVoltage , bool backwards) {
-  if(backwards) {
-    lVoltage = lVoltage * -1;
-    rVoltage = rVoltage * -1;
-  }
 }
 
 void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwards)
@@ -112,7 +91,7 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
     double rPower, lPower;
 
-    while (currentTime <=trap.m_totalTime)
+    while (currentTime <= trap.m_totalTime)
     {
 
       double currLeftMoved = this->convertTicksToMeters(this->getLeftEncoderValueMotors()) - initialMetersLeft; // (in meters)
@@ -291,6 +270,24 @@ void FourMotorDrive::setDrive(double leftVoltage, double rightVoltage)
     rightFront.spin(fwd, rightVoltage, volt);
     rightBack.spin(fwd, rightVoltage, volt);
 }
+
+
+void FourMotorDrive::adjustOutput(double targetAngle,double& angleOutput) {
+    if(targetAngle - toRadians(poseTracker.getInertialHeading()) > M_PI || targetAngle - toRadians(poseTracker.getInertialHeading())  < -1 * M_PI ) {
+
+    angleOutput = -1*angleOutput;
+    }
+}
+
+void FourMotorDrive::checkBackwards(double& lVoltage , double& rVoltage , bool backwards) {
+  if(backwards) {
+    lVoltage = lVoltage * -1;
+    rVoltage = rVoltage * -1;
+  }
+}
+
+
+
 
 double FourMotorDrive::getAverageEncoderValueMotors()
 {
