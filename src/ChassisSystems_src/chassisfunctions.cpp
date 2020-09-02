@@ -8,6 +8,13 @@
 #include "Util/literals.h"
 #include <memory>
 
+void FourMotorDrive::adjustOutput(double targetAngle,double& angleOutput) {
+    if(targetAngle - toRadians(poseTracker.getInertialHeading()) > M_PI || targetAngle - toRadians(poseTracker.getInertialHeading())  < -1 * M_PI ) {
+
+    angleOutput = -1*angleOutput;
+    }
+}
+
 void FourMotorDrive::turnToDegreeGyro(double angle)
 {
   bool atAngle = false;
@@ -39,7 +46,9 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
 
     double angleOutput = chassis.turnPID.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
     
-    this->setDrive(-1 * angleOutput *  optimize, angleOutput * optimize);
+    adjustOutput(angle,angleOutput);
+    
+    this->setDrive(-1 * angleOutput, angleOutput );
     
     //If we are close to the target start incrementing timeout
     if (std::abs(angle - currentAngleRadians) < acceptableError)
@@ -65,13 +74,15 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
   this->setDrive(0, 0);
 }
 
+void FourMotorDrive::checkBackwards(double& lVoltage , double& rVoltage , bool backwards) {
+  if(backwards) {
+    lVoltage = lVoltage * -1;
+    rVoltage = rVoltage * -1;
+  }
+}
 
 void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwards)
 {
-  double switchDirections =1;
-  if(backwards) {
-    switchDirections = -1;
-  }
     const double startTime = Brain.timer(vex::timeUnits::sec); //"resetting" timer
 
     TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
@@ -124,7 +135,10 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
      double lVoltage =  lFeedforwardConstants.kV * mpVel + lFeedforwardConstants.kA * mpAcc + lPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
      double rVoltage =  rFeedforwardConstants.kV * mpVel + rFeedforwardConstants.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
-     this->setDrive(switchDirections*lVoltage, switchDirections*rVoltage);
+     
+     checkBackwards(lVoltage,rVoltage,backwards);
+     
+     this->setDrive(lVoltage,rVoltage);
 
      if (!backwards)
      {

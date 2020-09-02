@@ -15,7 +15,11 @@ using namespace vex;
 
 struct FourMotorDrive
 {
+  private:
+    void adjustOutput(double targetAngle,double& angleOutput);
+    void checkBackwards(double& lVoltage , double& rVoltage , bool backwards);
 
+  public:
   Dimensions m_chassisDimensions;
   Limits m_chassisLimits;
   
