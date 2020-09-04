@@ -1,3 +1,4 @@
+#pragma once
 #include "Util/vex.h"
 
 /// inches operator (coverted to meters)
