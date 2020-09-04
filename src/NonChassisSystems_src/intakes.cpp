@@ -2,7 +2,7 @@
 #include "Util/vex.h"
 #include "Util/premacros.h"
 
-static int ballCount =0;
+static bool ballIn = false;
 
 bool backUp = false;
 
@@ -17,28 +17,39 @@ int intakeTask()
       intakeRunCont = false;
       backUp = false;
       
-      while(ballCount <1) {
-      IntakeL.spin(fwd, 10, volt);
-      IntakeR.spin(fwd, 10, volt);
-    if(intakeDetect.value(analogUnits::range10bit) < 615) {
-      ballCount =1;
-    }
+      if(!ballIn) {
+        IntakeL.spin(fwd, 10, volt);
+        IntakeR.spin(fwd, 10, volt);
+
+        if(intakeDetect.value(analogUnits::range10bit) < 615) {
+        ballIn = true;
+        }
+      }
+
+      else {
+        IntakeL.spin(fwd, 0, volt);
+        IntakeR.spin(fwd, 0, volt);
+
+      }
+
     }
 
-    IntakeL.spin(fwd, 0, volt);
-    IntakeR.spin(fwd, 0, volt);
-
-    }
     else if (backUp) {
-    IntakeL.spin(fwd, -8, volt);
-    IntakeR.spin(fwd, -8, volt);
-    }
-    else if(intakeRunCont) {
-    IntakeL.spin(fwd, 12, volt);
-    IntakeR.spin(fwd, 12, volt);
 
-  }
+      IntakeL.spin(fwd, -8, volt);
+      IntakeR.spin(fwd, -8, volt);
+
+    }
+
+    else if(intakeRunCont) {
+
+      IntakeL.spin(fwd, 12, volt);
+      IntakeR.spin(fwd, 12, volt);
+
+    }
+
     task::sleep(5);
 
   }
+  
 }

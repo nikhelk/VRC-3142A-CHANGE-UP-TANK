@@ -9,29 +9,14 @@ bool IndexerStopWhenBottomDetected = false;
 bool IndexerRunContinuously =false;
 int indexerTask()
 {
-  bool ballAtTop = topLine.value(analogUnits::range10bit) < 700;
-  bool ballAtMiddle = middleLine.value(analogUnits::range10bit) <715;
-  bool ballAtBottom = bottomLine.value(analogUnits::range10bit) < 711;
 
   while (true)
   {
-    if(IndexerStopWhenTopDetected) {
-      std::cout <<topLine.value(analogUnits::range10bit) <<std::endl;
-      if(topLine.value(analogUnits::range10bit) < 711) {
-          Indexer.spin(fwd,0,volt);
-          
-        }
-        else {
-          Indexer.spin(fwd,12,volt);
-        }
 
-    }
     if(IndexerStopWhenMiddleDetected) {
       if(middleLine.value(analogUnits::range10bit) <697) {
         LOG(" Middle Ball detected");
-        Indexer.spin(fwd,0,volt);
-        task::sleep(200);
-        
+        Indexer.spin(fwd,0,volt);       
       }
       else {
         Indexer.spin(fwd,7,volt);
@@ -51,14 +36,17 @@ int indexerTask()
     if(IndexerRunContinuously) {
       Indexer.spin(fwd,12,volt);
     }
+
     if(atGoal) {
+
       IndexerRunContinuously = false;
+
       IndexerStopWhenBottomDetected = false;
-      IndexerStopWhenTopDetected = false;
-      if(!scored) {
+
+      if(!scored) { // index to the middle while flywheel is scoring
         IndexerStopWhenMiddleDetected = true;
       }
-      else {
+      else { //run outy
         IndexerStopWhenMiddleDetected = false;
         Indexer.spin(fwd, 600*.5, velocityUnits::rpm);
 

@@ -272,14 +272,14 @@ void FourMotorDrive::setDrive(double leftVoltage, double rightVoltage)
 }
 
 
-void FourMotorDrive::adjustOutput(double targetAngle,double& angleOutput) {
+inline void FourMotorDrive::adjustOutput(double targetAngle,double& angleOutput) {
     if(targetAngle - toRadians(poseTracker.getInertialHeading()) > M_PI || targetAngle - toRadians(poseTracker.getInertialHeading())  < -1 * M_PI ) {
 
     angleOutput = -1*angleOutput;
     }
 }
 
-void FourMotorDrive::checkBackwards(double& lVoltage , double& rVoltage , bool backwards) {
+inline void FourMotorDrive::checkBackwards(double& lVoltage , double& rVoltage , bool backwards) {
   if(backwards) {
     lVoltage = lVoltage * -1;
     rVoltage = rVoltage * -1;

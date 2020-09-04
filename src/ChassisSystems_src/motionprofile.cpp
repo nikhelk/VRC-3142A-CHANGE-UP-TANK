@@ -9,7 +9,7 @@
  * 
  * The user inputs wheel velcoity constraints and a distance to travelled 
  * 
- * Using kinematic formulas, we are able to find the position, acceleration and most importantly the velocity at every timestep in the motion
+ * Using kinematic formulas, we are able to find the position, acceleration and most importantly the velocity at every timestep in the motio
  * 
  * @param maxVel max Velocity
  * @param maxAcc max acceleration

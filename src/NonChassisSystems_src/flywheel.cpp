@@ -2,92 +2,88 @@
 #include "Config/other-config.h"
 #include "NonChassisSystems/indexer.h"
 #include "NonChassisSystems/intakes.h"
-bool startFlyDecel = false;
-bool outy =false;
-bool doOuty = false;
-bool doOuty2 = false;
+#include <mutex>
+
+static mutex scoreLock;
+static mutex outyLock;
+
+bool outy = false;
+
 bool FlywheelStopWhenTopDetected = false;
 bool scored = false;
-double scoreTimer = 0;
-int flywheelTask()
-{
-  double start = Brain.timer(timeUnits::sec);
-  while (true)
-  {
-    if(outy) {
-       Flywheel.spin(fwd, -12, volt);
+
+int flywheelTask() {
+  bool ballOutied = false;
+  double scoreTimeoutTimer = 0;
+  double outyTimeoutTimer = 0;
+
+  while (true) {
+    if (outy) {
+      Flywheel.spin(fwd, -12, volt);
     }
 
     else {
-      if(FlywheelStopWhenTopDetected) {
-        if(topLine.value(analogUnits::range10bit) < 711) {
-          Flywheel.spin(fwd,0,volt);
-        }
-        else {
-          Flywheel.spin(fwd,10,volt);
+      if (FlywheelStopWhenTopDetected) {
+        if (topLine.value(analogUnits::range10bit) < 711) {
+          Flywheel.spin(fwd, 0, volt);
+        } else {
+          Flywheel.spin(fwd, 10, volt);
         }
       }
-      if(atGoal) {
+      if (atGoal) {
 
         FlywheelStopWhenTopDetected = false;
-        while(!scored) {
-        Flywheel.spin(fwd,12,volt);
-        if(topLine.value(analogUnits::range10bit) >720) {
 
-           double currTime =  Brain.timer(timeUnits::sec) -start;
-           if(currTime > 3) {
-             scored = true;
+        if (!scored) {
+          Flywheel.spin(fwd, 12, volt);
 
-             //doOuty2 = true;
-             
-           }
+          if (topLine.value(analogUnits::range10bit) > 720) {
+
+            scoreTimeoutTimer += 5;
+
+            scoreLock.lock();
+
+            if (scoreTimeoutTimer > 1000) {
+
+              scored = true;
+            }
+            scoreLock.unlock();
+          }
 
         }
-        task::sleep(3);
-      }
-      bool outied = false;
-      IndexerStopWhenMiddleDetected = false;
-      bool startOutyTimer = false;
 
-      while(!outied) {
-      
+        else { // if we have scored (outy code)
 
-      Flywheel.spin(fwd, -12, volt);
-      
-      //Indexer.spin(fwd, 6, volt);
+          Flywheel.spin(fwd, -12, volt);
 
+          if (outyLine.value(analogUnits::range10bit) < 700) {
 
-      if(outyLine.value(analogUnits::range10bit) < 700) {
+            ballOutied = true;
+          }
 
-        startOutyTimer =  true;
+          if (ballOutied) {
 
-      }
+            outyTimeoutTimer += 5;
 
-      if(startOutyTimer) {
-          
-          outied = true;
-        }
+            outyLock.lock();
 
+            if (outyTimeoutTimer > 1000) {
 
+              atGoal = false;
+              backUp = true;
+              FlywheelStopWhenTopDetected = true;
+            }
+            outyLock.unlock();
+          } // outy timeout
+        } //outy
+      } //at Goa;
 
-      task::sleep(3);
+    } //not manual
 
-      }
-      
-      atGoal = false;
-      backUp = true;
-      FlywheelStopWhenTopDetected = true;
-
-      }
-      else {
-        Flywheel.spin(fwd,0,volt);
-      }
     task::sleep(5);
-  }
-  }
-}
 
-void outyTask()
-{
-  Flywheel.spin(fwd, -12, volt);
-}
+  } // while true
+
+} // function def
+
+void outyTask() { Flywheel.spin(fwd, -12, volt); }
