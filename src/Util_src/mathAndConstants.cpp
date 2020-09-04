@@ -1,7 +1,7 @@
 #include "Util/vex.h"
 
 double positionArray[3];
-
+namespace math3142a {
 
 int sgn(double num) {
   if (num > 0)
@@ -31,3 +31,4 @@ double toRadians(double angle)
   return angle * (M_PI / 180);
 }
 
+}

@@ -2,6 +2,8 @@
 #include "Impl/auto_skills.h"
 #include "selectorAPI.h"
 
+namespace selector3142a {
+
 /* ***************************************************************************************************** */
 
 // We would like to thank jpearman and walshbots for providing us a template for the autonomous selector
@@ -92,3 +94,5 @@ extern int confirmPress;
 
 extern bool allianceBlue;
 extern bool skills;
+
+}

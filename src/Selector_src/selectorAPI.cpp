@@ -98,11 +98,11 @@ int ButtonGroupMaker::displayButtonControls(int index, bool pressed, bool perman
 
 int ButtonGroupMaker::displayButtonControls(int index, bool pressed) {
   Brain.Screen.clearScreen();
-  makeBackground();
+  selector3142a::makeBackground();
   vex::color c;
   Brain.Screen.setPenColor( vex::color(0xe0e0e0) );
-  tabButtons.displayButtonControls(0, false , true);
-  confirmButton.displayButtonControls(0,false ,true);
+  selector3142a::tabButtons.displayButtonControls(0, false , true);
+  selector3142a::confirmButton.displayButtonControls(0,false ,true);
 
 
   // NEW STUFF

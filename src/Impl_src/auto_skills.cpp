@@ -1,8 +1,6 @@
 #include "Impl/auto_skills.h"
 #include "Impl/api.h"
 
-task indexTask;
-
 void outyy();
 bool atGoal = false;
 void testAutoSkills() {

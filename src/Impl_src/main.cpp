@@ -14,32 +14,23 @@
 #include "ChassisSystems/posPID.h"
 using namespace vex;
 
-competition Competition;
-
 void pre_auto(void) {
 
   initChassis(); //initlizing chassis (see Config_src/chassis-config.cpp)
 
-  Brain.Screen.pressed( userTouchCallbackPressed ); // set up callback for brain screen press
-  Brain.Screen.released( userTouchCallbackReleased ); // set up callback for brain screen release
+  Brain.Screen.pressed( selector3142a::userTouchCallbackPressed ); // set up callback for brain screen press
+  Brain.Screen.released( selector3142a::userTouchCallbackReleased ); // set up callback for brain screen release
 
   // make background
-  makeBackground();
+  selector3142a::makeBackground();
 
   // auton selector task
-  task autonSelect( makeDisplay);
+  task autonSelect( selector3142a::makeDisplay );
 
 }
 
-
-//void autonomous(void) {}
-
 int main() {
-  
-  //Competition.autonomous(autonomous);
-  //Competition.drivercontrol(usercontrol);
 
-  
   pre_auto();
 
   BigBrother.ButtonB.pressed( runAutoSkills ); //Run autonomous skills when button "A" is pressed on controller

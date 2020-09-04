@@ -10,7 +10,7 @@
 
 
 
-void FourMotorDrive::turnToDegreeGyro(double angle)
+void FourMotorDrive::turnToDegreeGyro(const double angle)
 {
   bool atAngle = false;
   /***************************************************************************************************************************/
@@ -28,7 +28,7 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
 
   while (!atAngle)
   {
-    double currentAngleRadians = toRadians(poseTracker.getInertialHeading());
+    double currentAngleRadians = math3142a::toRadians(poseTracker.getInertialHeading());
 
     double angleOutput = chassis.turnPID.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
     
@@ -53,7 +53,7 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
       atAngle = true;
     }
 
-    LOG(toDegrees(angle),toDegrees(currentAngleRadians));
+    LOG(math3142a::toDegrees(angle),math3142a::toDegrees(currentAngleRadians));
     
     task::sleep(10);
   }
@@ -62,7 +62,7 @@ void FourMotorDrive::turnToDegreeGyro(double angle)
 
 void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwards)
 {
-    const double startTime = Brain.timer(vex::timeUnits::sec); //"resetting" timer
+    const double startTime = Brain.timer(timeUnits::sec); //"resetting" timer
 
     TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
 
@@ -81,9 +81,9 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
     // Our estamate for kV was 11V / maxVel as the inputted max velocity in the FourMotorDrive constructor was base on the robot travelling at 11V
     // the values for kA had to be tuned, but again it took consideriably less time than tuning PID
 
-    const Feedfoward rFeedforwardConstants(11/trap.m_maxVel,.1);
+    const Feedfoward rFeedforwardConstants(11/trap.getMpMaxVelocity(),.1);
 
-    const Feedfoward lFeedforwardConstants(11/trap.m_maxVel,.08);
+    const Feedfoward lFeedforwardConstants(11/trap.getMpMaxVelocity(),.08);
 
     posPID rFeedback(0, 0);
 
@@ -91,14 +91,14 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
     double rPower, lPower;
 
-    while (currentTime <= trap.m_totalTime)
+    while (currentTime <= trap.getMpTotalTime())
     {
 
       double currLeftMoved = this->convertTicksToMeters(this->getLeftEncoderValueMotors()) - initialMetersLeft; // (in meters)
 
       double currRightMoved = this->convertTicksToMeters(this->getRightEncoderValueMotors()) - initialMetersRight; // (in meters)
 
-      currentTime = Brain.timer(vex::timeUnits::sec) - startTime;
+      currentTime = Brain.timer(timeUnits::sec) - startTime;
 
       mpVel = trap.calculateMpVelocity(currentTime); //velocity of motion profile
       
@@ -141,7 +141,7 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
 void FourMotorDrive::driveArcFeedforward(const double radius, const double exitAngle) {
 
-  double startTimeA = Brain.timer(vex::timeUnits::sec);
+  double startTimeA = Brain.timer(timeUnits::sec);
 
   const double distance = radius *exitAngle;
 
@@ -171,9 +171,9 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
     double lPose = 0;
 
-    Feedfoward rFeed(9/trap.m_maxVel,.1);
+    Feedfoward rFeed(9/trap.getMpMaxVelocity() , .1);
 
-    Feedfoward lFeed(9/trap.m_maxVel,.08);
+    Feedfoward lFeed(9/trap.getMpMaxVelocity() , .08);
 
     posPID rPush(0, 0);
 
@@ -185,7 +185,7 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
 
     double lastLeft, lastRight;
 
-  while(t <= trap.m_totalTime) {
+  while(t <= trap.getMpTotalTime()) {
 
     double currLeftMoved = this->convertTicksToMeters(this->getLeftEncoderValueMotors()) - initialMetersLeft;
 
@@ -194,7 +194,7 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
   
     drift = currLeftMoved - currRightMoved;
 
-    currentTime = Brain.timer(vex::timeUnits::sec) - startTimeA;
+    currentTime = Brain.timer(timeUnits::sec) - startTimeA;
 
     mpVel = trap.calculateMpVelocity(currentTime);
       
@@ -273,7 +273,7 @@ void FourMotorDrive::setDrive(double leftVoltage, double rightVoltage)
 
 
 inline void FourMotorDrive::adjustOutput(double targetAngle,double& angleOutput) {
-    if(targetAngle - toRadians(poseTracker.getInertialHeading()) > M_PI || targetAngle - toRadians(poseTracker.getInertialHeading())  < -1 * M_PI ) {
+    if(targetAngle - math3142a::toRadians(poseTracker.getInertialHeading()) > M_PI || targetAngle - math3142a::toRadians(poseTracker.getInertialHeading()) < -1 * M_PI ) {
 
     angleOutput = -1*angleOutput;
     }

@@ -1,6 +1,7 @@
 #include "Selector/selectorAPI.h"
 #include "Selector/selectorImpl.h"
 
+namespace selector3142a {
 
 /* ***************************************************************************************************** */
 
@@ -533,4 +534,6 @@ int makeDisplay()
 {
   displayAllButtonControls(0, false);
   return (-1);
+}
+
 }

@@ -17,6 +17,7 @@
  * Button constructor with properties
  */
 
+
 struct button
 {
   int xpos; //x-coordanate

@@ -2,6 +2,7 @@
 
 #include "Util/vex.h"
 
+namespace math3142a {
 /**
  * Determnies whether a number is negative or positive
  * @param num number to be determined
@@ -33,4 +34,4 @@ double toRadians(double value);
 double toDegrees(double value);
 
 
-
+}
