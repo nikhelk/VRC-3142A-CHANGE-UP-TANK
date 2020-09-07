@@ -28,27 +28,41 @@ using namespace vex;
 
 ); */
 
-FourMotorDrive chassis{
+// FourMotorDrive chassis{
 
-    {{PORT8, PORT7}}, //Left motors (front and back)
+//     {{PORT8, PORT7}}, //Left motors (front and back)
 
-    {{PORT9, PORT10}}, //Right motors (front and back)
+//     {{PORT9, PORT10}}, //Right motors (front and back)
 
-    ratio18_1, //motor gear cartridge
+//     ratio18_1, //motor gear cartridge
 
-    1.66667, //gear ratio
+//     1.66667, //gear ratio
 
-    {12.0_in, 3.25_in}, //Dimensions (trackWidth and wheel size)
+//     {12.0_in, 3.25_in}, //Dimensions (trackWidth and wheel size)
 
-    {1.2_mps, 1.9_mps2}, //Limits (maxVelocity and maxAcceleration)
+//     {1.2_mps, 1.9_mps2}, //Limits (maxVelocity and maxAcceleration)
 
-    {
-        {0, 0}, //Distance PD (deprecated thanks to feedforwards control)
-        {0, 0},   //Angle PD (deprecated thanks to feedforwards control)
-        {25, 65},  //Turn PD (used for inertial sensor based turns)
-    }
+//     {
+//         {0, 0}, //Distance PD (deprecated thanks to feedforwards control)
+//         {0, 0},   //Angle PD (deprecated thanks to feedforwards control)
+//         {25, 65},  //Turn PD (used for inertial sensor based turns)
+//     }
 
- }; 
+//  }; 
+
+ FourMotorDrive chassis = FourMotorDrive::FourMotorDriveBuilder{}
+                          .withMotors({PORT8, PORT7}, {PORT9, PORT10})
+                          .withGearSetting(ratio18_1)
+                          .withGearRatio(1.6666667)
+                          .withDimensions({12.0_in, 3.25_in})
+                          .withLimits({1.2_mps, 1.9_mps2})
+                          .withPDGains( {
+                                        {0, 0},  //Distance PD (deprecated thanks to feedforwards control)
+                                        {0, 0},  //Angle PD (deprecated thanks to feedforwards control)
+                                        {25, 65} //Turn PD (used for inertial sensor based turns))
+                                                }) 
+                          .buildChassis();
+
 
 /**
  * This is the implementation of the poseTracker.

@@ -17,6 +17,7 @@ struct Dimensions
    * @param wheelRadius radius of  wheels on drive
    */
   Dimensions(long double trackWidth, long double wheelRadius);
+  Dimensions() {}
 };
 
 /**
@@ -36,5 +37,6 @@ struct Limits
    * @param maxAcceleration of drive (m/sec^2)
    */
   Limits(long double maxVelocity, long double maxAcceleration);
+  Limits() {}
 
 };

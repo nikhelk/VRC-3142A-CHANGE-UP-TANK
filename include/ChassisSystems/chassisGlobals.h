@@ -35,6 +35,8 @@ public:
     BACK,
   };
 
+  class FourMotorDriveBuilder;
+
   motor leftFront;
   motor rightFront;
   motor leftBack;
@@ -169,6 +171,60 @@ public:
   /// converts an imput ticks meters based off of gear ratio, gearbox etc.
   double convertTicksToMeters(double num_ticks);
 };
+
+
+class FourMotorDrive::FourMotorDriveBuilder {
+
+  private:
+  std::array<int32_t, 2> m_leftGroup;
+  std::array<int32_t, 2> m_rightGroup;
+  gearSetting gearbox;
+  double gearRatio;
+  Dimensions m_chassisDimensions;
+  Limits m_chassisLimits;
+  std::initializer_list<PDcontroller> m_PDGains;
+
+
+  public:
+    FourMotorDriveBuilder& withMotors(const std::array<int32_t, 2> &leftGroup,const std::array<int32_t, 2> &rightGroup) {
+      m_leftGroup = leftGroup;
+      m_rightGroup = rightGroup;
+      return *this;
+    }
+    FourMotorDriveBuilder& withGearSetting(gearSetting gears) {
+      gearbox = gears;
+      return *this;
+    }
+    FourMotorDriveBuilder& withGearRatio(double ratio) {
+      gearRatio = ratio;
+      return *this;
+    }
+    FourMotorDriveBuilder& withDimensions(Dimensions chassisDimensions) {
+      m_chassisDimensions = chassisDimensions;
+      return *this;
+    }
+    FourMotorDriveBuilder& withLimits(Limits chassisLimits) {
+      m_chassisLimits = chassisLimits;
+      return *this;
+    }
+    FourMotorDriveBuilder& withPDGains(std::initializer_list<PDcontroller> PDGains) {
+      PDGains = PDGains;
+      return *this;
+    }
+
+    FourMotorDrive buildChassis() const
+    {
+      return FourMotorDrive{m_leftGroup, m_rightGroup, gearbox, gearRatio,m_chassisDimensions,m_chassisLimits,m_PDGains};
+    }
+
+};
+
+
+
+
+
+
+
 
 struct WheelDistances {
   double R_DISTANCE;
