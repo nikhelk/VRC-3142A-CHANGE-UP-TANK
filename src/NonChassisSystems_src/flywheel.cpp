@@ -4,13 +4,24 @@
 #include "NonChassisSystems/intakes.h"
 #include <mutex>
 
+namespace Scorer {
+
 static mutex scoreLock;
 static mutex outyLock;
 
 bool outy = false;
 
 bool FlywheelStopWhenTopDetected = false;
+
 bool scored = false;
+
+static constexpr int SCORE_VOLTAGE = 10;
+
+static constexpr int STOP_VOLTAGE = 0;
+
+static constexpr int EJECT_VOLTAGE = -12;
+
+static constexpr int TOP_LINE_THRESHOLD = 711;
 
 int flywheelTask() {
   bool ballOutied = false;
@@ -27,7 +38,7 @@ int flywheelTask() {
         if (topLine.value(analogUnits::range10bit) < 711) {
           Flywheel.spin(fwd, 0, volt);
         } else {
-          Flywheel.spin(fwd, 10, volt);
+        Flywheel.spin(fwd, SCORE_VOLTAGE , volt);
         }
       }
       if (atGoal) {
@@ -70,7 +81,7 @@ int flywheelTask() {
             if (outyTimeoutTimer > 1000) {
 
               atGoal = false;
-              backUp = true;
+              Intakes::backUp = true;
               FlywheelStopWhenTopDetected = true;
             }
             outyLock.unlock();
@@ -87,3 +98,5 @@ int flywheelTask() {
 } // function def
 
 void outyTask() { Flywheel.spin(fwd, -12, volt); }
+
+}

@@ -2,14 +2,24 @@
 #include "Util/vex.h"
 #include "Util/premacros.h"
 
-static bool ballIn = false;
+namespace Intakes {
 
 bool backUp = false;
 
 bool intakeRunCont = false;
 
+static constexpr int INTAKE_VOLTAGE = 12;
+
+static constexpr int STOP_VOLTAGE = 0;
+
+static constexpr int BACKUP_VOLTAGE = -8;
+
+static constexpr int BALL_DETECT_THRESHOLD = 615;
+
 int intakeTask()
 {
+  bool ballIn = false;
+
   while (true)
   {
   
@@ -21,7 +31,7 @@ int intakeTask()
         IntakeL.spin(fwd, 10, volt);
         IntakeR.spin(fwd, 10, volt);
 
-        if(intakeDetect.value(analogUnits::range10bit) < 615) {
+        if(intakeDetect.value(analogUnits::range10bit) < BALL_DETECT_THRESHOLD) {
         ballIn = true;
         }
       }
@@ -52,4 +62,6 @@ int intakeTask()
 
   }
   
+}
+
 }

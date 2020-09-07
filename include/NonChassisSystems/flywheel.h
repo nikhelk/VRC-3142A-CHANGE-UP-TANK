@@ -7,6 +7,8 @@
 
 using namespace vex;
 
+namespace Scorer{
+
 int flywheelTask();
 
 void outyTask();
@@ -16,3 +18,7 @@ extern bool outy;
 extern bool FlywheelStopWhenTopDetected;
 
 extern bool scored;
+
+
+
+}

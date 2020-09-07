@@ -8,13 +8,13 @@ void testAutoSkills() {
 
 
   LOG("Running Test Skills!");
-  task intakes(intakeTask);
+  task intakes(Intakes::intakeTask);
   //intakeRunCont = true;
 
-  task taskedIndex(indexerTask);
+  task taskedIndex(Rollers::indexerTask);
   
  // doOuty = true;
-  task fly(flywheelTask);
+  task fly(Scorer::flywheelTask);
 
   atGoal = true;
 
@@ -56,7 +56,7 @@ void testAutoSkills() {
 
 
 void outyy() {
-   outy = true;
+   Scorer::outy = true;
 }
 void runAutoSkills() {
 
@@ -67,13 +67,13 @@ void runAutoSkills() {
    chassis.driveStraightFeedforward(8.0_in);
   chassis.turnToDegreeGyro(-65.0_deg);
   std::cout <<"Done Turning" <<std::endl;
-  task intakeSpin(intakeTask); //start intakes to pick up first ball
-  intakeRunCont = true;
+  task intakeSpin(Intakes::intakeTask); //start intakes to pick up first ball
+  Intakes::intakeRunCont = true;
 
   chassis.driveStraightFeedforward(34.0_in);
   chassis.turnToDegreeGyro(-130.0_deg);
   std::cout <<"Done Turning" <<std::endl;
-  task indexTask(indexerTask); //index up to line sensor
+  //task indexTask(indexerTask); //index up to line sensor
   chassis.driveStraightFeedforward(30.0_in); 
 
   // Goal1.atGoal = true;
@@ -86,7 +86,7 @@ void runAutoSkills() {
   poseTracker.inert.setRotation(145, degrees);
  
   chassis.driveStraightFeedforward(20.0_in,true);
-  backUp = false;
+  Intakes::backUp = false;
 
 
 
@@ -94,7 +94,7 @@ void runAutoSkills() {
 
   chassis.turnToDegreeGyro(0.0_deg);
 
-  intakeRunCont = true;
+  Intakes::intakeRunCont = true;
 
   chassis.driveStraightFeedforward(55.0_in);
 
@@ -119,12 +119,12 @@ void runAutoSkills() {
   poseTracker.inert.setRotation(90, degrees);
 
   chassis.driveStraightFeedforward(24.0_in,true);
-  backUp = false;
+  Intakes::backUp = false;
   task::sleep(100);
 
   chassis.turnToDegreeGyro(0.0_deg);
 
-  intakeRunCont = true;
+  Intakes::intakeRunCont = true;
 
   chassis.driveStraightFeedforward(50.0_in);
   task::sleep(100);

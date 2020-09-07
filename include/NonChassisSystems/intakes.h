@@ -7,8 +7,11 @@
 
 using namespace vex;
 
+namespace Intakes {
 int intakeTask();
 
 extern bool backUp;
 
 extern bool intakeRunCont;
+
+}

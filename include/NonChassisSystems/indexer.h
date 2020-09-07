@@ -7,6 +7,8 @@
 
 using namespace vex;
 
+namespace Rollers{
+
 int indexerTask();
 
 void stopIndexerTask(task taskID);
@@ -18,3 +20,5 @@ extern bool IndexerStopWhenMiddleDetected;
 extern bool IndexerStopWhenBottomDetected;
 
 extern bool IndexerRunContinuously;
+
+}
