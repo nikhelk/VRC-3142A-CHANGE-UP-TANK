@@ -80,11 +80,17 @@ int flywheelTask() {
 
             outyLock.lock();
 
-            if (outyTimeoutTimer > 1000) {
+            if (outyTimeoutTimer > 1000) { //if we have elasped enough time since first outy detection, we have outied
 
               atGoal = false;
               Intakes::backUp = true;
               FlywheelStopWhenTopDetected = true;
+              
+
+              // reset bools for next goal sequence
+              ballOutied = false;
+              scored = false;
+              
             }
             outyLock.unlock();
           } // outy timeout
