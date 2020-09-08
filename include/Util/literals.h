@@ -1,5 +1,4 @@
 #include "Util/vex.h"
-
 /// inches operator (coverted to meters)
 long double operator"" _in(long double x);
 

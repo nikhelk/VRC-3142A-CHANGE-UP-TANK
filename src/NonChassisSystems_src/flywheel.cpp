@@ -11,6 +11,7 @@ static mutex outyLock;
 
 bool outy = false;
 
+
 bool FlywheelStopWhenTopDetected = false;
 
 bool scored = false;
@@ -34,6 +35,7 @@ int flywheelTask() {
     }
 
     else {
+      
       if (FlywheelStopWhenTopDetected) {
         if (topLine.value(analogUnits::range10bit) < 711) {
           Flywheel.spin(fwd, 0, volt);

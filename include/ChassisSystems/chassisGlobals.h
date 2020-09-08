@@ -55,9 +55,9 @@ public:
 
   FourMotorDrive(const std::array<int32_t, 2> &leftGroup,
                  const std::array<int32_t, 2> &rightGroup,
-                 gearSetting setting, double gearRatio,
-                 Dimensions chassisDimensions, Limits chassisLimits,
-                 std::initializer_list<PDcontroller> PDGains);
+                 const gearSetting setting, const double gearRatio,
+                 const Dimensions chassisDimensions, const Limits chassisLimits,
+                 const std::initializer_list<PDcontroller> PDGains);
 
   /**
    * Handles the reversal of motors.
@@ -132,7 +132,7 @@ public:
    * @param rightVoltage desired right voltage
    */
 
-  void setDrive(double leftVoltage, double rightVoltage);
+  void setDrive(const double leftVoltage, const double rightVoltage);
 
   /**
    * sets the chassis to drive at a velocity
@@ -141,7 +141,7 @@ public:
    * @param units desired velocity units (rpm, dps, etc)
    */
 
-  void setVelDrive(double leftVelocity, double rightVelocity, velocityUnits units);
+  void setVelDrive(const double leftVelocity, const double rightVelocity, const velocityUnits units);
 
   /**
    * gets the encoder values of the all motors (average)
@@ -166,10 +166,10 @@ public:
 
   /// converts an imput meters to encoder ticks based off of gear ratio, gearbox
   /// etc.
-  double convertMetersToTicks(double num_meters);
+  double convertMetersToTicks( const double num_meters) const;
 
   /// converts an imput ticks meters based off of gear ratio, gearbox etc.
-  double convertTicksToMeters(double num_ticks);
+  double convertTicksToMeters( const double num_ticks) const;
 };
 
 
@@ -191,15 +191,15 @@ class FourMotorDrive::FourMotorDriveBuilder {
       m_rightGroup = rightGroup;
       return *this;
     }
-    FourMotorDriveBuilder& withGearSetting(gearSetting gears) {
+    FourMotorDriveBuilder& withGearSetting(const gearSetting gears) {
       gearbox = gears;
       return *this;
     }
-    FourMotorDriveBuilder& withGearRatio(double ratio) {
+    FourMotorDriveBuilder& withGearRatio(const double ratio) {
       gearRatio = ratio;
       return *this;
     }
-    FourMotorDriveBuilder& withDimensions(Dimensions chassisDimensions) {
+    FourMotorDriveBuilder& withDimensions(const Dimensions chassisDimensions) {
       m_chassisDimensions = chassisDimensions;
       return *this;
     }

@@ -37,7 +37,7 @@ public:
    * @param t time for velocity to be calculated
    * @return velocity at the given time
    */
-  double calculateMpVelocity(const double t);
+  double calculateMpVelocity(const double t) const;
 
   /**
    * calculates acceleration at a given t
@@ -45,7 +45,7 @@ public:
    * @return acceleration at the given time
    */
 
-  double calculateMpAcceleration(const double t);
+  double calculateMpAcceleration(const double t) const;
 
   /**
    * gives profile status at a given t
@@ -53,11 +53,11 @@ public:
    * @return status at the given time (accelerating, coasting, decelerating)
    */
 
-  std::string getMpStatus(const double t);
+  std::string getMpStatus(const double t) const;
 
-  double getMpTotalTime() {return(m_totalTime);}
+  double getMpTotalTime() const {return(m_totalTime);}
 
-  double getMpMaxVelocity() {return(m_maxVel);}
+  double getMpMaxVelocity() const {return(m_maxVel);}
 };
 
 struct Feedfoward {

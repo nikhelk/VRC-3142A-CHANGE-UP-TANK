@@ -17,6 +17,7 @@ bool getS1Status()
   }
 }
 
+
 bool getS2Status()
 {
   if (Line2.value(analogUnits::range10bit) > 3000)

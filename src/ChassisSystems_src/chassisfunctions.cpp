@@ -303,7 +303,7 @@ double FourMotorDrive::getLeftEncoderValueMotors()
 {
   return ((leftFront.position(degrees) + leftBack.position(degrees)) / 2);
 }
-double Tracking::getAverageEncoderValueEncoders()
+double Tracking::getAverageEncoderValueEncoders() 
 {
   return ((this->leftEncoder.position(degrees) + this->rightEncoder.position(degrees)) / 2);
 }

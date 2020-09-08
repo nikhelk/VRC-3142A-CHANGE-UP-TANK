@@ -58,10 +58,10 @@ void FourMotorDrive::resetRotation() {
   this->rightBack.resetRotation();
 }
 
-Dimensions::Dimensions(long double trackWidth, long double wheelRadius)
+Dimensions::Dimensions( const long double trackWidth,  const long double wheelRadius)
     : m_trackWidth(trackWidth), m_wheelRadius(wheelRadius) {}
 
-Limits::Limits(long double maxVelocity, long double maxAcceleration)
+Limits::Limits( const long double maxVelocity,  const long double maxAcceleration)
     : m_maxVelocity(maxVelocity), m_maxAcceleration(maxAcceleration) {}
 
 Tracking::Tracking(WheelDistances wheels, double wheelRadius,
@@ -77,13 +77,13 @@ Tracking::Tracking(WheelDistances wheels, double wheelRadius,
   this->wheelRadius = wheelRadius;
 }
 
-double FourMotorDrive::convertMetersToTicks(double num_meters) {
+double FourMotorDrive::convertMetersToTicks( const double num_meters) const {
   return (num_meters * (360 / (m_chassisDimensions.m_wheelRadius * M_PI)) * this->gearRatio);
 }
-double FourMotorDrive::convertTicksToMeters(double num_ticks) {
+double FourMotorDrive::convertTicksToMeters( const double num_ticks) const {
   return (num_ticks * (m_chassisDimensions.m_wheelRadius * M_PI / 360) * this->gearRatio);
 }
-double Tracking::getInertialHeading() {
+ double Tracking::getInertialHeading() {
   // change the direction to counter clockwise = positive
   double fixedRotation = -1 * this->inert.rotation();
 

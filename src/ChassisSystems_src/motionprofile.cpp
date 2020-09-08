@@ -48,7 +48,7 @@ TrapezoidalMotionProfile::TrapezoidalMotionProfile(const double maxVel,
   m_totalTime = m_accelTime + m_coastTime + m_decelTime;
 }
 
-double TrapezoidalMotionProfile::calculateMpVelocity(const double t) {
+double TrapezoidalMotionProfile::calculateMpVelocity(const double t) const {
 
   if (t < m_accelTime) {
     return (t * m_maxAcc);
@@ -60,7 +60,7 @@ double TrapezoidalMotionProfile::calculateMpVelocity(const double t) {
   return 0;
 }
 
-double TrapezoidalMotionProfile::calculateMpAcceleration(const double t) {
+double TrapezoidalMotionProfile::calculateMpAcceleration(const double t) const {
 
   if (t < m_accelTime) {
     return (m_maxAcc);
@@ -72,7 +72,7 @@ double TrapezoidalMotionProfile::calculateMpAcceleration(const double t) {
   return 0;
 }
 
-std::string TrapezoidalMotionProfile::getMpStatus(const double t) {
+std::string TrapezoidalMotionProfile::getMpStatus(const double t) const {
 
   if (t < m_accelTime) {
     return ("accelerating");

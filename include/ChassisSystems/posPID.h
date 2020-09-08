@@ -65,19 +65,19 @@ public:
    * @return error of controller
    */
 
-  double getError() { return (m_error); }
+  double getError() const { return (m_error); }
 
   /// gets kP value of controller
-  double getKp() {return (m_kP);}
+  double getKp() const {return (m_kP);}
 
   /// gets kD value of controller 
-  double getKd() {return(m_kD);}
+  double getKd() const {return(m_kD);}
 
   /**
    * gets the power of the PD controller
    * @return error of controller
    */
-  double getPower() { return (m_power); }
+  double getPower() const { return (m_power); }
 };
 
 
