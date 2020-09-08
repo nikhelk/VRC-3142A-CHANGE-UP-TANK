@@ -21,4 +21,12 @@ extern bool IndexerStopWhenBottomDetected;
 
 extern bool IndexerRunContinuously;
 
+enum IndexerVoltages {
+
+    INDEXER_VOLTAGE = 12,
+    INDEXER_STOP_VOLTAGE = 0,
+    INDEXER_OUTY_VOLTAGE = 8
+
+};
+
 }

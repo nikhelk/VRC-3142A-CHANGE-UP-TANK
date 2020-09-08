@@ -1,6 +1,7 @@
 #include "NonChassisSystems/intakes.h"
-#include "Util/vex.h"
 #include "Util/premacros.h"
+#include "Util/vex.h"
+
 
 namespace Intakes {
 
@@ -8,60 +9,47 @@ bool backUp = false;
 
 bool intakeRunCont = false;
 
-static constexpr int INTAKE_VOLTAGE = 12;
-
-static constexpr int STOP_VOLTAGE = 0;
-
-static constexpr int BACKUP_VOLTAGE = -8;
-
-static constexpr int BALL_DETECT_THRESHOLD = 615;
-
-int intakeTask()
-{
+int intakeTask() {
   bool ballIn = false;
 
-  while (true)
-  {
-  
-    if(atGoal) {
+  while (true) {
+
+    if (atGoal) {
       intakeRunCont = false;
       backUp = false;
-      
-      if(!ballIn) {
-        IntakeL.spin(fwd, 10, volt);
-        IntakeR.spin(fwd, 10, volt);
 
-        if(intakeDetect.value(analogUnits::range10bit) < BALL_DETECT_THRESHOLD) {
-        ballIn = true;
+      if (!ballIn) {
+        IntakeL.spin(fwd, INTAKE_INDEX_BALL_VOLTAGE, volt);
+        IntakeR.spin(fwd, INTAKE_INDEX_BALL_VOLTAGE, volt);
+
+        if (intakeDetect.value(analogUnits::range10bit) <
+            INTAKE_STOP_LINE_THRESHOLD) {
+          ballIn = true;
         }
       }
 
       else {
-        IntakeL.spin(fwd, 0, volt);
-        IntakeR.spin(fwd, 0, volt);
-
+        IntakeL.spin(fwd, INTAKE_STOP_VOLTAGE, volt);
+        IntakeR.spin(fwd, INTAKE_STOP_VOLTAGE, volt);
       }
 
     }
 
     else if (backUp) {
 
-      IntakeL.spin(fwd, -8, volt);
-      IntakeR.spin(fwd, -8, volt);
+      IntakeL.spin(fwd, INTAKE_BACK_UP_VOLTAGE, volt);
+      IntakeR.spin(fwd, INTAKE_BACK_UP_VOLTAGE, volt);
 
     }
 
-    else if(intakeRunCont) {
+    else if (intakeRunCont) {
 
-      IntakeL.spin(fwd, 12, volt);
-      IntakeR.spin(fwd, 12, volt);
-
+      IntakeL.spin(fwd, INTAKE_VOLTAGE, volt);
+      IntakeR.spin(fwd, INTAKE_VOLTAGE, volt);
     }
 
     task::sleep(5);
-
   }
-  
 }
 
-}
+} // namespace Intakes

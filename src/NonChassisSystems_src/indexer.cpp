@@ -9,51 +9,37 @@ bool IndexerStopWhenMiddleDetected = false;
 bool IndexerStopWhenBottomDetected = false;
 bool IndexerRunContinuously = false;
 
-static constexpr int INDEXER_VOLTAGE = 12;
-
-static constexpr int STOP_VOLTAGE = 0;
-
-static constexpr int EJECT_VOLTAGE = -8;
-
-static constexpr int BOTTOM_LINE_THRESHOLD = -8;
-
-static constexpr int MIDDLE_LINE_THRESHOLD = -8;
-
-static constexpr int TOP_LINE_THRESHOLD = 711;
-
-static constexpr int OUTY_LINE_THRESHOLD = -8;
-
 int indexerTask() {
 
   while (true) {
     if (IndexerStopWhenTopDetected) {
       if (middleLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
         LOG(" Top Ball detected");
-        Indexer.spin(fwd, 0, volt);
+        Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
       } else {
-        Indexer.spin(fwd, INDEXER_VOLTAGE , volt);
+        Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       }
     }
 
     if (IndexerStopWhenMiddleDetected) {
-      if (middleLine.value(analogUnits::range10bit) < 697) {
+      if (middleLine.value(analogUnits::range10bit) < MIDDLE_LINE_THRESHOLD) {
         LOG(" Middle Ball detected");
-        Indexer.spin(fwd, 0, volt);
+        Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
       } else {
-        Indexer.spin(fwd, 7, volt);
+        Indexer.spin(fwd, INDEXER_OUTY_VOLTAGE, volt);
       }
     }
     if (IndexerStopWhenBottomDetected) {
-      if (bottomLine.value(analogUnits::range10bit) < 695) {
+      if (bottomLine.value(analogUnits::range10bit) < BOTTOM_LINE_THRESHOLD) {
         LOG("ball at bottom");
-        Indexer.spin(fwd, 0, volt);
+        Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
 
       } else {
-        Indexer.spin(fwd, 10, volt);
+        Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       }
     }
     if (IndexerRunContinuously) {
-      Indexer.spin(fwd, 12, volt);
+      Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
     }
 
     if (atGoal) {
@@ -66,11 +52,11 @@ int indexerTask() {
         IndexerStopWhenMiddleDetected = true;
       } else { // run outy
         IndexerStopWhenMiddleDetected = false;
-        Indexer.spin(fwd, 600 * .5, velocityUnits::rpm);
+        Indexer.spin(fwd, INDEXER_OUTY_VOLTAGE, volt);
       }
     }
 
-    task::sleep(5);
+    task::sleep(10);
   }
 }
 
@@ -79,4 +65,4 @@ void stopIndexerTask(task taskID) {
   Indexer.spin(fwd, 0, volt);
 }
 
-}
+} // namespace Rollers

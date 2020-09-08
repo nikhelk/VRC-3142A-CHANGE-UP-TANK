@@ -14,4 +14,11 @@ extern bool backUp;
 
 extern bool intakeRunCont;
 
+enum IntakeVoltages {
+    INTAKE_VOLTAGE = 12,
+    INTAKE_STOP_VOLTAGE = 0,
+    INTAKE_BACK_UP_VOLTAGE = -8,
+    INTAKE_INDEX_BALL_VOLTAGE = 10,
+};
+
 }

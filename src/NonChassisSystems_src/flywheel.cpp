@@ -11,18 +11,9 @@ static mutex outyLock;
 
 bool outy = false;
 
-
 bool FlywheelStopWhenTopDetected = false;
 
 bool scored = false;
-
-static constexpr int SCORE_VOLTAGE = 10;
-
-static constexpr int STOP_VOLTAGE = 0;
-
-static constexpr int EJECT_VOLTAGE = -12;
-
-static constexpr int TOP_LINE_THRESHOLD = 711;
 
 int flywheelTask() {
   bool ballOutied = false;
@@ -31,16 +22,16 @@ int flywheelTask() {
 
   while (true) {
     if (outy) {
-      Flywheel.spin(fwd, -12, volt);
+      Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt);
     }
 
     else {
-      
+
       if (FlywheelStopWhenTopDetected) {
-        if (topLine.value(analogUnits::range10bit) < 711) {
-          Flywheel.spin(fwd, 0, volt);
+        if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
+          Flywheel.spin(fwd, FLYWHEEL_STOP_VOLTAGE, volt);
         } else {
-        Flywheel.spin(fwd, SCORE_VOLTAGE , volt);
+          Flywheel.spin(fwd, SCORE_VOLTAGE, volt);
         }
       }
       if (atGoal) {
@@ -48,11 +39,12 @@ int flywheelTask() {
         FlywheelStopWhenTopDetected = false;
 
         if (!scored) {
-          Flywheel.spin(fwd, 12, volt);
+          Flywheel.spin(fwd, SCORE_VOLTAGE, volt);
 
-          if (topLine.value(analogUnits::range10bit) > 720) {
+          if (topLine.value(analogUnits::range10bit) >
+              TOP_LINE_EMPTY_THRESHOLD) {
 
-            scoreTimeoutTimer += 5;
+            scoreTimeoutTimer += 10;
 
             scoreLock.lock();
 
@@ -67,44 +59,46 @@ int flywheelTask() {
 
         else { // if we have scored (outy code)
 
-          Flywheel.spin(fwd, -12, volt);
+          Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt);
 
-          if (outyLine.value(analogUnits::range10bit) < 700) {
+          if (outyLine.value(analogUnits::range10bit) < OUTY_LINE_THRESHOLD) {
 
             ballOutied = true;
           }
 
           if (ballOutied) {
 
-            outyTimeoutTimer += 5;
+            outyTimeoutTimer += 10;
 
             outyLock.lock();
 
-            if (outyTimeoutTimer > 1000) { //if we have elasped enough time since first outy detection, we have outied
+            if (outyTimeoutTimer >
+                1000) { // if we have elasped enough time since first outy
+                        // detection, we have outied
 
               atGoal = false;
               Intakes::backUp = true;
               FlywheelStopWhenTopDetected = true;
-              
 
-              // reset bools for next goal sequence
+              // reset bools and timers for next goal sequence
               ballOutied = false;
               scored = false;
-              
+              scoreTimeoutTimer = 0;
+              outyTimeoutTimer = 0;
             }
             outyLock.unlock();
           } // outy timeout
-        } //outy
-      } //at Goa;
+        }   // outy
+      }     // at Goa;
 
-    } //not manual
+    } // not manual
 
-    task::sleep(5);
+    task::sleep(10);
 
   } // while true
 
 } // function def
 
-void outyTask() { Flywheel.spin(fwd, -12, volt); }
+void outyTask() { Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt); }
 
-}
+} // namespace Scorer

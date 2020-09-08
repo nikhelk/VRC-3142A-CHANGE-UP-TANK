@@ -20,4 +20,11 @@ extern line middleLine;
 extern line topLine;
 extern line outyLine;
 
-
+enum LineSensorThresolds {
+  TOP_LINE_THRESHOLD = 711,
+  TOP_LINE_EMPTY_THRESHOLD = 720,
+  MIDDLE_LINE_THRESHOLD = 697,
+  BOTTOM_LINE_THRESHOLD = 695,
+  OUTY_LINE_THRESHOLD = 700,
+  INTAKE_STOP_LINE_THRESHOLD = 615
+};

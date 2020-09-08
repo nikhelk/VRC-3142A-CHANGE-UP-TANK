@@ -19,6 +19,11 @@ extern bool FlywheelStopWhenTopDetected;
 
 extern bool scored;
 
+enum FlywheelVoltages {
+    SCORE_VOLTAGE = 12,
+    FLYWHEEL_STOP_VOLTAGE = 0,
+    FLYWHEEL_OUTY_VOLTAGE = -12
+};
 
 
 }
