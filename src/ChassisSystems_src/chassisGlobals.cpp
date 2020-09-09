@@ -59,7 +59,7 @@ void FourMotorDrive::resetRotation() {
   this->rightBack.resetRotation();
 }
 
-Dimensions::Dimensions( const long double trackWidth,  const long double wheelRadius)
+Dimensions::Dimensions( const long double trackWidth,  const long double wheelRadius, const long double ticksToDegrees)
     : m_trackWidth(trackWidth), m_wheelRadius(wheelRadius) {}
 
 Limits::Limits(  long double maxVelocity,   long double maxAcceleration)

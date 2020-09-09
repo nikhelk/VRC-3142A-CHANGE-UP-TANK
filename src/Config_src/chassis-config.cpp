@@ -10,7 +10,7 @@ FourMotorDrive chassis = FourMotorDrive::FourMotorDriveBuilder{}
                           .withMotors({PORT8, PORT7}, {PORT9, PORT10})
                           .withGearSetting(ratio18_1)
                           .withGearRatio(1.6666667)
-                          .withDimensions({12.0_in, 3.25_in})
+                          .withDimensions({12.0_in, 3.25_in, 26})
                           .withLinearLimits({1.2_mps, 1.9_mps2})
                           .withAngularLimits( {1.0_radps,3.0_radps2} )
                           .withPDGains( {

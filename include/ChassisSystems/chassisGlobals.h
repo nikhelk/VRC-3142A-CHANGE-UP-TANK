@@ -81,6 +81,8 @@ public:
 
   void turnToDegreeGyro(const double angle);
 
+  void turnToDegreeFeedforward(const double angle);
+
   /**
    * Drives the robot straight using feedforward control
    *

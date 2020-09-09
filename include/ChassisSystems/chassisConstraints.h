@@ -10,13 +10,14 @@ struct Dimensions
 {
   long double m_trackWidth;
   long double m_wheelRadius;
+  long double ticksToDegrees;
 
   /**
    * Initializes dimensions for 4 motor drive
    * @param trackWidth width of drive
    * @param wheelRadius radius of  wheels on drive
    */
-  Dimensions( const long double trackWidth,  const long double wheelRadius);
+  Dimensions( const long double trackWidth,  const long double wheelRadius, const long double ticksToDegrees);
   Dimensions() {}
 };
 
@@ -37,7 +38,7 @@ class Limits
     * @param maxVelocity of drive (m/sec)
     * @param maxAcceleration of drive (m/sec^2)
     */
-    //Limits( const long double maxVelocity,  const long double maxAcceleration);
-   // Limits() {}
+    Limits(  long double maxVelocity,   long double maxAcceleration);
+    Limits() {}
 
 };

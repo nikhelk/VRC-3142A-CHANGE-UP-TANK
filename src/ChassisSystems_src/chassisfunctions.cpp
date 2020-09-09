@@ -8,6 +8,80 @@
 #include "Util/literals.h"
 #include <memory>
 
+void FourMotorDrive::turnToDegreeFeedforward(const double angle) {
+  const double initialEncodersLeft = this->getLeftEncoderValueMotors();
+  const double initialEncodersRight = this->getRightEncoderValueMotors();
+
+  const double totalEncoderTicks = math3142a::toDegrees(angle)*m_chassisDimensions.ticksToDegrees;
+
+  TrapezoidalMotionProfile trap(getMaxAngularVelocity(),getMaxAngularAcceleration(),totalEncoderTicks);
+
+  const double startTime = Brain.timer(timeUnits::sec); //"resetting" timer
+
+
+  double mpVel, mpAcc; //forward ref for motion profile velocity and acceleration
+
+  double currentTime = 0, prevTime = 0;
+
+
+  double lPose = 0, rPose = 0; //position on the motion profile
+
+  // Here we use different feedfoward and P loops on both sides of the drivetrain
+  // Ideally, we would not have to do this but the frictional losses on the right side were significantly greater than the left
+  // Our estamate for kV was 11V / maxVel as the inputted max velocity in the FourMotorDrive constructor was base on the robot travelling at 11V
+  // the values for kA had to be tuned, but again it took consideriably less time than tuning PID
+
+  const Feedfoward rFeedforwardConstants(11/trap.getMpMaxVelocity(),.1);
+
+  const Feedfoward lFeedforwardConstants(11/trap.getMpMaxVelocity(),.08);
+
+  posPID rFeedback(0, 0);
+
+  posPID lFeedback(0,  0);
+
+  double rPower, lPower;
+
+  while (currentTime <= trap.getMpTotalTime())
+    {
+
+      double currLeftMoved = this->getLeftEncoderValueMotors() - initialEncodersLeft; // (in meters)
+
+      double currRightMoved = this->getRightEncoderValueMotors() - initialEncodersRight; // (in meters)
+
+      currentTime = Brain.timer(timeUnits::sec) - startTime;
+
+      mpVel = trap.calculateMpVelocity(currentTime); //velocity of motion profile
+      
+      mpAcc = trap.calculateMpAcceleration(currentTime); //acceleration of motion profile
+
+      auto currentStatus = trap.getMpStatus(currentTime);
+
+      rPower = rFeedback.calculatePower(rPose, currRightMoved);
+
+      lPower = lFeedback.calculatePower(lPose, currLeftMoved);
+      
+      LOG(currLeftMoved,currRightMoved,rPose,lPower,rPower);
+
+     double lVoltage =  -1* lFeedforwardConstants.kV * mpVel + lFeedforwardConstants.kA * mpAcc + lPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
+     double rVoltage =  rFeedforwardConstants.kV * mpVel + rFeedforwardConstants.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
+     
+     
+     this->setDrive(lVoltage,rVoltage);
+
+     rPose += mpVel * (currentTime - prevTime); //Way of apporoximating position on the profile: pose_t += velocity_t * dt
+     lPose -= mpVel * (currentTime - prevTime); //Way of apporoximating position on the profile: pose_t += velocity_t * dt
+
+     prevTime = currentTime;
+
+     task::sleep(10);
+      
+    }
+
+  this->setDrive(0, 0); //stopping bot
+
+  
+
+}
 
 
 void FourMotorDrive::turnToDegreeGyro(const double angle)
