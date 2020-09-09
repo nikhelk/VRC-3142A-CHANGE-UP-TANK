@@ -12,16 +12,23 @@ bool IndexerRunContinuously = false;
 int indexerTask() {
 
   while (true) {
-    if (IndexerStopWhenTopDetected) {
+    if (IndexerStopWhenTopDetected) {  // Stop indexer when top line detects ball
+
+      //reset the other ones
+
+      IndexerStopWhenMiddleDetected = false;
+      IndexerStopWhenBottomDetected = false;
+      IndexerRunContinuously = false;
+
       if (middleLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
         LOG(" Top Ball detected");
-        Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
+        Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt); //stop when detected
       } else {
         Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       }
     }
 
-    if (IndexerStopWhenMiddleDetected) {
+    if (IndexerStopWhenMiddleDetected) { // similar to StopWhenTopDetected but for the middle line sensor
       if (middleLine.value(analogUnits::range10bit) < MIDDLE_LINE_THRESHOLD) {
         LOG(" Middle Ball detected");
         Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
@@ -29,7 +36,7 @@ int indexerTask() {
         Indexer.spin(fwd, INDEXER_OUTY_VOLTAGE, volt);
       }
     }
-    if (IndexerStopWhenBottomDetected) {
+    if (IndexerStopWhenBottomDetected) { // similar to StopWhenTopDetected but for the bottom line sensor
       if (bottomLine.value(analogUnits::range10bit) < BOTTOM_LINE_THRESHOLD) {
         LOG("ball at bottom");
         Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
@@ -38,7 +45,7 @@ int indexerTask() {
         Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       }
     }
-    if (IndexerRunContinuously) {
+    if (IndexerRunContinuously) { // keep running indexer
       Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
     }
 
@@ -50,7 +57,7 @@ int indexerTask() {
 
       if (!Scorer::scored) { // index to the middle while flywheel is scoring
         IndexerStopWhenMiddleDetected = true;
-      } else { // run outy
+      } else { // run ejector
         IndexerStopWhenMiddleDetected = false;
         Indexer.spin(fwd, INDEXER_OUTY_VOLTAGE, volt);
       }

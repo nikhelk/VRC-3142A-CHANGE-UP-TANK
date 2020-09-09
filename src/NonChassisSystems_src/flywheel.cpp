@@ -27,41 +27,40 @@ int flywheelTask() {
 
     else {
 
-      if (FlywheelStopWhenTopDetected) {
-        if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
+      if (FlywheelStopWhenTopDetected) { // index the ball up to the top line sensor
+        if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) { // if the line sensor detects stop the flywheel
           Flywheel.spin(fwd, FLYWHEEL_STOP_VOLTAGE, volt);
-        } else {
+        } else { // if it hasnt detected then run them
           Flywheel.spin(fwd, SCORE_VOLTAGE, volt);
         }
       }
       if (atGoal) {
 
-        FlywheelStopWhenTopDetected = false;
+        FlywheelStopWhenTopDetected = false; //turn off the top line macro
 
-        if (!scored) {
+        if (!scored) { // run while we havent scored a ball
           Flywheel.spin(fwd, SCORE_VOLTAGE, volt);
 
-          if (topLine.value(analogUnits::range10bit) >
-              TOP_LINE_EMPTY_THRESHOLD) {
+          if (topLine.value(analogUnits::range10bit) > TOP_LINE_EMPTY_THRESHOLD) { //if the top line is empty then we can start the timeout to stop intake
 
-            scoreTimeoutTimer += 10;
+            scoreTimeoutTimer += 10; //10 because it is the delay time
 
-            scoreLock.lock();
+            scoreLock.lock(); //lock the mutex as we are accessing the "scored" bool that is used in mutiple threads
 
             if (scoreTimeoutTimer > 1000) {
 
               scored = true;
             }
-            scoreLock.unlock();
+            scoreLock.unlock(); //unlock mutex
           }
 
         }
 
-        else { // if we have scored (outy code)
+        else { // if we have scored (eject code)
 
-          Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt);
+          Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt); //spin flywheel to reverse
 
-          if (outyLine.value(analogUnits::range10bit) < OUTY_LINE_THRESHOLD) {
+          if (outyLine.value(analogUnits::range10bit) < OUTY_LINE_THRESHOLD) { //very similar "timeout" procedure as the scoring macro
 
             ballOutied = true;
           }
@@ -72,9 +71,7 @@ int flywheelTask() {
 
             outyLock.lock();
 
-            if (outyTimeoutTimer >
-                1000) { // if we have elasped enough time since first outy
-                        // detection, we have outied
+            if (outyTimeoutTimer > 1000) { // if we have elasped enough time since first ejected ball detection, we have outied
 
               atGoal = false;
               Intakes::backUp = true;
