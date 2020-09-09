@@ -62,24 +62,25 @@ void runAutoSkills() {
 
   LOG("Running Skills!");
   //PATH 1 (Starting position to first goal)
-  
+  task intakeSpin( Intakes::intakeTask ); //start intakes to pick up first ball
+  task indexTask( Rollers::indexerTask ); //index up to line sensor
+  task scorerTask( Scorer::flywheelTask );
 
-   chassis.driveStraightFeedforward(8.0_in);
+  chassis.driveStraightFeedforward(8.0_in);
   chassis.turnToDegreeGyro(-65.0_deg);
   std::cout <<"Done Turning" <<std::endl;
-  task intakeSpin(Intakes::intakeTask); //start intakes to pick up first ball
+
   Intakes::intakeRunCont = true;
+  Rollers::IndexerStopWhenTopDetected = true;
 
   chassis.driveStraightFeedforward(34.0_in);
   chassis.turnToDegreeGyro(-130.0_deg);
   std::cout <<"Done Turning" <<std::endl;
-  //task indexTask(indexerTask); //index up to line sensor
+  
   chassis.driveStraightFeedforward(30.0_in); 
 
-  // Goal1.atGoal = true;
-  //waitUntil(!atGoal);
-
-  task::sleep(2000);
+  atGoal = true;
+  waitUntil(!atGoal);
 
   //PATH 2 (first goal to second goal)
 
