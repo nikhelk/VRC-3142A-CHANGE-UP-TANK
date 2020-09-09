@@ -26,17 +26,18 @@ struct Dimensions
  * (see ChassisSystems/chassisGlobals.h for impl)
  */
 
-struct Limits
+class Limits
 {
-  long double m_maxVelocity;
-  long double m_maxAcceleration;
+  public:
+    long double m_maxVelocity;
+    long double m_maxAcceleration;
 
-  /**
-   * Initializes kinematic limits for 4 motor drive
-   * @param maxVelocity of drive (m/sec)
-   * @param maxAcceleration of drive (m/sec^2)
-   */
-  Limits( const long double maxVelocity,  const long double maxAcceleration);
-  Limits() {}
+    /**
+    * Initializes kinematic limits for 4 motor drive
+    * @param maxVelocity of drive (m/sec)
+    * @param maxAcceleration of drive (m/sec^2)
+    */
+    //Limits( const long double maxVelocity,  const long double maxAcceleration);
+   // Limits() {}
 
 };

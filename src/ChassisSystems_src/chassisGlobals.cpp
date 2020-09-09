@@ -1,14 +1,15 @@
 #include "ChassisSystems/chassisGlobals.h"
 #include "Util/vex.h"
 
-FourMotorDrive::FourMotorDrive(const std::array<int32_t, 2> &leftGroup,
-                               const std::array<int32_t, 2> &rightGroup,
-                               gearSetting setting, double gearRatio,
-                               Dimensions chassisDimensions,
-                               Limits chassisLimits,
-                               std::initializer_list<PDcontroller> PDGains)
+FourMotorDrive::FourMotorDrive( const std::array<int32_t, 2> &leftGroup,
+                 const std::array<int32_t, 2> &rightGroup,
+                 const gearSetting setting, const double gearRatio,
+                 const Dimensions chassisDimensions, const Limits linLimits,
+                 const Limits angLimits,
+                 const std::initializer_list<PDcontroller> PDGains)
 
-    : m_chassisDimensions(chassisDimensions), m_chassisLimits(chassisLimits),
+    : m_chassisDimensions(chassisDimensions), m_chassisLinearLimits(linLimits),
+    m_chassisAngularLimits(angLimits),
       leftFront(leftGroup[FRONT], setting),
       rightFront(rightGroup[FRONT], setting),
       leftBack(leftGroup[BACK], setting), rightBack(rightGroup[BACK], setting) {
@@ -61,7 +62,7 @@ void FourMotorDrive::resetRotation() {
 Dimensions::Dimensions( const long double trackWidth,  const long double wheelRadius)
     : m_trackWidth(trackWidth), m_wheelRadius(wheelRadius) {}
 
-Limits::Limits( const long double maxVelocity,  const long double maxAcceleration)
+Limits::Limits(  long double maxVelocity,   long double maxAcceleration)
     : m_maxVelocity(maxVelocity), m_maxAcceleration(maxAcceleration) {}
 
 Tracking::Tracking(WheelDistances wheels, double wheelRadius,

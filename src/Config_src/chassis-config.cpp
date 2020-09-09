@@ -11,7 +11,8 @@ FourMotorDrive chassis = FourMotorDrive::FourMotorDriveBuilder{}
                           .withGearSetting(ratio18_1)
                           .withGearRatio(1.6666667)
                           .withDimensions({12.0_in, 3.25_in})
-                          .withLimits({1.2_mps, 1.9_mps2})
+                          .withLinearLimits({1.2_mps, 1.9_mps2})
+                          .withAngularLimits( {1.0_radps,3.0_radps2} )
                           .withPDGains( {
                                         {0, 0},  //Distance PD (deprecated thanks to feedforwards control)
                                         {0, 0},  //Angle PD (deprecated thanks to feedforwards control)

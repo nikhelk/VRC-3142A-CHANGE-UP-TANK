@@ -21,7 +21,8 @@ private:
   inline void checkBackwards(double &lVoltage, double &rVoltage, bool backwards);
 public:
   Dimensions m_chassisDimensions;
-  Limits m_chassisLimits;
+  Limits m_chassisLinearLimits;
+  Limits m_chassisAngularLimits;
 
   posPID distancePID;
   posPID anglePID;
@@ -56,7 +57,8 @@ public:
   FourMotorDrive(const std::array<int32_t, 2> &leftGroup,
                  const std::array<int32_t, 2> &rightGroup,
                  const gearSetting setting, const double gearRatio,
-                 const Dimensions chassisDimensions, const Limits chassisLimits,
+                 const Dimensions chassisDimensions, const Limits linLimits,
+                 const Limits angLimits,
                  const std::initializer_list<PDcontroller> PDGains);
 
   /**
@@ -170,6 +172,14 @@ public:
 
   /// converts an imput ticks meters based off of gear ratio, gearbox etc.
   double convertTicksToMeters( const double num_ticks) const;
+
+  double getMaxLinearVelocity() const {return(m_chassisLinearLimits.m_maxVelocity);}
+
+  double getMaxAngularVelocity() const {return(m_chassisAngularLimits.m_maxVelocity);}
+
+  double getMaxLinearAcceleration() const {return(m_chassisLinearLimits.m_maxAcceleration);}
+
+  double getMaxAngularAcceleration() const {return(m_chassisAngularLimits.m_maxAcceleration);}
 };
 
 
@@ -181,7 +191,8 @@ class FourMotorDrive::FourMotorDriveBuilder {
   gearSetting gearbox;
   double gearRatio;
   Dimensions m_chassisDimensions;
-  Limits m_chassisLimits;
+  Limits b_chassisLinearLimits;
+  Limits b_chassisAngularLimits;
   std::initializer_list<PDcontroller> m_PDGains;
 
 
@@ -203,8 +214,12 @@ class FourMotorDrive::FourMotorDriveBuilder {
       m_chassisDimensions = chassisDimensions;
       return *this;
     }
-    FourMotorDriveBuilder& withLimits(Limits chassisLimits) {
-      m_chassisLimits = chassisLimits;
+    FourMotorDriveBuilder& withLinearLimits(Limits linearChassisLimits) {
+      b_chassisLinearLimits = linearChassisLimits;
+      return *this;
+    }
+    FourMotorDriveBuilder& withAngularLimits(Limits angularChassisLimits) {
+      b_chassisAngularLimits = angularChassisLimits;
       return *this;
     }
     FourMotorDriveBuilder& withPDGains(std::initializer_list<PDcontroller> PDGains) {
@@ -214,7 +229,7 @@ class FourMotorDrive::FourMotorDriveBuilder {
 
     FourMotorDrive buildChassis() const
     {
-      return FourMotorDrive{m_leftGroup, m_rightGroup, gearbox, gearRatio,m_chassisDimensions,m_chassisLimits,m_PDGains};
+      return FourMotorDrive{m_leftGroup, m_rightGroup, gearbox, gearRatio,m_chassisDimensions,b_chassisLinearLimits,b_chassisAngularLimits,m_PDGains};
     }
 
 };

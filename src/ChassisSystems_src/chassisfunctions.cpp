@@ -64,7 +64,7 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 {
     const double startTime = Brain.timer(timeUnits::sec); //"resetting" timer
 
-    TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
+    TrapezoidalMotionProfile trap(getMaxLinearVelocity(), getMaxLinearAcceleration(), distance);
 
     double mpVel, mpAcc; //forward ref for motion profile velocity and acceleration
 
@@ -151,11 +151,11 @@ void FourMotorDrive::driveArcFeedforward(const double radius, const double exitA
   double lDistance = lRadius * exitAngle;
 
   double ratio = lDistance/rDistance;
-  TrapezoidalMotionProfile trap(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, distance);
+  TrapezoidalMotionProfile trap(getMaxLinearVelocity(),getMaxLinearAcceleration(), distance);
 
-  TrapezoidalMotionProfile trapR(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, rDistance);
+  TrapezoidalMotionProfile trapR(getMaxLinearVelocity(),getMaxLinearAcceleration(), rDistance);
 
-  TrapezoidalMotionProfile trapL(this->m_chassisLimits.m_maxVelocity, this->m_chassisLimits.m_maxAcceleration, lDistance);
+  TrapezoidalMotionProfile trapL(getMaxLinearVelocity(),getMaxLinearAcceleration(), lDistance);
 
     double mpVel, mpAcc;
 
@@ -243,13 +243,13 @@ void FourMotorDrive::normalize(double &left, double &right) {
 
   double maxSpeed = std::max(std::abs(left), std::abs(right));
 
-  if (maxSpeed > m_chassisLimits.m_maxVelocity) 
+  if (maxSpeed > getMaxLinearVelocity()) 
   {
     std::cout << "NORMALIZING" << " " << maxSpeed << std::endl;
 
-    left = left / maxSpeed * m_chassisLimits.m_maxVelocity;
+    left = left / maxSpeed * getMaxLinearVelocity();
 
-    right = right / maxSpeed * m_chassisLimits.m_maxVelocity;
+    right = right / maxSpeed * getMaxLinearVelocity();
 
   }
 }
