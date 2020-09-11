@@ -9,6 +9,7 @@
 #include "ChassisSystems/posPID.h"
 #include "ChassisSystems/chassisGlobals.h"
 #include "ChassisSystems/odometry.h"
+#include "ChassisSystems/ChassisBuilder.h"
 
 #include "NonChassisSystems/flywheel.h"
 #include "NonChassisSystems/intakes.h"

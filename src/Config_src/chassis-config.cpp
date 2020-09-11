@@ -1,6 +1,7 @@
 #include "Util/vex.h"
 #include "ChassisSystems/chassisGlobals.h"
 #include "Util/literals.h"
+#include "Impl/api.h"
 #include "ChassisSystems/odometry.h"
 #include "Config/other-config.h"
 using namespace vex;
