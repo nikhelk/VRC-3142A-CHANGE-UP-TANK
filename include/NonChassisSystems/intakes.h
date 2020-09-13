@@ -3,16 +3,14 @@
 #include "Config/other-config.h"
 #include "Impl/auto_skills.h"
 #include "Util/vex.h"
-
+#include "Util/mathAndConstants.h"
 
 using namespace vex;
 
 namespace Intakes {
-int intakeTask();
+int intakeTask(void* toBeCastedBools);
 
-extern bool backUp;
 
-extern bool intakeRunCont;
 
 enum IntakeVoltages {
     INTAKE_VOLTAGE = 12,

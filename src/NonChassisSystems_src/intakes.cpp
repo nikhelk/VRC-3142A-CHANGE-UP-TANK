@@ -4,19 +4,18 @@
 
 namespace Intakes {
 
-bool backUp = false;
 
-bool intakeRunCont = false;
-
-int intakeTask() {
+int intakeTask(void* toBeCastedBools) {
   bool ballIn = false;
+
+  globalBools* instance = static_cast<globalBools*>(toBeCastedBools);
 
   while (true) {
 
     if (atGoal) {
 
-      intakeRunCont = false;
-      backUp = false;
+      instance->IntakesRunContinously = false;
+      instance->backUp = false;
 
       if (!ballIn) { //we only "de-score" one ball out of the goal so after we detect we don't take another one in
 
@@ -26,6 +25,7 @@ int intakeTask() {
         if (intakeDetect.value(analogUnits::range10bit) < INTAKE_STOP_LINE_THRESHOLD) {
           ballIn = true;
         }
+
       }
 
       else { //if a ball is "descored" then stop the intakes
@@ -35,7 +35,7 @@ int intakeTask() {
 
     }
 
-    else if (backUp) { //reverse the intakes as we back up
+    else if (instance->backUp) { //reverse the intakes as we back up
 
       ballIn = false; //roundabout way of "resetting" the bool as we backUp right after atGoal becomes false.
 
@@ -44,7 +44,7 @@ int intakeTask() {
 
     }
 
-    else if (intakeRunCont) { //run intakes at max voltage
+    else if (instance->IntakesRunContinously) { //run intakes at max voltage
 
       IntakeL.spin(fwd, INTAKE_VOLTAGE, volt);
       IntakeR.spin(fwd, INTAKE_VOLTAGE, volt);

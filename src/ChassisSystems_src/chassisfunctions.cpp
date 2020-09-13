@@ -14,7 +14,9 @@ void FourMotorDrive::turnToDegreeFeedforward(const double angle) {
 
   const double totalEncoderTicks = math3142a::toDegrees(angle)*m_chassisDimensions.ticksToDegrees;
 
-  TrapezoidalMotionProfile trap(getMaxAngularVelocity(),getMaxAngularAcceleration(),totalEncoderTicks);
+  //TrapezoidalMotionProfile trap(getMaxAngularVelocity(),getMaxAngularAcceleration(),totalEncoderTicks);
+
+  std::unique_ptr<TrapezoidalMotionProfile> trap(new TrapezoidalMotionProfile(getMaxAngularVelocity(),getMaxAngularAcceleration(),totalEncoderTicks));
 
   const double startTime = Brain.timer(timeUnits::sec); //"resetting" timer
 
@@ -31,9 +33,9 @@ void FourMotorDrive::turnToDegreeFeedforward(const double angle) {
   // Our estamate for kV was 11V / maxVel as the inputted max velocity in the FourMotorDrive constructor was base on the robot travelling at 11V
   // the values for kA had to be tuned, but again it took consideriably less time than tuning PID
 
-  const Feedfoward rFeedforwardConstants(11/trap.getMpMaxVelocity(),.1);
+  const Feedfoward rFeedforwardConstants(11/trap->getMpMaxVelocity(),.1);
 
-  const Feedfoward lFeedforwardConstants(11/trap.getMpMaxVelocity(),.08);
+  const Feedfoward lFeedforwardConstants(11/trap->getMpMaxVelocity(),.08);
 
   posPID rFeedback(0, 0);
 
@@ -41,7 +43,7 @@ void FourMotorDrive::turnToDegreeFeedforward(const double angle) {
 
   double rPower, lPower;
 
-  while (currentTime <= trap.getMpTotalTime())
+  while (currentTime <= trap->getMpTotalTime())
     {
 
       double currLeftMoved = this->getLeftEncoderValueMotors() - initialEncodersLeft; // (in meters)
@@ -50,11 +52,11 @@ void FourMotorDrive::turnToDegreeFeedforward(const double angle) {
 
       currentTime = Brain.timer(timeUnits::sec) - startTime;
 
-      mpVel = trap.calculateMpVelocity(currentTime); //velocity of motion profile
+      mpVel = trap->calculateMpVelocity(currentTime); //velocity of motion profile
       
-      mpAcc = trap.calculateMpAcceleration(currentTime); //acceleration of motion profile
+      mpAcc = trap->calculateMpAcceleration(currentTime); //acceleration of motion profile
 
-      auto currentStatus = trap.getMpStatus(currentTime);
+      auto currentStatus = trap->getMpStatus(currentTime);
 
       rPower = rFeedback.calculatePower(rPose, currRightMoved);
 

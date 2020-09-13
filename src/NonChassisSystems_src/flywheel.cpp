@@ -11,14 +11,17 @@ static mutex outyLock;
 
 bool outy = false;
 
-bool FlywheelStopWhenTopDetected = false;
 
-bool scored = false;
+int flywheelTask(void* toBeCastedBools) {
 
-int flywheelTask() {
+  globalBools* instance = static_cast<globalBools*>(toBeCastedBools);
+
   bool ballOutied = false;
-  double scoreTimeoutTimer = 0;
-  double outyTimeoutTimer = 0;
+
+  math3142a::TimeoutTimer scoreTimeout(10,1000);
+
+  math3142a::TimeoutTimer ejectorTimeout(10,1000);
+
 
   while (true) {
     if (outy) {
@@ -27,7 +30,7 @@ int flywheelTask() {
 
     else {
 
-      if (FlywheelStopWhenTopDetected) { // index the ball up to the top line sensor
+      if (instance->FlywheelStopWhenTopDetected) { // index the ball up to the top line sensor
         if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) { // if the line sensor detects stop the flywheel
           Flywheel.spin(fwd, FLYWHEEL_STOP_VOLTAGE, volt);
         } else { // if it hasnt detected then run them
@@ -36,20 +39,20 @@ int flywheelTask() {
       }
       if (atGoal) {
 
-        FlywheelStopWhenTopDetected = false; //turn off the top line macro
+        instance->FlywheelStopWhenTopDetected = false; //turn off the top line macro. these two are mutually exclusive
 
-        if (!scored) { // run while we havent scored a ball
+        if (!instance->scored) { // run while we havent scored a ball
           Flywheel.spin(fwd, SCORE_VOLTAGE, volt);
 
           if (topLine.value(analogUnits::range10bit) > TOP_LINE_EMPTY_THRESHOLD) { //if the top line is empty then we can start the timeout to stop intake
 
-            scoreTimeoutTimer += 10; //10 because it is the delay time
+            scoreTimeout.m_currentTime += scoreTimeout.m_delay; //10 because it is the delay time
 
             scoreLock.lock(); //lock the mutex as we are accessing the "scored" bool that is used in mutiple threads
 
-            if (scoreTimeoutTimer > 1000) {
+            if (scoreTimeout.m_currentTime > scoreTimeout.m_timeout) {
 
-              scored = true;
+              instance->scored = true;
             }
             scoreLock.unlock(); //unlock mutex
           }
@@ -67,26 +70,27 @@ int flywheelTask() {
 
           if (ballOutied) {
 
-            outyTimeoutTimer += 10;
+            ejectorTimeout.m_currentTime += ejectorTimeout.m_delay;
 
             outyLock.lock();
 
-            if (outyTimeoutTimer > 1000) { // if we have elasped enough time since first ejected ball detection, we have outied
+            if (ejectorTimeout.m_currentTime > ejectorTimeout.m_timeout) { // if we have elasped enough time since first ejected ball detection, we have outied
 
               atGoal = false;
-              Intakes::backUp = true;
-              FlywheelStopWhenTopDetected = true;
+              instance->backUp = true;
+              instance->FlywheelStopWhenTopDetected = true;
 
               // reset bools and timers for next goal sequence
               ballOutied = false;
-              scored = false;
-              scoreTimeoutTimer = 0;
-              outyTimeoutTimer = 0;
+              instance->scored = false;
+              scoreTimeout.reset();
+              ejectorTimeout.reset();
+
             }
             outyLock.unlock();
           } // outy timeout
         }   // outy
-      }     // at Goa;
+      }     // at Goal
 
     } // not manual
 

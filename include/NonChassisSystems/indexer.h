@@ -3,23 +3,15 @@
 #include "Config/other-config.h"
 #include "Impl/auto_skills.h"
 #include "Util/vex.h"
-
+#include "Util/mathAndConstants.h"
 
 using namespace vex;
 
 namespace Rollers{
 
-int indexerTask();
+int indexerTask(void* toBeCastedBools);
 
 void stopIndexerTask(task taskID);
-
-extern bool IndexerStopWhenTopDetected;
-
-extern bool IndexerStopWhenMiddleDetected;
-
-extern bool IndexerStopWhenBottomDetected;
-
-extern bool IndexerRunContinuously;
 
 enum IndexerVoltages {
 

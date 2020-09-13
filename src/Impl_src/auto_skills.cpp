@@ -5,16 +5,18 @@ void outyy();
 bool atGoal = false;
 void testAutoSkills() {
 
+  globalBools autoSkillBools;
 
+  autoSkillBools.resetBools();
 
   LOG("Running Test Skills!");
-  task intakes(Intakes::intakeTask);
+  task intakes(Intakes::intakeTask, &autoSkillBools);
   //intakeRunCont = true;
 
-  task taskedIndex(Rollers::indexerTask);
+  task taskedIndex(Rollers::indexerTask , &autoSkillBools);
   
  // doOuty = true;
-  task fly(Scorer::flywheelTask);
+  task fly(Scorer::flywheelTask, &autoSkillBools);
 
   atGoal = true;
 
@@ -62,16 +64,16 @@ void runAutoSkills() {
 
   LOG("Running Skills!");
   //PATH 1 (Starting position to first goal)
-  task intakeSpin( Intakes::intakeTask ); //start intakes to pick up first ball
-  task indexTask( Rollers::indexerTask ); //index up to line sensor
-  task scorerTask( Scorer::flywheelTask );
+  // task intakeSpin( Intakes::intakeTask ); //start intakes to pick up first ball
+  // task indexTask( Rollers::indexerTask ); //index up to line sensor
+  // task scorerTask( Scorer::flywheelTask );
 
   chassis.driveStraightFeedforward(8.0_in);
   chassis.turnToDegreeGyro(-65.0_deg);
   std::cout <<"Done Turning" <<std::endl;
 
-  Intakes::intakeRunCont = true;
-  Rollers::IndexerStopWhenTopDetected = true;
+  //Intakes::intakeRunCont = true;
+  //Rollers::IndexerStopWhenTopDetected = true;
 
   chassis.driveStraightFeedforward(34.0_in);
   chassis.turnToDegreeGyro(-130.0_deg);
@@ -87,7 +89,7 @@ void runAutoSkills() {
   poseTracker.inert.setRotation(145, degrees);
  
   chassis.driveStraightFeedforward(20.0_in,true);
-  Intakes::backUp = false;
+  //Intakes::backUp = false;
 
 
 
@@ -95,7 +97,7 @@ void runAutoSkills() {
 
   chassis.turnToDegreeGyro(0.0_deg);
 
-  Intakes::intakeRunCont = true;
+  //Intakes::intakeRunCont = true;
 
   chassis.driveStraightFeedforward(55.0_in);
 
@@ -120,12 +122,12 @@ void runAutoSkills() {
   poseTracker.inert.setRotation(90, degrees);
 
   chassis.driveStraightFeedforward(24.0_in,true);
-  Intakes::backUp = false;
+ // Intakes::backUp = false;
   task::sleep(100);
 
   chassis.turnToDegreeGyro(0.0_deg);
 
-  Intakes::intakeRunCont = true;
+ // Intakes::intakeRunCont = true;
 
   chassis.driveStraightFeedforward(50.0_in);
   task::sleep(100);
