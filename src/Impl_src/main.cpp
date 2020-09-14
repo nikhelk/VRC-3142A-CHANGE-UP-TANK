@@ -40,11 +40,11 @@ int main() {
   task trackPos(trackPosition);
 
   while (true) {
-  //   LOG(topLine.value(analogUnits::range10bit),
-  //   middleLine.value(analogUnits::range10bit),
-  //  bottomLine.value(analogUnits::range10bit),
-  //  outyLine.value(analogUnits::range10bit),
-  //  intakeDetect.value(analogUnits::range10bit));
+//     LOG(topLine.value(analogUnits::range10bit),
+//      middleLine.value(analogUnits::range10bit),
+//  bottomLine.value(analogUnits::range10bit),
+//     outyLine.value(analogUnits::range10bit),
+//     intakeDetect.value(analogUnits::range10bit));
     
     this_thread::sleep_for(10);
   }
