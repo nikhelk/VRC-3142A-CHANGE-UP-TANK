@@ -38,6 +38,7 @@ int flywheelTask(void* toBeCastedBools) {
         }
       }
       if (atGoal) {
+        LOG("AT GOAL");
 
         instance->FlywheelStopWhenTopDetected = false; //turn off the top line macro. these two are mutually exclusive
 
@@ -59,13 +60,14 @@ int flywheelTask(void* toBeCastedBools) {
 
         }
 
-        else { // if we have scored (eject code)
+        else { // if we have scored (;eject code)
 
-          LOG(outyLine.value(analogUnits::range10bit));
+          LOG("EJECTING",outyLine.value(analogUnits::range10bit),OUTY_LINE_THRESHOLD);
           Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt); //spin flywheel to reverse
 
-          if (outyLine.value(analogUnits::range10bit) < OUTY_LINE_THRESHOLD) { //very similar "timeout" procedure as the scoring macro
-
+          if (outyLine.value(analogUnits::range10bit) < OUTY_LINE_THRESHOLD) {
+             //very similar "timeout" procedure as the scoring macro
+            LOG("EJECTED BALL DETECTED")
             ballOutied = true;
           }
 
@@ -77,7 +79,7 @@ int flywheelTask(void* toBeCastedBools) {
             outyLock.lock();
 
             if (ejectorTimeout.m_currentTime > ejectorTimeout.m_timeout) { // if we have elasped enough time since first ejected ball detection, we have outied
-
+              LOG("DONE EJECTING and FINSIHED GOAL TASK");
               atGoal = false;
               Flywheel.spin(fwd,FLYWHEEL_STOP_VOLTAGE,volt);
               instance->backUp = true;
