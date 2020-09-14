@@ -67,7 +67,7 @@ int flywheelTask(void* toBeCastedBools) {
 
           if (outyLine.value(analogUnits::range10bit) < OUTY_LINE_THRESHOLD) {
              //very similar "timeout" procedure as the scoring macro
-            LOG("EJECTED BALL DETECTED")
+            LOG("EJECTED BALL DETECTED");
             ballOutied = true;
           }
 
