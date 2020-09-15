@@ -22,6 +22,7 @@ int flywheelTask(void* toBeCastedBools) {
 
   math3142a::TimeoutTimer ejectorTimeout(10,1000);
 
+  instance->resetBools();
 
   while (true) {
     if (outy) {
@@ -83,6 +84,7 @@ int flywheelTask(void* toBeCastedBools) {
               atGoal = false;
               Flywheel.spin(fwd,FLYWHEEL_STOP_VOLTAGE,volt);
               instance->backUp = true;
+              instance->IndexerStop = true;
               //instance->FlywheelStopWhenTopDetected = true;
 
               // reset bools and timers for next goal sequence

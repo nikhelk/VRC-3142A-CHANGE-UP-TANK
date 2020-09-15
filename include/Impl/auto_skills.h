@@ -13,10 +13,12 @@ struct globalBools {
   bool scored;
   bool backUp;
   bool IntakesRunContinously;
+  bool IntakesStop;
   bool IndexerStopWhenTopDetected;
   bool IndexerStopWhenMiddleDetected;
   bool IndexerStopWhenBottomDetected;
   bool IndexerRunContinuously;
+  bool IndexerStop;
 
   void resetBools() {
     FlywheelStopWhenTopDetected =
@@ -27,6 +29,8 @@ struct globalBools {
     IndexerStopWhenMiddleDetected =
     IndexerStopWhenBottomDetected =
     IndexerRunContinuously =
+    IntakesStop =
+    IndexerStop =
     false;
   }
 

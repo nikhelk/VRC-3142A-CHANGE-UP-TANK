@@ -10,6 +10,7 @@ int indexerTask(void* toBeCastedBools) {
 
   globalBools* instance = static_cast<globalBools*>(toBeCastedBools);
 
+  instance->resetBools();
   while (true) {
     if (instance->IndexerStopWhenTopDetected) {  // Stop indexer when top line detects ball
 
@@ -46,6 +47,15 @@ int indexerTask(void* toBeCastedBools) {
     }
     if (instance->IndexerRunContinuously) { // keep running indexer
       Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
+    }
+    if (instance->IndexerStop) {
+      instance->FlywheelStopWhenTopDetected = false;
+      instance->IndexerStopWhenMiddleDetected = false;
+      instance->IndexerStopWhenBottomDetected = false;
+      instance->IndexerRunContinuously = false;
+
+      Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
+
     }
 
     if (atGoal) {

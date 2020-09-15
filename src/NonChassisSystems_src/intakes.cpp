@@ -10,12 +10,16 @@ int intakeTask(void* toBeCastedBools) {
 
   globalBools* instance = static_cast<globalBools*>(toBeCastedBools);
 
+  instance->resetBools();
+
   while (true) {
+    LOG("Intake BackUp status: " , instance->backUp);
 
     if (atGoal) {
 
       instance->IntakesRunContinously = false;
       instance->backUp = false;
+      instance->IntakesStop = false;
 
       if (!ballIn) { //we only "de-score" one ball out of the goal so after we detect we don't take another one in
 
@@ -35,8 +39,10 @@ int intakeTask(void* toBeCastedBools) {
 
     }
 
-    else if (instance->backUp) { //reverse the intakes as we back up
-
+     if (instance->backUp) { //reverse the intakes as we back up
+     instance->IntakesRunContinously = false;
+     instance->IntakesStop = false;
+      LOG("BACKING UP");
       ballIn = false; //roundabout way of "resetting" the bool as we backUp right after atGoal becomes false.
 
       IntakeL.spin(fwd, INTAKE_BACK_UP_VOLTAGE, volt);
@@ -44,10 +50,21 @@ int intakeTask(void* toBeCastedBools) {
 
     }
 
-    else if (instance->IntakesRunContinously) { //run intakes at max voltage
+     if (instance->IntakesRunContinously) { //run intakes at max voltage
+     instance->backUp = false;
+     instance->IntakesStop = false;
+     LOG("INTAKES AT FULL SPEED");
 
       IntakeL.spin(fwd, INTAKE_VOLTAGE, volt);
       IntakeR.spin(fwd, INTAKE_VOLTAGE, volt);
+    }
+
+    if (instance->IntakesStop) { //run intakes at max voltage
+     instance->backUp = false;
+     instance->IntakesRunContinously = false;
+
+      IntakeL.spin(fwd, INTAKE_STOP_VOLTAGE, volt);
+      IntakeR.spin(fwd, INTAKE_STOP_VOLTAGE, volt);
     }
 
     task::sleep(10);

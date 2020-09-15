@@ -1,16 +1,19 @@
 #include "Impl/auto_skills.h"
 #include "Impl/api.h"
+#include <memory>
 
 void outyy();
 bool atGoal = false;
 void testAutoSkills() {
 
-  globalBools autoSkillBools;
+ static globalBools autoSkillBools;
+//  std::shared_ptr<globalBools> autoSkillBools(std::make_shared<globalBools>());
 
+ //   std::unique_ptr<globalBools> autoSkillBools(new globalBools);
   autoSkillBools.resetBools();
 
   LOG("Running Test Skills!");
-  task intakes(Intakes::intakeTask, &autoSkillBools);
+  task intakes(Intakes::intakeTask, &autoSkillBools );
   //intakeRunCont = true;
 
   task taskedIndex(Rollers::indexerTask , &autoSkillBools);
@@ -19,6 +22,12 @@ void testAutoSkills() {
   task fly(Scorer::flywheelTask, &autoSkillBools);
 
   atGoal = true;
+  waitUntil(!atGoal);
+  chassis.driveStraightFeedforward(10.0_in,true);
+  autoSkillBools.backUp = false;
+  autoSkillBools.IntakesStop = true;
+  
+  LOG("backup: ", autoSkillBools.backUp, "stop", autoSkillBools.IntakesStop);
 
 
   //doOuty2 =true;
