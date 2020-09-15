@@ -4,21 +4,24 @@
 
 namespace Rollers {
 
+bool IndexerStopWhenTopDetected = false;
+bool IndexerStopWhenMiddleDetected= false;
+bool IndexerStopWhenBottomDetected = false;
+bool IndexerRunContinuously = false;
+bool IndexerStop = false;
 
+int indexerTask() {
 
-int indexerTask(void* toBeCastedBools) {
-
-  globalBools* instance = static_cast<globalBools*>(toBeCastedBools);
-
-  instance->resetBools();
   while (true) {
-    if (instance->IndexerStopWhenTopDetected) {  // Stop indexer when top line detects ball
+    if (IndexerStopWhenTopDetected) {  // Stop indexer when top line detects ball
 
       //reset the other ones
+      LOG("INDEXING TO TOP SENSOR");
 
-      instance->IndexerStopWhenMiddleDetected = false;
-      instance->IndexerStopWhenBottomDetected = false;
-      instance->IndexerRunContinuously = false;
+      IndexerStopWhenMiddleDetected = false;
+      IndexerStopWhenBottomDetected = false;
+      IndexerRunContinuously = false;
+      IndexerStop = false;
 
       if (middleLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
         LOG(" Top Ball detected");
@@ -28,7 +31,8 @@ int indexerTask(void* toBeCastedBools) {
       }
     }
 
-    if (instance->IndexerStopWhenMiddleDetected) { // similar to StopWhenTopDetected but for the middle line sensor
+    if (IndexerStopWhenMiddleDetected) {// similar to StopWhenTopDetected but for the middle line sensor
+      LOG("INDEXING TO MIDDLE SENSOR");
       if (middleLine.value(analogUnits::range10bit) < MIDDLE_LINE_THRESHOLD) {
         LOG(" Middle Ball detected");
         Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
@@ -36,7 +40,7 @@ int indexerTask(void* toBeCastedBools) {
         Indexer.spin(fwd, INDEXER_OUTY_VOLTAGE, volt);
       }
     }
-    if (instance->IndexerStopWhenBottomDetected) { // similar to StopWhenTopDetected but for the bottom line sensor
+    if (IndexerStopWhenBottomDetected) { // similar to StopWhenTopDetected but for the bottom line sensor
       if (bottomLine.value(analogUnits::range10bit) < BOTTOM_LINE_THRESHOLD) {
         LOG("ball at bottom");
         Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
@@ -45,14 +49,19 @@ int indexerTask(void* toBeCastedBools) {
         Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       }
     }
-    if (instance->IndexerRunContinuously) { // keep running indexer
+    if (IndexerRunContinuously) { // keep running indexer
+      IndexerStopWhenTopDetected = false;
+      IndexerStopWhenMiddleDetected = false;
+      IndexerStopWhenBottomDetected = false;
+      IndexerStop = false;
+
       Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
     }
-    if (instance->IndexerStop) {
-      instance->FlywheelStopWhenTopDetected = false;
-      instance->IndexerStopWhenMiddleDetected = false;
-      instance->IndexerStopWhenBottomDetected = false;
-      instance->IndexerRunContinuously = false;
+    if (IndexerStop) {
+      IndexerStopWhenTopDetected = false;
+      IndexerStopWhenMiddleDetected = false;
+      IndexerStopWhenBottomDetected = false;
+      IndexerRunContinuously = false;
 
       Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
 
@@ -60,14 +69,15 @@ int indexerTask(void* toBeCastedBools) {
 
     if (atGoal) {
 
-      instance->IndexerRunContinuously = false;
-      instance->IndexerStopWhenTopDetected = false;
-      instance->IndexerStopWhenBottomDetected = false;
+      IndexerRunContinuously = false;
+      IndexerStopWhenTopDetected = false;
+      IndexerStopWhenBottomDetected = false;
+      IndexerStop = false;
 
-      if (!instance->scored) { // index to the middle while flywheel is scoring
-        instance->IndexerStopWhenMiddleDetected = true;
+      if (!Scorer::Scored) { // index to the middle while flywheel is scoring
+        IndexerStopWhenMiddleDetected = true;
       } else { // run ejector
-        instance->IndexerStopWhenMiddleDetected = false;
+        IndexerStopWhenMiddleDetected = false;
         Indexer.spin(fwd, INDEXER_OUTY_VOLTAGE, volt);
       }
     }

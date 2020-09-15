@@ -10,11 +10,16 @@ using namespace vex;
 
 namespace Scorer{
 
-int flywheelTask(void* toBeCastedBools);
+int flywheelTask();
 
 void outyTask();
 
 extern bool outy;
+
+extern bool FlywheelStopWhenTopDetected;
+
+extern bool Scored;
+
 
 enum FlywheelVoltages {
     SCORE_VOLTAGE = 12,

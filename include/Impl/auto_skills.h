@@ -9,16 +9,16 @@ void testAutoSkills();
 extern bool atGoal;
 
 struct globalBools {
-  bool FlywheelStopWhenTopDetected;
-  bool scored;
-  bool backUp;
-  bool IntakesRunContinously;
-  bool IntakesStop;
-  bool IndexerStopWhenTopDetected;
-  bool IndexerStopWhenMiddleDetected;
-  bool IndexerStopWhenBottomDetected;
-  bool IndexerRunContinuously;
-  bool IndexerStop;
+  static bool FlywheelStopWhenTopDetected;
+  static bool scored;
+ static bool backUp;
+ static bool IntakesRunContinously;
+static  bool IntakesStop;
+static  bool IndexerStopWhenTopDetected;
+static  bool IndexerStopWhenMiddleDetected;
+static  bool IndexerStopWhenBottomDetected;
+ static bool IndexerRunContinuously;
+ static bool IndexerStop;
 
   void resetBools() {
     FlywheelStopWhenTopDetected =

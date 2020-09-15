@@ -11,10 +11,12 @@ static mutex outyLock;
 
 bool outy = false;
 
+bool FlywheelStopWhenTopDetected = false;
 
-int flywheelTask(void* toBeCastedBools) {
+bool Scored = false;
 
-  globalBools* instance = static_cast<globalBools*>(toBeCastedBools);
+int flywheelTask() {
+
 
   bool ballOutied = false;
 
@@ -22,16 +24,13 @@ int flywheelTask(void* toBeCastedBools) {
 
   math3142a::TimeoutTimer ejectorTimeout(10,1000);
 
-  instance->resetBools();
 
   while (true) {
-    if (outy) {
-      Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt);
-    }
 
-    else {
 
-      if (instance->FlywheelStopWhenTopDetected) { // index the ball up to the top line sensor
+      if (FlywheelStopWhenTopDetected) {
+         // index the ball up to the top line sensor
+        LOG("FLYWHEEL INDEXING TO TOP LINE");
         if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) { // if the line sensor detects stop the flywheel
           Flywheel.spin(fwd, FLYWHEEL_STOP_VOLTAGE, volt);
         } else { // if it hasnt detected then run them
@@ -41,9 +40,9 @@ int flywheelTask(void* toBeCastedBools) {
       if (atGoal) {
         LOG("AT GOAL");
 
-        instance->FlywheelStopWhenTopDetected = false; //turn off the top line macro. these two are mutually exclusive
+        FlywheelStopWhenTopDetected = false; //turn off the top line macro. these two are mutually exclusive
 
-        if (!instance->scored) { // run while we havent scored a ball
+        if (!Scored) { // run while we havent scored a ball
           Flywheel.spin(fwd, SCORE_VOLTAGE, volt);
           LOG("SCORING",topLine.value(analogUnits::range10bit), TOP_LINE_EMPTY_THRESHOLD);
           if (topLine.value(analogUnits::range10bit) > TOP_LINE_EMPTY_THRESHOLD) { //if the top line is empty then we can start the timeout to stop intake
@@ -54,7 +53,7 @@ int flywheelTask(void* toBeCastedBools) {
 
             if (scoreTimeout.m_currentTime > scoreTimeout.m_timeout) {
               LOG("DONE SCORING"); 
-              instance->scored = true;
+              Scored = true;
             }
             scoreLock.unlock(); //unlock mutex
           }
@@ -83,20 +82,20 @@ int flywheelTask(void* toBeCastedBools) {
               LOG("DONE EJECTING and FINSIHED GOAL TASK");
               atGoal = false;
               Flywheel.spin(fwd,FLYWHEEL_STOP_VOLTAGE,volt);
-              instance->backUp = true;
-              instance->IndexerStop = true;
+              Intakes::backUp = true;
+              Rollers::IndexerStop = true;
               //instance->FlywheelStopWhenTopDetected = true;
 
               // reset bools and timers for next goal sequence
               ballOutied = false;
-              instance->scored = false;
+              Scored = false;
               scoreTimeout.reset();
               ejectorTimeout.reset();
 
             }
             outyLock.unlock();
           } // outy timeout
-        }   // outy
+           // outy
       }     // at Goal
 
     } // not manual

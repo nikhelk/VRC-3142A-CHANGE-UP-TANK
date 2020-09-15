@@ -5,31 +5,29 @@
 void outyy();
 bool atGoal = false;
 void testAutoSkills() {
-
- static globalBools autoSkillBools;
-//  std::shared_ptr<globalBools> autoSkillBools(std::make_shared<globalBools>());
-
- //   std::unique_ptr<globalBools> autoSkillBools(new globalBools);
-  autoSkillBools.resetBools();
-
   LOG("Running Test Skills!");
-  task intakes(Intakes::intakeTask, &autoSkillBools );
-  //intakeRunCont = true;
-
-  task taskedIndex(Rollers::indexerTask , &autoSkillBools);
   
- // doOuty = true;
-  task fly(Scorer::flywheelTask, &autoSkillBools);
+  task intakes(Intakes::intakeTask );
 
+  task taskedIndex(Rollers::indexerTask);
+  
+  task fly(Scorer::flywheelTask);
+
+
+  //chassis.driveStraightFeedforward(20.0_in);
   atGoal = true;
   waitUntil(!atGoal);
   chassis.driveStraightFeedforward(10.0_in,true);
-  autoSkillBools.backUp = false;
-  autoSkillBools.IntakesStop = true;
-  
-  LOG("backup: ", autoSkillBools.backUp, "stop", autoSkillBools.IntakesStop);
+  Intakes::IntakesStop = true;
 
 
+
+  while(true) {
+    task::sleep(100);
+  }
+  // LOG("backup: ", autoSkillBools.backUp, "stop", autoSkillBools.IntakesStop);
+
+  // LOG("BRUHHH: ", autoSkillBools.FlywheelStopWhenTopDetected);
   //doOuty2 =true;
   //FlywheelStopWhenTopDetected = true;
   //IndexerStopWhenBottomDetected = true;
@@ -60,7 +58,7 @@ void testAutoSkills() {
 
   BigBrother.ButtonA.pressed( outyy );
 
- 
+
 
 
 }

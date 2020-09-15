@@ -186,7 +186,7 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
 
       lPower = lFeedback.calculatePower(pose, currLeftMoved);
       
-      LOG(currLeftMoved,currRightMoved,pose,lPower,rPower);
+     // LOG(currLeftMoved,currRightMoved,pose,lPower,rPower);
 
      double lVoltage =  lFeedforwardConstants.kV * mpVel + lFeedforwardConstants.kA * mpAcc + lPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
      double rVoltage =  rFeedforwardConstants.kV * mpVel + rFeedforwardConstants.kA * mpAcc + rPower; //kV * velocity + kA* acceleration + kP*(pose-measuredPose)
