@@ -23,7 +23,7 @@ int indexerTask() {
       IndexerRunContinuously = false;
       IndexerStop = false;
 
-      if (middleLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
+      if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
         LOG(" Top Ball detected");
         Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt); //stop when detected
       } else {
@@ -78,7 +78,7 @@ int indexerTask() {
         IndexerStopWhenMiddleDetected = true;
       } else { // run ejector
         IndexerStopWhenMiddleDetected = false;
-        Indexer.spin(fwd, INDEXER_OUTY_VOLTAGE, volt);
+        Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       }
     }
 

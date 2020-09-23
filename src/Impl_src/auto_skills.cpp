@@ -13,12 +13,21 @@ void testAutoSkills() {
   
   task fly(Scorer::flywheelTask);
 
+  Intakes::IntakesRunContinously = true;
+  Scorer::FlywheelStopWhenTopDetected = true;
+  Rollers::IndexerStopWhenTopDetected = true;
+  
+ chassis.driveStraightFeedforward(60.0_in);
 
-  //chassis.driveStraightFeedforward(20.0_in);
   atGoal = true;
   waitUntil(!atGoal);
-  chassis.driveStraightFeedforward(10.0_in,true);
+ chassis.driveStraightFeedforward(10.0_in,true);
+  task::sleep(100);
+  Intakes::backUp = false;
   Intakes::IntakesStop = true;
+  LOG("BACK UP STATUS: ", Intakes::backUp);
+  task::sleep(1000);
+
 
 
 

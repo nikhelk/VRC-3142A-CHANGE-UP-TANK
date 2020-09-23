@@ -30,11 +30,12 @@ int flywheelTask() {
 
       if (FlywheelStopWhenTopDetected) {
          // index the ball up to the top line sensor
-        LOG("FLYWHEEL INDEXING TO TOP LINE");
-        if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) { // if the line sensor detects stop the flywheel
+        LOG("FLYWHEEL INDEXING TO TOP LINE", topLine.value(analogUnits::range10bit), TOP_LINE_THRESHOLD);
+        if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
+          LOG("BALL AT TOP"); // if the line sensor detects stop the flywheel
           Flywheel.spin(fwd, FLYWHEEL_STOP_VOLTAGE, volt);
         } else { // if it hasnt detected then run them
-          Flywheel.spin(fwd, SCORE_VOLTAGE, volt);
+          Flywheel.spin(fwd, 9, volt);
         }
       }
       if (atGoal) {

@@ -43,8 +43,7 @@ int intakeTask() {
     }
 
      if (backUp) { //reverse the intakes as we back up
-      IntakesRunContinously = false;
-      IntakesStop = false;
+
       LOG("BACKING UP");
       ballIn = false; //roundabout way of "resetting" the bool as we backUp right after atGoal becomes false.
 
@@ -54,8 +53,7 @@ int intakeTask() {
     }
 
      if (IntakesRunContinously) { //run intakes at max voltage
-      backUp = false;
-      IntakesStop = false;
+
      LOG("INTAKES AT FULL SPEED");
 
       IntakeL.spin(fwd, INTAKE_VOLTAGE, volt);
@@ -63,8 +61,7 @@ int intakeTask() {
     }
 
     if (IntakesStop) { //run intakes at max voltage
-      backUp = false;
-      IntakesRunContinously = false;
+
       LOG("INTAKES STOPPED");
 
       IntakeL.spin(fwd, INTAKE_STOP_VOLTAGE, volt);
