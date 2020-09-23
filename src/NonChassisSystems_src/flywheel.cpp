@@ -61,7 +61,7 @@ int flywheelTask() {
 
         }
 
-        else { // if we have scored (;eject code)
+        else { // f we have scored (;eject code)
 
           LOG("EJECTING",outyLine.value(analogUnits::range10bit),OUTY_LINE_THRESHOLD);
           Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt); //spin flywheel to reverse
