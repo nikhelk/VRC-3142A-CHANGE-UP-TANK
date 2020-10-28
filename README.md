@@ -66,7 +66,7 @@ We also created Educational Resources for other VEX teams to use:
 ## Acknowledgements
 We would like to thank the following people for giving new insights on the amazing world of robotics:<br /><br />
     Our mentor, Dave<br />
-    jpearman<br />
-    the Unofficial VEX discord, especially the folks from 5225A, Lachlan, hotel, tabor, theo etc.<br />
+    jpearman and other VEX Forum<br />
+    the Unofficial VEX discord, especially the folks from 5225A, Lachlan, hotel, Tabor, Theo <br />
     the FRC Discord Server and WPI lib<br />
     
