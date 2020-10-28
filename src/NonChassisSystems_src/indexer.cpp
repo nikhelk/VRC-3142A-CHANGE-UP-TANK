@@ -18,10 +18,7 @@ int indexerTask() {
       //reset the other ones
       LOG("INDEXING TO TOP SENSOR");
 
-      IndexerStopWhenMiddleDetected = false;
-      IndexerStopWhenBottomDetected = false;
-      IndexerRunContinuously = false;
-      IndexerStop = false;
+
 
       if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
         LOG(" Top Ball detected");
@@ -32,12 +29,13 @@ int indexerTask() {
     }
 
     if (IndexerStopWhenMiddleDetected) {// similar to StopWhenTopDetected but for the middle line sensor
+    IndexerStop = false;
       LOG("INDEXING TO MIDDLE SENSOR");
       if (middleLine.value(analogUnits::range10bit) < MIDDLE_LINE_THRESHOLD) {
         LOG(" Middle Ball detected");
         Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
       } else {
-        Indexer.spin(fwd, INDEXER_OUTY_VOLTAGE, volt);
+        Indexer.spin(fwd, 12, volt);
       }
     }
     if (IndexerStopWhenBottomDetected) { // similar to StopWhenTopDetected but for the bottom line sensor
@@ -50,18 +48,13 @@ int indexerTask() {
       }
     }
     if (IndexerRunContinuously) { // keep running indexer
-      IndexerStopWhenTopDetected = false;
-      IndexerStopWhenMiddleDetected = false;
-      IndexerStopWhenBottomDetected = false;
-      IndexerStop = false;
+  
 
       Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
     }
     if (IndexerStop) {
-      IndexerStopWhenTopDetected = false;
-      IndexerStopWhenMiddleDetected = false;
-      IndexerStopWhenBottomDetected = false;
-      IndexerRunContinuously = false;
+      LOG("STOPPING INDEXER");
+
 
       Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
 
@@ -72,12 +65,12 @@ int indexerTask() {
       IndexerRunContinuously = false;
       IndexerStopWhenTopDetected = false;
       IndexerStopWhenBottomDetected = false;
+      IndexerStopWhenMiddleDetected = false;
       IndexerStop = false;
 
       if (!Scorer::Scored) { // index to the middle while flywheel is scoring
-        IndexerStopWhenMiddleDetected = true;
+        Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       } else { // run ejector
-        IndexerStopWhenMiddleDetected = false;
         Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       }
     }

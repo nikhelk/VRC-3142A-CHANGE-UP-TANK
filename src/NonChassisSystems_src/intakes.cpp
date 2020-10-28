@@ -24,7 +24,7 @@ int intakeTask() {
       backUp = false;
       IntakesStop = false;
 
-      if (!ballIn) { //we only "de-score" one ball out of the goal so after we detect we don't take another one in
+      if (!ballIn) { //we only "de-score" one ball out of the goal so after we  detect we don't take another one in
 
         IntakeL.spin(fwd, INTAKE_INDEX_BALL_VOLTAGE, volt);
         IntakeR.spin(fwd, INTAKE_INDEX_BALL_VOLTAGE, volt);

@@ -1,5 +1,5 @@
 #include "Util/vex.h"
-
+#include "Util/mathAndConstants.h"
 double positionArray[3];
 namespace math3142a {
 
@@ -32,3 +32,4 @@ double toRadians(double angle)
 }
 
 }
+

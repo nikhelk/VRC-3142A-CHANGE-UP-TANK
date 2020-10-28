@@ -14,7 +14,7 @@ double posPID::calculatePower(double targetPos, double currentPos) {
   m_error = targetPos - currentPos;
 
   m_derivative = m_error - m_prevError;
-  LOG(m_error, m_prevError, (m_derivative * m_kD));
+  LOG("PID",m_error, m_prevError, (m_derivative * m_kD),m_power);
 
   m_power = (m_error * m_kP) + (m_derivative * m_kD);
 

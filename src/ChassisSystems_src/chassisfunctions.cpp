@@ -97,6 +97,7 @@ void FourMotorDrive::turnToDegreeGyro(const double angle)
 
   /****************************************************************************************************************************/
   pidTimer turnTimer;
+  posPID hi = posPID(28, 65);
 
   const double timeoutPeriod = 200;
 
@@ -106,7 +107,7 @@ void FourMotorDrive::turnToDegreeGyro(const double angle)
   {
     double currentAngleRadians = math3142a::toRadians(poseTracker.getInertialHeading());
 
-    double angleOutput = chassis.turnPID.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
+    double angleOutput = hi.calculatePower(angle, currentAngleRadians); //no need to initilze turnPID here becuase it is in the initlizer list (see Config_src/chassis-config.cpp)
     
     adjustOutput(angle,angleOutput);
     
@@ -206,7 +207,7 @@ void FourMotorDrive::driveStraightFeedforward(const double distance, bool backwa
      }
 
      prevTime = currentTime;
-
+     LOG("DRIVING STRAIGHT");
      task::sleep(10);
       
     }
@@ -405,3 +406,4 @@ void FourMotorDrive::moveToPoint(const double x, const double y, bool backwards)
 }
 
 */
+

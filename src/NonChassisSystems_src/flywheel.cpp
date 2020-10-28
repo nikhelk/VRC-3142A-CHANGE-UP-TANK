@@ -20,7 +20,7 @@ int flywheelTask() {
 
   bool ballOutied = false;
 
-  math3142a::TimeoutTimer scoreTimeout(10,1000);
+  math3142a::TimeoutTimer scoreTimeout(10,1250);
 
   math3142a::TimeoutTimer ejectorTimeout(10,1000);
 

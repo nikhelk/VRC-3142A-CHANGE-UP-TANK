@@ -13,22 +13,65 @@ void testAutoSkills() {
   
   task fly(Scorer::flywheelTask);
 
+
+  
+  chassis.driveStraightFeedforward(8.0_in);
+  chassis.turnToDegreeGyro(-75.0_deg);
+
   Intakes::IntakesRunContinously = true;
   Scorer::FlywheelStopWhenTopDetected = true;
-  Rollers::IndexerStopWhenTopDetected = true;
-  
- chassis.driveStraightFeedforward(60.0_in);
+  Rollers::IndexerStopWhenMiddleDetected = true;
+
+  chassis.driveStraightFeedforward(41.0_in);
+  chassis.turnToDegreeGyro(-125.0_deg);
+  chassis.driveStraightFeedforward(20.0_in);
 
   atGoal = true;
   waitUntil(!atGoal);
- chassis.driveStraightFeedforward(10.0_in,true);
+  chassis.driveStraightFeedforward(17.0_in,true);
   task::sleep(100);
   Intakes::backUp = false;
   Intakes::IntakesStop = true;
   LOG("BACK UP STATUS: ", Intakes::backUp);
-  task::sleep(1000);
 
 
+  chassis.turnToDegreeGyro(0.0_deg);
+  Intakes::IntakesStop = false;
+  Intakes::IntakesRunContinously = true;
+  Scorer::FlywheelStopWhenTopDetected = true;
+  Rollers::IndexerStopWhenMiddleDetected = true;
+
+  chassis.driveStraightFeedforward(53.0_in);
+  chassis.turnToDegreeGyro(-90.0_deg);
+  chassis.driveStraightFeedforward(10.0_in);
+
+  task::sleep(3000);
+  atGoal = true;
+  waitUntil(!atGoal);
+  chassis.driveStraightFeedforward(17.0_in,true);
+  task::sleep(100);
+  Intakes::backUp = false;
+  Intakes::IntakesStop = true;
+  LOG("BACK UP STATUS: ", Intakes::backUp);
+
+  chassis.turnToDegreeGyro(7.0_deg);
+  Intakes::IntakesStop = false;
+  Intakes::IntakesRunContinously = true;
+  Scorer::FlywheelStopWhenTopDetected = true;
+  Rollers::IndexerStopWhenMiddleDetected = true;
+  chassis.driveStraightFeedforward(50.0_in);
+
+  chassis.turnToDegreeGyro(-40.0_deg);
+
+  chassis.driveStraightFeedforward(34.0_in);
+
+  atGoal = true;
+  waitUntil(!atGoal);
+  chassis.driveStraightFeedforward(17.0_in,true);
+  task::sleep(100);
+  Intakes::backUp = false;
+  Intakes::IntakesStop = true;
+  LOG("BACK UP STATUS: ", Intakes::backUp);
 
 
   while(true) {
@@ -91,7 +134,7 @@ void runAutoSkills() {
   //Intakes::intakeRunCont = true;
   //Rollers::IndexerStopWhenTopDetected = true;
 
-  chassis.driveStraightFeedforward(34.0_in);
+
   chassis.turnToDegreeGyro(-130.0_deg);
   std::cout <<"Done Turning" <<std::endl;
   
