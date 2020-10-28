@@ -14,7 +14,8 @@ private:
   double m_maxVel;
   double m_maxAcc;
 public:
-
+  /// WE WROTE AN EDUCATIONAL ARTICLE DETAILING THE PROCCESS OF GENERATING A TRAPEZOIDAL MOTION PROFILE
+  /// <https://paideiarobotics.files.wordpress.com/2020/10/feedforward-series-chapter-two.pdf>
 
   /**
    * Initilizes TrapezoidalMotionProfile with constraints

@@ -6,10 +6,11 @@
 
 namespace Scorer {
 
+// We have mutex becuase we have three tasks reading and writing to the same data
+// Having these mutexes helps us avoid race conditions
 static mutex scoreLock;
 static mutex outyLock;
 
-bool outy = false;
 
 bool FlywheelStopWhenTopDetected = false;
 
@@ -18,7 +19,9 @@ bool Scored = false;
 int flywheelTask() {
 
 
-  bool ballOutied = false;
+  bool ballEjected = false;
+
+  // We dont want to stop the flywheel as soon as a ball exits because we stil need momentum. Therefore, we have timers that activate once the ball leaves
 
   math3142a::TimeoutTimer scoreTimeout(10,1250);
 
@@ -52,7 +55,7 @@ int flywheelTask() {
             LOG("SCORED");
             scoreLock.lock(); //lock the mutex as we are accessing the "scored" bool that is used in mutiple threads
 
-            if (scoreTimeout.m_currentTime > scoreTimeout.m_timeout) {
+            if (scoreTimeout.m_currentTime > scoreTimeout.m_timeout) { //once we have delayed for long enough, we have scored
               LOG("DONE SCORING"); 
               Scored = true;
             }
@@ -61,7 +64,7 @@ int flywheelTask() {
 
         }
 
-        else { // f we have scored (;eject code)
+        else { // if we have scored (eject code)
 
           LOG("EJECTING",outyLine.value(analogUnits::range10bit),OUTY_LINE_THRESHOLD);
           Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt); //spin flywheel to reverse
@@ -69,13 +72,13 @@ int flywheelTask() {
           if (outyLine.value(analogUnits::range10bit) < OUTY_LINE_THRESHOLD) {
              //very similar "timeout" procedure as the scoring macro
             LOG("EJECTED BALL DETECTED");
-            ballOutied = true;
+            ballEjected = true;
           }
 
-          if (ballOutied) {
+          if (ballEjected) {
             LOG("BALL EJECTED",ejectorTimeout.m_currentTime , ejectorTimeout.m_timeout);
 
-            ejectorTimeout.m_currentTime += ejectorTimeout.m_delay;
+            ejectorTimeout.m_currentTime += ejectorTimeout.m_delay; //increment timer by a delay
 
             outyLock.lock();
 
@@ -83,18 +86,17 @@ int flywheelTask() {
               LOG("DONE EJECTING and FINSIHED GOAL TASK");
               atGoal = false;
               Flywheel.spin(fwd,FLYWHEEL_STOP_VOLTAGE,volt);
-              Intakes::backUp = true;
-              Rollers::IndexerStop = true;
-              //instance->FlywheelStopWhenTopDetected = true;
+              Intakes::backUp = true; //reverse intakes for a smooth exit
+              Rollers::IndexerStop = true; //stop indexing
 
               // reset bools and timers for next goal sequence
-              ballOutied = false;
+              ballEjected = false;
               Scored = false;
               scoreTimeout.reset();
               ejectorTimeout.reset();
 
             }
-            outyLock.unlock();
+            outyLock.unlock(); //unlock mutex for next run
           } // outy timeout
            // outy
       }     // at Goal
@@ -107,6 +109,4 @@ int flywheelTask() {
 
 } // function def
 
-void outyTask() { Flywheel.spin(fwd, FLYWHEEL_OUTY_VOLTAGE, volt); }
-
-} // namespace Scorer
+} // namespace scorer

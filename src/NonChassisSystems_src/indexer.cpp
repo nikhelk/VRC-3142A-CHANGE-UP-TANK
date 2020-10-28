@@ -6,7 +6,7 @@ namespace Rollers {
 
 bool IndexerStopWhenTopDetected = false;
 bool IndexerStopWhenMiddleDetected= false;
-bool IndexerStopWhenBottomDetected = false;
+
 bool IndexerRunContinuously = false;
 bool IndexerStop = false;
 
@@ -15,15 +15,13 @@ int indexerTask() {
   while (true) {
     if (IndexerStopWhenTopDetected) {  // Stop indexer when top line detects ball
 
-      //reset the other ones
-      LOG("INDEXING TO TOP SENSOR");
-
+      
 
 
       if (topLine.value(analogUnits::range10bit) < TOP_LINE_THRESHOLD) {
         LOG(" Top Ball detected");
         Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt); //stop when detected
-      } else {
+      } else { //run Indexer as long as we ghaven't detected anything
         Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
       }
     }
@@ -38,21 +36,13 @@ int indexerTask() {
         Indexer.spin(fwd, 12, volt);
       }
     }
-    if (IndexerStopWhenBottomDetected) { // similar to StopWhenTopDetected but for the bottom line sensor
-      if (bottomLine.value(analogUnits::range10bit) < BOTTOM_LINE_THRESHOLD) {
-        LOG("ball at bottom");
-        Indexer.spin(fwd, INDEXER_STOP_VOLTAGE, volt);
 
-      } else {
-        Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
-      }
-    }
-    if (IndexerRunContinuously) { // keep running indexer
+    if (IndexerRunContinuously) { // keep running indexer at full speed
   
 
       Indexer.spin(fwd, INDEXER_VOLTAGE, volt);
     }
-    if (IndexerStop) {
+    if (IndexerStop) { //stop indexer
       LOG("STOPPING INDEXER");
 
 
@@ -64,7 +54,6 @@ int indexerTask() {
 
       IndexerRunContinuously = false;
       IndexerStopWhenTopDetected = false;
-      IndexerStopWhenBottomDetected = false;
       IndexerStopWhenMiddleDetected = false;
       IndexerStop = false;
 

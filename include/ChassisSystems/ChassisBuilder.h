@@ -1,5 +1,9 @@
 #pragma once
 #include "ChassisSystems/chassisGlobals.h"
+
+//This class let's us have a chassis "builder"
+//we can set specific attributes like gearRatio, kinematical limits 
+// See example in src/config/chassis_config.cpp
 class FourMotorDrive::FourMotorDriveBuilder {
 
   private:
@@ -7,7 +11,7 @@ class FourMotorDrive::FourMotorDriveBuilder {
   std::array<int32_t, 2> m_rightGroup;
   gearSetting gearbox;
   double gearRatio;
-  Dimensions m_chassisDimensions;
+  Dimensions b_chassisDimensions;
   Limits b_chassisLinearLimits;
   Limits b_chassisAngularLimits;
   std::initializer_list<PDcontroller> m_PDGains;
@@ -28,7 +32,7 @@ class FourMotorDrive::FourMotorDriveBuilder {
       return *this;
     }
     FourMotorDriveBuilder& withDimensions(const Dimensions chassisDimensions) {
-      m_chassisDimensions = chassisDimensions;
+      b_chassisDimensions = chassisDimensions;
       return *this;
     }
     FourMotorDriveBuilder& withLinearLimits(Limits linearChassisLimits) {
@@ -44,9 +48,10 @@ class FourMotorDrive::FourMotorDriveBuilder {
       return *this;
     }
 
+    ///builder that returns a new FourMotorDrive
     FourMotorDrive buildChassis() const
     {
-      return FourMotorDrive{m_leftGroup, m_rightGroup, gearbox, gearRatio,m_chassisDimensions,b_chassisLinearLimits,b_chassisAngularLimits,m_PDGains};
+      return FourMotorDrive{m_leftGroup, m_rightGroup, gearbox, gearRatio,b_chassisDimensions,b_chassisLinearLimits,b_chassisAngularLimits,m_PDGains};
     }
 
 };

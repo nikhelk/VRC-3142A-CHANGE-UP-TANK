@@ -15,9 +15,27 @@ applications such as PID and Motion Profiling
 
 */
 
+/// FourMotorDrive class that we use for our builder, and chassis functions
 class FourMotorDrive {
 private:
+
+  /**
+   * Omtimizes the output of a PD controller for turning
+   * if the difference between the output and targer is less than 180, -1*angleOutput otherwise
+   * @param targetAngle the target angle we have to reach
+   * @param angleOutput that needs to be optimized
+   */
+
   inline void adjustOutput(double targetAngle, double &angleOutput);
+
+  /**
+   * Changes the voltage of our feedforward/feedback controller depending if we are going backwards
+   * Will multiply by -1 if we are going backwards
+   * @param lVoltage left voltage output
+   * @param rVoltage tright voltage output
+   * @param backwards if we are going backwards or not
+   */
+
   inline void checkBackwards(double &lVoltage, double &rVoltage, bool backwards);
 public:
   Dimensions m_chassisDimensions;
@@ -69,8 +87,7 @@ public:
    * reversal states
    */
 
-  void setReverseSettings(const std::array<bool, 2> &LeftReverseVals,
-                          const std::array<bool, 2> &RightReverseVals);
+  void setReverseSettings(const std::array<bool, 2> &LeftReverseVals, const std::array<bool, 2> &RightReverseVals);
 
   /**
    * Does a point turn based off of inertial value

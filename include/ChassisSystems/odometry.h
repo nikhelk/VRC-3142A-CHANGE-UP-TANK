@@ -1,5 +1,8 @@
 #pragma once
 #include "Config/chassis-config.h"
+
+
+/// WE WOULD LIKE TO THANK 5225A FOR SHARING AND EXPLAINING THEIR ODOM SYSTEM AND CODE
 struct pointVals
 {
 	double length;

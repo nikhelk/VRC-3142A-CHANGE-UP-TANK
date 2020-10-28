@@ -14,10 +14,12 @@ double posPID::calculatePower(double targetPos, double currentPos) {
   m_error = targetPos - currentPos;
 
   m_derivative = m_error - m_prevError;
-  LOG("PID",m_error, m_prevError, (m_derivative * m_kD),m_power);
 
-  m_power = (m_error * m_kP) + (m_derivative * m_kD);
 
+  m_power = (m_error * m_kP) + (m_derivative * m_kD); // error*kP + deltaError*kD
+
+
+  //limit our voltage to the V5 constraints
   if (m_power > m_upperBound) {
     m_power = m_upperBound;
   }

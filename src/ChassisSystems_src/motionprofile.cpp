@@ -2,24 +2,15 @@
 #include <cmath>
 #include <string>
 
-/**
- * Initilizes TrapezoidalMotionProfile with constraints
- *
- * We use a trapezoidal motion profile generator for our 1D motion generator
- *
- * The user inputs wheel velcoity constraints and a distance to travelled
- *
- * Using kinematic formulas, we are able to find the position, acceleration and
- * most importantly the velocity at every timestep in the motio
- *
- * @param maxVel max Velocity
- * @param maxAcc max acceleration
- * @param distance desired distance
- */
+
 TrapezoidalMotionProfile::TrapezoidalMotionProfile(const double maxVel,
                                                    const double maxAcc,
                                                    const double distanceTotal)
     : m_distanceTotal(distanceTotal), m_maxVel(maxVel), m_maxAcc(maxAcc) {
+
+
+  /// WE WROTE AN EDUCATIONAL ARTICLE DETAILING THE PROCCESS OF GENERATING A TRAPEZOIDAL MOTION PROFILE
+  /// <https://paideiarobotics.files.wordpress.com/2020/10/feedforward-series-chapter-two.pdf>
 
   m_accelTime = m_maxVel / m_maxAcc;
 
@@ -50,6 +41,9 @@ TrapezoidalMotionProfile::TrapezoidalMotionProfile(const double maxVel,
 
 double TrapezoidalMotionProfile::calculateMpVelocity(const double t) const {
 
+  /// WE WROTE AN EDUCATIONAL ARTICLE DETAILING THE PROCCESS OF GENERATING A TRAPEZOIDAL MOTION PROFILE
+  /// <https://paideiarobotics.files.wordpress.com/2020/10/feedforward-series-chapter-two.pdf>
+  
   if (t < m_accelTime) {
     return (t * m_maxAcc);
   } else if (t > m_accelTime && t < (m_accelTime + m_coastTime)) {

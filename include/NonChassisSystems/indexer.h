@@ -13,22 +13,23 @@ namespace Rollers{
 int indexerTask();
 
 
-void stopIndexerTask(task taskID);
-
+/// when we set this bool to true, then the indexer stops when the top line sensor detects a ball
 extern bool IndexerStopWhenTopDetected;
 
+/// when we set this bool to true, then the indexer stops when the middle line sensor detects a ball
 extern bool IndexerStopWhenMiddleDetected;
 
-extern bool IndexerStopWhenBottomDetected;
-
+/// when we set this bool to true, then the indexer runs at full speed
 extern bool IndexerRunContinuously;
 
+/// when we set this bool to true, then the indexer stops
 extern bool IndexerStop;
 
+// different voltages depending on what we are doing (admittedly, it was probably not the best idea to use an enum)
 enum IndexerVoltages {
 
     INDEXER_VOLTAGE = 12,
     INDEXER_STOP_VOLTAGE = 0,
-    INDEXER_OUTY_VOLTAGE = 8
+    INDEXER_OUTY_VOLTAGE = 8 //less than full 12 volts becuase it was overshooting the line sensor
 };
 }

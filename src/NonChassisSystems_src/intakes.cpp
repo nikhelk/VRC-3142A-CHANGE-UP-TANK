@@ -13,7 +13,8 @@ bool IntakesStop = false;
 
 
 int intakeTask() {
-  bool ballIn = false;
+
+  bool ballIn = false; //we havent intaked a ball in at the start of our program
 
 
 
@@ -29,7 +30,7 @@ int intakeTask() {
         IntakeL.spin(fwd, INTAKE_INDEX_BALL_VOLTAGE, volt);
         IntakeR.spin(fwd, INTAKE_INDEX_BALL_VOLTAGE, volt);
 
-        if (intakeDetect.value(analogUnits::range10bit) < INTAKE_STOP_LINE_THRESHOLD) {
+        if (intakeDetect.value(analogUnits::range10bit) < INTAKE_STOP_LINE_THRESHOLD) { //once the line sensor detects a ball, we can set our ballIn value to true: stopping the intakes
           ballIn = true;
         }
 
@@ -45,7 +46,7 @@ int intakeTask() {
      if (backUp) { //reverse the intakes as we back up
 
       LOG("BACKING UP");
-      ballIn = false; //roundabout way of "resetting" the bool as we backUp right after atGoal becomes false.
+      ballIn = false; //roundabout way of "resetting" the bool as we backUp right after atGoal becomes false. ( we always back up after at a goal)
 
       IntakeL.spin(fwd, INTAKE_BACK_UP_VOLTAGE, volt);
       IntakeR.spin(fwd, INTAKE_BACK_UP_VOLTAGE, volt);
@@ -60,7 +61,7 @@ int intakeTask() {
       IntakeR.spin(fwd, INTAKE_VOLTAGE, volt);
     }
 
-    if (IntakesStop) { //run intakes at max voltage
+    if (IntakesStop) { //run intakes at min voltage
 
       LOG("INTAKES STOPPED");
 

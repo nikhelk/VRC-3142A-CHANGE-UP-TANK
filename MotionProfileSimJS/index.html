@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motion Profile Simulation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0">
+    </script> 
+    <br>
+    <label for="maxVel">Max Velocity:  </label>
+    <input type="number" id="maxVel">
+    <text> (in m/s) </text>
+    <br>
+    <br>
+    <label for="maxAcc">Max Acceleration:  </label>
+    <input type="number" id="maxAcc">
+    <text> (in m/s^2) </text>
+    <br>
+    <br>
+    <label for="distance">Desired Distance:  </label>
+    <input type="number" id="distance">
+    <text> (in m) </text>
+    <br>
+    <br>
+
+    <button id = "start" onclick="setInputs()">Try it!</button>
+
+    <p id="demo"></p>
+  
+</head>
+<body>
+
+    <div class = 'parent'>
+
+    <div class = 'child'>
+        <canvas id="myPoseChart" width="200" height="100"> </canvas>
+    </div>
+    <div class = 'child'>
+        <canvas id="myVelChart" width="200" height="100"> </canvas>
+    </div>
+    <div class = 'child'>
+        <canvas id="myAccChart" width="200" height="100"> </canvas>
+    </div> 
+        </div> 
+    <script src = script.js>
+        
+    </script>
+</body>
+</html> 

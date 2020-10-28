@@ -416,7 +416,7 @@ void displayPIDSettings() {
                          nonChassisPidControllers[nonChassisSelection].kP);
     Brain.Screen.printAt(210, 85, "kI:%.2f",
                          nonChassisPidControllers[nonChassisSelection].kI);
-    Brain.Screen.printAt(390, 85, "kD:%.2f",
+    Brain.Screen.printAt(290, 85, "kD:%.2f",
                          nonChassisPidControllers[nonChassisSelection].kD);
   }
 }
