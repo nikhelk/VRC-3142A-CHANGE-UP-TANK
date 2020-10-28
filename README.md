@@ -69,4 +69,5 @@ We would like to thank the following people for giving new insights on the amazi
     - Our mentor, Dave
     - jpearman
     - the Unofficial VEX discord, especially the folks from 5225A, Lachlan, hotel, tabor, theo etc.
+    - the FRC Discord Server and WPI lib
     
