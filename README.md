@@ -18,7 +18,8 @@ This is our sumbission for the Annotated Programming Skills Challenge
  - `include/Impl/auto_skills.h` + `src/Impl/auto_skills.cpp` Initializes code for skills run and runs it
  - `include/Impl/api.h` tree for files used in robot implementation
  - `src/Impl_src/main.cpp` runs int main() function
-    ** Our skills run code is in `src/Impl/auto_skills.cpp` **
+ 
+ - ** Our skills run code is in `src/Impl/auto_skills.cpp` **
 
 ### Chassis Systems ###
 
@@ -63,3 +64,9 @@ We also created Educational Resources for other VEX teams to use:
 <https://paideiarobotics.wordpress.com/articles/>
 <a name = "ack"></a>
 ## Acknowledgements
+We would like to thank the following people for giving new insights on the amazing world of robotics.
+
+    - Our mentor, Dave
+    - jpearman
+    - the Unofficial VEX discord, especially the folks from 5225A, Lachlan, hotel, tabor, theo etc.
+    
