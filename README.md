@@ -64,9 +64,9 @@ We also created Educational Resources for other VEX teams to use:
 <https://paideiarobotics.wordpress.com/articles/>
 <a name = "ack"></a>
 ## Acknowledgements
-We would like to thank the following people for giving new insights on the amazing world of robotics:
-    Our mentor, Dave
-    jpearman
-    the Unofficial VEX discord, especially the folks from 5225A, Lachlan, hotel, tabor, theo etc.
-    the FRC Discord Server and WPI lib
+We would like to thank the following people for giving new insights on the amazing world of robotics:<br />
+    Our mentor, Dave<br />
+    jpearman<br />
+    the Unofficial VEX discord, especially the folks from 5225A, Lachlan, hotel, tabor, theo etc.<br />
+    the FRC Discord Server and WPI lib<br />
     
